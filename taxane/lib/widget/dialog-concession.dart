@@ -6,41 +6,20 @@ import 'package:taxane/utils/color-by-dii.dart';
 
 dialogAddConcession(
     {required BuildContext context,
-    required String idPays,
-    required String idRegion,
-    required String idDepartement,
-    required String idCommune,
+   
     required String idVillage}) {
   return showDialog(
       context: context,
       builder: (context) {
         Size size = MediaQuery.of(context).size;
-        return StreamBuilder<DocumentSnapshot>(
-            stream: FirebaseFirestore.instance
-                .collection("pays")
-                .doc(idPays)
-                .collection("regions")
-                .doc(idRegion)
-                .collection("departements")
-                .doc(idDepartement)
-                .collection("communes")
-                .doc(idCommune)
-                .collection("villages")
-                .doc(idVillage)
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return Container();
-              } else {
-                TextEditingController code = TextEditingController();
+         TextEditingController code = TextEditingController();
                 TextEditingController nom = TextEditingController();
                 TextEditingController nombreCase = TextEditingController();
                 TextEditingController nomP = TextEditingController();
                 TextEditingController prenomP = TextEditingController();
                 TextEditingController eau = TextEditingController();
                 TextEditingController energie = TextEditingController();
-
-                return AlertDialog(
+        return AlertDialog(
                   title: Container(
                     width: size.width * .5,
                     child: Row(
@@ -281,21 +260,12 @@ dialogAddConcession(
                         GestureDetector(
                           onTap: () {
                             FirebaseFirestore.instance
-                                .collection('pays')
-                                .doc(idPays)
-                                .collection("regions")
-                                .doc(idRegion)
-                                .collection("departements")
-                                .doc(idDepartement)
-                                .collection("communes")
-                                .doc(idCommune)
-                                .collection("villages")
-                                .doc(idVillage)
                                 .collection("concessions")
                                 .add({
                               "code": code.text,
                               "nom": nom.text,
                               "eau": administrationFoncierState.eau,
+                              "villages" : idVillage,
                               "energie": administrationFoncierState.energie,
                               "nomP": nomP.text,
                               "prenomP": prenomP.text,
@@ -326,7 +296,5 @@ dialogAddConcession(
                     ),
                   ),
                 );
-              }
-            });
       });
 }

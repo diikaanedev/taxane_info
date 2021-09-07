@@ -7,18 +7,7 @@ import 'package:taxane/utils/color-by-dii.dart';
 import 'package:taxane/widget/dialog-departement.dart';
 
 adminDepartement({required BuildContext context}) async {
-  await FirebaseFirestore.instance
-      .collection("pays")
-      .doc(administrationFoncierState.paysSelected)
-      .collection("regions")
-      .doc(administrationFoncierState.regionSlected)
-      .collection("departements")
-      .get()
-      .then((value) {
-    administrationFoncierState.setState(() {
-      administrationFoncierState.departementSelected = value.docs.first.id;
-    });
-  });
+ 
   Size size = MediaQuery.of(context).size;
 
   showDialog(
@@ -27,9 +16,7 @@ adminDepartement({required BuildContext context}) async {
       return AlertDialog(
         content: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
-                .collection("pays")
-                .doc(administrationFoncierState.paysSelected)
-                .collection("regions")
+                .collection("departements")
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
@@ -56,22 +43,27 @@ adminDepartement({required BuildContext context}) async {
                                 Text('Gestions des Départements'),
                                 Spacer(),
                                 Container(
-                                  // width: size.width * .15,
-                                  child: DropdownButton<String>(
-                                      value: administrationFoncierState
-                                          .regionSlected,
-                                      onChanged: (String? newValue) {
-                                        setState(() {
-                                          administrationFoncierState
-                                              .regionSlected = newValue!;
-                                        });
-                                      },
-                                      items: snapshot.data!.docs
-                                          .map((e) => DropdownMenuItem(
-                                              value: e.id,
-                                              child: Text(
-                                                  "${e.get("code")}-${e.get("nom")}")))
-                                          .toList()),
+                                  /*width: size.width * .15,  */
+                                  child: StreamBuilder<QuerySnapshot>(
+                                    stream: FirebaseFirestore.instance.collection("regions").snapshots(),
+                                    builder: (context, snap) {
+                                      return !snap.hasData ? Container() : DropdownButton<String>(
+                                          value: administrationFoncierState
+                                              .regionSlected,
+                                          onChanged: (String? newValue) {
+                                            setState(() {
+                                              administrationFoncierState
+                                                  .regionSlected = newValue!;
+                                            });
+                                          },
+                                          items: snap.data!.docs
+                                              .map((e) => DropdownMenuItem(
+                                                  value: e.id,
+                                                  child: Text(
+                                                      "${e.get("code")}-${e.get("nom")}")))
+                                              .toList());
+                                    }
+                                  ),
                                   decoration: BoxDecoration(),
                                 ),
                                 Spacer(),
@@ -113,16 +105,10 @@ adminDepartement({required BuildContext context}) async {
                           Container(
                             height: size.height * .7,
                             width: size.width,
-                            child: LayoutBuilder(
+                             child: LayoutBuilder(
                               builder: (context, constraints) {
                                 return StreamBuilder<QuerySnapshot>(
                                     stream: FirebaseFirestore.instance
-                                        .collection("pays")
-                                        .doc(administrationFoncierState
-                                            .paysSelected)
-                                        .collection("regions")
-                                        .doc(administrationFoncierState
-                                            .regionSlected)
                                         .collection("departements")
                                         .snapshots(),
                                     builder: (context, snapshot) {
@@ -235,23 +221,26 @@ adminDepartement({required BuildContext context}) async {
                                           ])
                                         ];
 
-                                        // snapshot.data!.get("regions") as List;
-                                        listes.addAll(
-                                            snapshot.data!.docs.map((e) {
-                                          Timestamp timestamp = e.get('date');
+
+                                        for (var item in snapshot.data!.docs) {
+                                          
+                                          if (item.get('regions') == administrationFoncierState.regionSlected) {
+                                            Timestamp timestamp = item.get('date');
                                           DateTime date = new DateTime
                                                   .fromMicrosecondsSinceEpoch(
                                               timestamp.millisecondsSinceEpoch *
                                                   1000);
-                                          return TableRow(children: [
-                                            Container(
+
+                                                  listes.add(TableRow(
+                                                    children: [
+ Container(
                                                 height:
                                                     constraints.maxHeight * .05,
                                                 child: Row(
                                                   children: [
                                                     Spacer(),
                                                     Text(
-                                                      e.get('code'),
+                                                      item.get('code'),
                                                       style: TextStyle(
                                                           color: vert,
                                                           fontWeight:
@@ -267,7 +256,7 @@ adminDepartement({required BuildContext context}) async {
                                                   children: [
                                                     Spacer(),
                                                     Text(
-                                                      e.get('nom'),
+                                                      item.get('nom'),
                                                       style: TextStyle(
                                                           color: vert,
                                                           fontWeight:
@@ -301,13 +290,8 @@ adminDepartement({required BuildContext context}) async {
                                                     GestureDetector(
                                                       onTap: () => dialogEditDepartement(
                                                           context: context,
-                                                          idPays:
-                                                              administrationFoncierState
-                                                                  .paysSelected,
-                                                          idRegion:
-                                                              administrationFoncierState
-                                                                  .regionSlected,
-                                                          idDepartement: e.id),
+                                                     
+                                                          idDepartement: item.id),
                                                       child: Icon(
                                                         Icons.edit,
                                                         color: vert,
@@ -321,13 +305,8 @@ adminDepartement({required BuildContext context}) async {
                                                     GestureDetector(
                                                       onTap: () => dialogDeleteDepartement(
                                                           context: context,
-                                                          idPays:
-                                                              administrationFoncierState
-                                                                  .paysSelected,
-                                                          idRegion:
-                                                              administrationFoncierState
-                                                                  .regionSlected,
-                                                          idDepartement: e.id),
+                                                        
+                                                          idDepartement: item.id),
                                                       child: Icon(
                                                         Icons.delete,
                                                         color: rouge,
@@ -336,8 +315,13 @@ adminDepartement({required BuildContext context}) async {
                                                     Spacer(),
                                                   ],
                                                 )),
-                                          ]);
-                                        }).toList());
+                                                    ]
+                                                  ));
+                                          }
+
+                                        }
+
+                                       
                                         return Container(
                                           height: constraints.maxHeight,
                                           width: constraints.maxWidth,
@@ -356,7 +340,7 @@ adminDepartement({required BuildContext context}) async {
                                       }
                                     });
                               },
-                            ),
+                            ), 
                           ),
                           Spacer(),
                           Container(

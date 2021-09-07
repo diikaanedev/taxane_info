@@ -5,9 +5,6 @@ import 'package:taxane/utils/color-by-dii.dart';
 
 dialogAddVillage(
     {required BuildContext context,
-    required String idPays,
-    required String idRegion,
-    required String idDepartement,
     required String idCommune}) {
   return showDialog(
       context: context,
@@ -15,12 +12,6 @@ dialogAddVillage(
         Size size = MediaQuery.of(context).size;
         return StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
-                .collection("pays")
-                .doc(idPays)
-                .collection("regions")
-                .doc(idRegion)
-                .collection("departements")
-                .doc(idDepartement)
                 .collection("communes")
                 .doc(idCommune)
                 .snapshots(),
@@ -52,7 +43,7 @@ dialogAddVillage(
                           height: size.height * .1,
                           child: Center(
                             child: Text(
-                              'Formulaire d\'ajout de villages/vuartiers',
+                              'Formulaire d\'ajout de villages/quartiers',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                   color: noir,
@@ -107,18 +98,11 @@ dialogAddVillage(
                         GestureDetector(
                           onTap: () {
                             FirebaseFirestore.instance
-                                .collection('pays')
-                                .doc(idPays)
-                                .collection("regions")
-                                .doc(idRegion)
-                                .collection("departements")
-                                .doc(idDepartement)
-                                .collection("communes")
-                                .doc(idCommune)
                                 .collection("villages")
                                 .add({
                               "code": code.text,
                               "nom": nom.text,
+                              "communes" : idCommune,
                               "date": DateTime.now()
                             }).then((value) => Navigator.pop(context));
                           },
@@ -152,10 +136,6 @@ dialogAddVillage(
 
 dialogEditVillage({
   required BuildContext context,
-  required String idPays,
-  required String idRegion,
-  required String idDepartement,
-  required String idCommune,
   required String idVillage,
 }) {
   return showDialog(
@@ -164,14 +144,6 @@ dialogEditVillage({
         Size size = MediaQuery.of(context).size;
         return StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
-                .collection("pays")
-                .doc(idPays)
-                .collection("regions")
-                .doc(idRegion)
-                .collection("departements")
-                .doc(idDepartement)
-                .collection("communes")
-                .doc(idCommune)
                 .collection("villages")
                 .doc(idVillage)
                 .snapshots(),
@@ -260,14 +232,6 @@ dialogEditVillage({
                         GestureDetector(
                           onTap: () {
                             FirebaseFirestore.instance
-                                .collection('pays')
-                                .doc(idPays)
-                                .collection("regions")
-                                .doc(idRegion)
-                                .collection("departements")
-                                .doc(idDepartement)
-                                .collection("communes")
-                                .doc(idCommune)
                                 .collection("villages")
                                 .doc(idVillage)
                                 .update({

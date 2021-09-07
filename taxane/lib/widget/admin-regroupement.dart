@@ -8,7 +8,9 @@ import 'package:taxane/widget/dialog-regroupenment.dart';
 
 adminRegouprement({required BuildContext context}) async {
   Size size = MediaQuery.of(context).size;
-
+  await FirebaseFirestore.instance.collection("villages").get().then((value) => administrationFoncierState.setState(() {
+      administrationFoncierState.villageSelected = value.docs.first.id;
+  }));
   return showDialog(
     context: context,
     builder: (context) => AlertDialog(content: StatefulBuilder(
@@ -26,257 +28,30 @@ adminRegouprement({required BuildContext context}) async {
                     Text('Gestion des Regroupement ou Associations'),
                     Spacer(),
                     Container(
-                      width: size.width * .4,
-                      // child: ListView(
-                      //   scrollDirection: Axis.horizontal,
-                      //   children: [
-                      //     Container(
-                      //       child: Row(
-                      //         children: [
-                      //           Container(
-                      //               height: size.height * .04,
-                      //               child: Center(
-                      //                   child: Text(
-                      //                 'Pays :',
-                      //                 style: TextStyle(
-                      //                     fontWeight: FontWeight.bold,
-                      //                     color: vert,
-                      //                     decoration: TextDecoration.underline),
-                      //               ))),
-                      //           SizedBox(
-                      //             width: 8,
-                      //           ),
-                      //           StreamBuilder<QuerySnapshot>(
-                      //               stream: FirebaseFirestore.instance
-                      //                   .collection('pays')
-                      //                   .snapshots(),
-                      //               builder: (context, snapshot) {
-                      //                 if (!snapshot.hasData) {
-                      //                   return Container();
-                      //                 } else {
-                      //                   return Container(
-                      //                     // width: size.width * .15,
-                      //                     child: DropdownButton<String>(
-                      //                         value: administrationFoncierState
-                      //                             .paysSelected,
-                      //                         onChanged: (String? newValue) {
-                      //                           setState(() {
-                      //                             administrationFoncierState
-                      //                                 .paysSelected = newValue!;
-                      //                           });
-                      //                           FirebaseFirestore.instance
-                      //                               .collection("pays")
-                      //                               .doc(
-                      //                                   administrationFoncierState
-                      //                                       .paysSelected)
-                      //                               .collection("regions")
-                      //                               .get()
-                      //                               .then((value) {
-                      //                             if (value.docs.length > 0) {
-                      //                               setState(() {
-                      //                                 administrationFoncierState
-                      //                                         .regionSlected =
-                      //                                     value.docs.first.id;
-                      //                               });
-                      //                             } else {
-                      //                               setState(() {
-                      //                                 administrationFoncierState
-                      //                                     .regionSlected = "";
-                      //                               });
-                      //                             }
-                      //                           });
-                      //                         },
-                      //                         items: snapshot.data!.docs
-                      //                             .map((e) => DropdownMenuItem(
-                      //                                 value: e.id,
-                      //                                 child: Text(
-                      //                                     "${e.get("code")}-${e.get("nom")}")))
-                      //                             .toList()),
-                      //                     decoration: BoxDecoration(),
-                      //                   );
-                      //                 }
-                      //               }),
-                      //         ],
-                      //       ),
-                      //     ),
-                      //     SizedBox(
-                      //       width: 16,
-                      //     ),
-                      //     if (administrationFoncierState.regionSlected != "")
-                      //       Container(
-                      //         child: Row(
-                      //           children: [
-                      //             Container(
-                      //                 height: size.height * .04,
-                      //                 child: Center(
-                      //                     child: Text(
-                      //                   'Regions :',
-                      //                   style: TextStyle(
-                      //                       fontWeight: FontWeight.bold,
-                      //                       color: vert,
-                      //                       decoration:
-                      //                           TextDecoration.underline),
-                      //                 ))),
-                      //             SizedBox(
-                      //               width: 8,
-                      //             ),
-                      //             StreamBuilder<QuerySnapshot>(
-                      //                 stream: FirebaseFirestore.instance
-                      //                     .collection('pays')
-                      //                     .doc(administrationFoncierState
-                      //                         .paysSelected)
-                      //                     .collection("regions")
-                      //                     .snapshots(),
-                      //                 builder: (context, snapshot) {
-                      //                   if (!snapshot.hasData) {
-                      //                     return Container();
-                      //                   } else {
-                      //                     return Container(
-                      //                       // width: size.width * .15,
-                      //                       child: DropdownButton<String>(
-                      //                           value:
-                      //                               administrationFoncierState
-                      //                                   .regionSlected,
-                      //                           onChanged: (String? newValue) {
-                      //                             setState(() {
-                      //                               administrationFoncierState
-                      //                                       .regionSlected =
-                      //                                   newValue!;
-                      //                             });
-                      //                             FirebaseFirestore.instance
-                      //                                 .collection("pays")
-                      //                                 .doc(
-                      //                                     administrationFoncierState
-                      //                                         .paysSelected)
-                      //                                 .collection("regions")
-                      //                                 .doc(
-                      //                                     administrationFoncierState
-                      //                                         .regionSlected)
-                      //                                 .collection(
-                      //                                     "departements")
-                      //                                 .get()
-                      //                                 .then((value) {
-                      //                               if (value.docs.length > 0) {
-                      //                                 setState(() {
-                      //                                   administrationFoncierState
-                      //                                           .departementSelected =
-                      //                                       value.docs.first.id;
-                      //                                 });
-                      //                               } else {
-                      //                                 setState(() {
-                      //                                   administrationFoncierState
-                      //                                       .departementSelected = "";
-                      //                                 });
-                      //                               }
-                      //                             });
-                      //                           },
-                      //                           items: snapshot.data!.docs
-                      //                               .map((e) => DropdownMenuItem(
-                      //                                   value: e.id,
-                      //                                   child: Text(
-                      //                                       "${e.get("code")}-${e.get("nom")}")))
-                      //                               .toList()),
-                      //                       decoration: BoxDecoration(),
-                      //                     );
-                      //                   }
-                      //                 })
-                      //           ],
-                      //         ),
-                      //       ),
-                      //     if (administrationFoncierState.departementSelected !=
-                      //         "")
-                      //       Container(
-                      //         child: Row(
-                      //           children: [
-                      //             Container(
-                      //                 height: size.height * .04,
-                      //                 child: Center(
-                      //                     child: Text(
-                      //                   'Departement :',
-                      //                   style: TextStyle(
-                      //                       fontWeight: FontWeight.bold,
-                      //                       color: vert,
-                      //                       decoration:
-                      //                           TextDecoration.underline),
-                      //                 ))),
-                      //             SizedBox(
-                      //               width: 8,
-                      //             ),
-                      //             StreamBuilder<QuerySnapshot>(
-                      //                 stream: FirebaseFirestore.instance
-                      //                     .collection('pays')
-                      //                     .doc(administrationFoncierState
-                      //                         .paysSelected)
-                      //                     .collection("regions")
-                      //                     .doc(administrationFoncierState
-                      //                         .regionSlected)
-                      //                     .collection("departements")
-                      //                     .snapshots(),
-                      //                 builder: (context, snapshot) {
-                      //                   if (!snapshot.hasData) {
-                      //                     return Container();
-                      //                   } else {
-                      //                     return Container(
-                      //                       // width: size.width * .15,
-                      //                       child: DropdownButton<String>(
-                      //                           value:
-                      //                               administrationFoncierState
-                      //                                   .departementSelected,
-                      //                           onChanged: (String? newValue) {
-                      //                             setState(() {
-                      //                               administrationFoncierState
-                      //                                       .departementSelected =
-                      //                                   newValue!;
-                      //                             });
-                      //                             FirebaseFirestore.instance
-                      //                                 .collection("pays")
-                      //                                 .doc(
-                      //                                     administrationFoncierState
-                      //                                         .paysSelected)
-                      //                                 .collection("regions")
-                      //                                 .doc(
-                      //                                     administrationFoncierState
-                      //                                         .regionSlected)
-                      //                                 .collection(
-                      //                                     "departements")
-                      //                                 .doc(administrationFoncierState
-                      //                                     .departementSelected)
-                      //                                 .collection("communes")
-                      //                                 .get()
-                      //                                 .then((value) {
-                      //                               if (value.docs.length > 0) {
-                      //                                 setState(() {
-                      //                                   administrationFoncierState
-                      //                                           .departementSelected =
-                      //                                       value.docs.first.id;
-                      //                                 });
-                      //                               } else {
-                      //                                 setState(() {
-                      //                                   administrationFoncierState
-                      //                                       .departementSelected = "";
-                      //                                 });
-                      //                               }
-                      //                             });
-                      //                           },
-                      //                           items: snapshot.data!.docs
-                      //                               .map((e) => DropdownMenuItem(
-                      //                                   value: e.id,
-                      //                                   child: Text(
-                      //                                       "${e.get("code")}-${e.get("nom")}")))
-                      //                               .toList()),
-                      //                       decoration: BoxDecoration(),
-                      //                     );
-                      //                   }
-                      //                 })
-                      //           ],
-                      //         ),
-                      //       ),
-                      //   ],
-                      // ),
+                      /* width: size.width * .4, */
+                      child: StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance.collection("villages").snapshots(),
+                        builder: (ctx , snap) => !snap.hasData ? Container() :  DropdownButton<String>(
+                                        value: administrationFoncierState
+                                            .villageSelected,
+                                        onChanged: (String? newValue) {
+                                          setState(() {
+                                            administrationFoncierState.setState(() {
+                                              administrationFoncierState
+                                                  .villageSelected = newValue!;
+                                            });
+                                          });
+                                        },
+                                        items: snap.data!.docs
+                                            .map((e) => DropdownMenuItem(
+                                                value: e.id,
+                                                child: Text(
+                                                    "${e.get("code")}-${e.get("nom")}")))
+                                            .toList())),
                     ),
                     Spacer(),
                     GestureDetector(
-                      onTap: () => addRegroupement(context: context),
+                      onTap: () => addRegroupement(context: context , idVillage: administrationFoncierState.villageSelected ),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
@@ -405,20 +180,20 @@ adminRegouprement({required BuildContext context}) async {
                           ])
                         ];
 
-                        // snapshot.data!.get("regions") as List;
-                        listes.addAll(snapshot.data!.docs.map((e) {
-                          Timestamp timestamp = e.get('date');
+                        for (var item in snapshot.data!.docs) {
+                          if (item.get("villages") == administrationFoncierState.villageSelected) {
+                              Timestamp timestamp = item.get('date');
                           DateTime date =
                               new DateTime.fromMicrosecondsSinceEpoch(
                                   timestamp.millisecondsSinceEpoch * 1000);
-                          return TableRow(children: [
-                            Container(
+                          listes.add(TableRow(children: [
+ Container(
                                 height: size.height * .05,
                                 child: Row(
                                   children: [
                                     Spacer(),
                                     Text(
-                                      e.get('code'),
+                                      item.get('code'),
                                       style: TextStyle(
                                           color: vert,
                                           fontWeight: FontWeight.w300),
@@ -432,7 +207,7 @@ adminRegouprement({required BuildContext context}) async {
                                   children: [
                                     Spacer(),
                                     Text(
-                                      e.get('name'),
+                                    item.get('name'),
                                       style: TextStyle(
                                           color: vert,
                                           fontWeight: FontWeight.w300),
@@ -462,7 +237,7 @@ adminRegouprement({required BuildContext context}) async {
                                     GestureDetector(
                                       onTap: () => showRegroupement(
                                           context: context,
-                                          idRegroupement: e.id),
+                                          idRegroupement: item.id),
                                       child: Icon(
                                         CupertinoIcons.eye_fill,
                                         color: jaune,
@@ -491,8 +266,11 @@ adminRegouprement({required BuildContext context}) async {
                                     Spacer(),
                                   ],
                                 )),
-                          ]);
-                        }).toList());
+                          ]));
+                          }
+                        }
+
+                       
 
                         return LayoutBuilder(
                           builder: (context, constraints) {

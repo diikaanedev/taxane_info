@@ -14,8 +14,6 @@ dialogAddDepartement({
         Size size = MediaQuery.of(context).size;
         return StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
-                .collection("pays")
-                .doc(idPays)
                 .collection("regions")
                 .doc(idRegion)
                 .snapshots(),
@@ -102,14 +100,11 @@ dialogAddDepartement({
                         GestureDetector(
                           onTap: () {
                             FirebaseFirestore.instance
-                                .collection('pays')
-                                .doc(idPays)
-                                .collection("regions")
-                                .doc(idRegion)
                                 .collection("departements")
                                 .add({
                               "code": code.text,
                               "nom": nom.text,
+                              "regions" : idRegion,
                               "date": DateTime.now()
                             }).then((value) {
                               Navigator.pop(context);
@@ -145,8 +140,6 @@ dialogAddDepartement({
 
 dialogEditDepartement(
     {required BuildContext context,
-    required String idPays,
-    required String idRegion,
     required String idDepartement}) {
   return showDialog(
       context: context,
@@ -154,10 +147,6 @@ dialogEditDepartement(
         Size size = MediaQuery.of(context).size;
         return StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
-                .collection("pays")
-                .doc(idPays)
-                .collection("regions")
-                .doc(idRegion)
                 .collection("departements")
                 .doc(idDepartement)
                 .snapshots(),
@@ -246,10 +235,6 @@ dialogEditDepartement(
                         GestureDetector(
                           onTap: () {
                             FirebaseFirestore.instance
-                                .collection('pays')
-                                .doc(idPays)
-                                .collection("regions")
-                                .doc(idRegion)
                                 .collection("departements")
                                 .doc(idDepartement)
                                 .update({
@@ -287,8 +272,6 @@ dialogEditDepartement(
 
 dialogDeleteDepartement(
     {required BuildContext context,
-    required String idPays,
-    required String idRegion,
     required String idDepartement}) {
   return showDialog(
       context: context,
@@ -296,11 +279,7 @@ dialogDeleteDepartement(
         Size size = MediaQuery.of(context).size;
         return StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
-                .collection("pays")
-                .doc(idPays)
-                .collection("regions")
-                .doc(idRegion)
-                .collection("departements")
+               .collection("departements")
                 .doc(idDepartement)
                 .snapshots(),
             builder: (context, snapshot) {
@@ -342,10 +321,6 @@ dialogDeleteDepartement(
                           onTap: () {
                             Navigator.pop(context);
                             FirebaseFirestore.instance
-                                .collection('pays')
-                                .doc(idPays)
-                                .collection("regions")
-                                .doc(idRegion)
                                 .collection("departements")
                                 .doc(idDepartement)
                                 .delete()

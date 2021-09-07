@@ -5,21 +5,14 @@ import 'package:taxane/utils/color-by-dii.dart';
 
 dialogAddCommune(
     {required BuildContext context,
-    required String idPays,
-    required String idRegion,
     required String idDepartement}) {
   return showDialog(
       context: context,
       builder: (context) {
         Size size = MediaQuery.of(context).size;
-        return StreamBuilder<DocumentSnapshot>(
+        return StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
-                .collection("pays")
-                .doc(idPays)
-                .collection("regions")
-                .doc(idRegion)
-                .collection("departements")
-                .doc(idDepartement)
+                .collection("communes")
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
@@ -104,16 +97,11 @@ dialogAddCommune(
                         GestureDetector(
                           onTap: () {
                             FirebaseFirestore.instance
-                                .collection('pays')
-                                .doc(idPays)
-                                .collection("regions")
-                                .doc(idRegion)
-                                .collection("departements")
-                                .doc(idDepartement)
                                 .collection("communes")
                                 .add({
                               "code": code.text,
                               "nom": nom.text,
+                              "departements" : idDepartement,
                               "date": DateTime.now()
                             }).then((value) {
                               Navigator.pop(context);
@@ -149,9 +137,6 @@ dialogAddCommune(
 
 dialogEditCommune(
     {required BuildContext context,
-    required String idPays,
-    required String idRegion,
-    required String idDepartement,
     required String idCommune}) {
   return showDialog(
       context: context,
@@ -159,12 +144,6 @@ dialogEditCommune(
         Size size = MediaQuery.of(context).size;
         return StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
-                .collection("pays")
-                .doc(idPays)
-                .collection("regions")
-                .doc(idRegion)
-                .collection("departements")
-                .doc(idDepartement)
                 .collection("communes")
                 .doc(idCommune)
                 .snapshots(),
@@ -253,13 +232,7 @@ dialogEditCommune(
                         GestureDetector(
                           onTap: () {
                             FirebaseFirestore.instance
-                                .collection('pays')
-                                .doc(idPays)
-                                .collection("regions")
-                                .doc(idRegion)
-                                .collection("departements")
-                                .doc(idDepartement)
-                                .collection("communes")
+                                 .collection("communes")
                                 .doc(idCommune)
                                 .update(({
                                   "code": code.text,
@@ -297,9 +270,6 @@ dialogEditCommune(
 
 dialogDeleteCommune(
     {required BuildContext context,
-    required String idPays,
-    required String idRegion,
-    required String idDepartement,
     required String idCommune}) {
   return showDialog(
       context: context,
@@ -307,12 +277,6 @@ dialogDeleteCommune(
         Size size = MediaQuery.of(context).size;
         return StreamBuilder<DocumentSnapshot>(
             stream: FirebaseFirestore.instance
-                .collection("pays")
-                .doc(idPays)
-                .collection("regions")
-                .doc(idRegion)
-                .collection("departements")
-                .doc(idDepartement)
                 .collection("communes")
                 .doc(idCommune)
                 .snapshots(),
@@ -363,12 +327,6 @@ dialogDeleteCommune(
                         GestureDetector(
                           onTap: () {
                             FirebaseFirestore.instance
-                                .collection('pays')
-                                .doc(idPays)
-                                .collection("regions")
-                                .doc(idRegion)
-                                .collection("departements")
-                                .doc(idDepartement)
                                 .collection("communes")
                                 .doc(idCommune)
                                 .delete()

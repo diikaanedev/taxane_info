@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,18 +7,12 @@ import 'package:taxane/utils/color-by-dii.dart';
 import 'package:taxane/widget/admin-commune.dart';
 import 'package:taxane/widget/admin-concession.dart';
 import 'package:taxane/widget/admin-departement.dart';
+import 'package:taxane/widget/admin-domaine.dart';
 import 'package:taxane/widget/admin-menage.dart';
-import 'package:taxane/widget/admin-pays.dart';
 import 'package:taxane/widget/admin-regions.dart';
 import 'package:taxane/widget/admin-regroupement.dart';
 import 'package:taxane/widget/admin-village.dart';
-import 'package:taxane/widget/dialog-add-pays.dart';
-import 'package:taxane/widget/dialog-commune.dart';
-import 'package:taxane/widget/dialog-departement.dart';
-import 'package:taxane/widget/dialog-region.dart';
-import 'package:taxane/widget/dialog-village.dart';
 import 'package:taxane/widget/menu-left-home.dart';
-import 'package:taxane/widget/table-region.dart';
 
 late _AdministrationFoncierState administrationFoncierState;
 
@@ -63,14 +56,16 @@ class _AdministrationFoncierState extends State<AdministrationFoncier> {
         chargement = true;
       });
       FirebaseFirestore.instance
-          .collection("pays")
-          .doc(paysSelected)
           .collection("regions")
           .get()
           .then((value) {
         setState(() {
           regionSlected = value.docs.first.id;
         });
+
+        FirebaseFirestore.instance.collection("departements").get().then((value) => setState((){
+          departementSelected = value.docs.first.id;
+        }));
       });
     });
   }
@@ -205,7 +200,7 @@ class _AdministrationFoncierState extends State<AdministrationFoncier> {
                                                         onTap: () =>
                                                             adminRegion(
                                                                 context:
-                                                                    context),
+                                                                    context , idPays: paysSelected),
                                                         child: Container(
                                                           width: constraints
                                                                   .maxWidth *
@@ -499,30 +494,33 @@ class _AdministrationFoncierState extends State<AdministrationFoncier> {
                                                         ),
                                                       ),
                                                       Spacer(),
-                                                      Container(
-                                                        width: constraints
-                                                                .maxWidth *
-                                                            .3,
-                                                        child: Center(
-                                                          child: Text(
-                                                            'Gestion des Domaines ou Lots',
-                                                            style: TextStyle(
-                                                                fontSize:
-                                                                    constraints
-                                                                            .maxHeight *
-                                                                        .02,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w800,
-                                                                color: blanc),
+                                                      GestureDetector(
+                                                        onTap: () => adminDomaine(context: context),
+                                                        child: Container(
+                                                          width: constraints
+                                                                  .maxWidth *
+                                                              .3,
+                                                          child: Center(
+                                                            child: Text(
+                                                              'Gestion des Domaines ou Lots',
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      constraints
+                                                                              .maxHeight *
+                                                                          .02,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w800,
+                                                                  color: blanc),
+                                                            ),
                                                           ),
+                                                          decoration: BoxDecoration(
+                                                              color: rouge,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8)),
                                                         ),
-                                                        decoration: BoxDecoration(
-                                                            color: rouge,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8)),
                                                       ),
                                                       Spacer(),
                                                     ],

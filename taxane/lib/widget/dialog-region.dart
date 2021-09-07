@@ -101,12 +101,12 @@ dialogAddRegion({required BuildContext context, required String id}) {
                             .doc(id)
                             .get()
                             .then((value) => FirebaseFirestore.instance
-                                    .collection('pays')
-                                    .doc(id)
+                                    
                                     .collection("regions")
                                     .add({
                                   "code": code.text,
                                   "nom": nom.text,
+                                  "pays" : id,
                                   "date": DateTime.now(),
                                 }))
                             .then((value) {
@@ -149,9 +149,7 @@ dialogEditRegion(
     context: context,
     builder: (context) => StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
-            .collection("pays")
-            .doc(id)
-            .collection("regions")
+             .collection("regions")
             .doc(idRegion)
             .snapshots(),
         builder: (context, snapshot) {
@@ -244,8 +242,6 @@ dialogEditRegion(
                     GestureDetector(
                       onTap: () async {
                         FirebaseFirestore.instance
-                            .collection("pays")
-                            .doc(id)
                             .collection("regions")
                             .doc(idRegion)
                             .update({
@@ -289,8 +285,6 @@ dialogDeleteRegion(
     context: context,
     builder: (context) => StreamBuilder<DocumentSnapshot>(
         stream: FirebaseFirestore.instance
-            .collection("pays")
-            .doc(id)
             .collection("regions")
             .doc(idRegion)
             .snapshots(),
@@ -322,9 +316,7 @@ dialogDeleteRegion(
                       onTap: () async {
                         Navigator.pop(context);
                         FirebaseFirestore.instance
-                            .collection("pays")
-                            .doc(id)
-                            .collection("regions")
+                           .collection("regions")
                             .doc(idRegion)
                             .delete()
                             .then((value) => Navigator.pop(context));

@@ -7,37 +7,14 @@ import 'package:taxane/widget/dialog-commune.dart';
 
 adminCommune({required BuildContext context}) async {
   Size size = MediaQuery.of(context).size;
-  await FirebaseFirestore.instance
-      .collection("pays")
-      .doc(administrationFoncierState.paysSelected)
-      .collection("regions")
-      .doc(administrationFoncierState.regionSlected)
-      .collection("departements")
-      .doc(administrationFoncierState.departementSelected)
-      .collection("communes")
-      .get()
-      .then((value) {
-    if (value.docs.length > 0) {
-      administrationFoncierState.setState(() {
-        administrationFoncierState.communeSelected = value.docs.first.id;
-      });
-    } else {
-      administrationFoncierState.setState(() {
-        administrationFoncierState.communeSelected = '';
-      });
-    }
-  });
+  
   showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
         content: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
-                .collection("pays")
-                .doc(administrationFoncierState.paysSelected)
-                .collection("regions")
-                .doc(administrationFoncierState.regionSlected)
-                .collection("departements")
+                .collection("communes")
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
@@ -65,31 +42,32 @@ adminCommune({required BuildContext context}) async {
                                 Spacer(),
                                 Container(
                                   // width: size.width * .15,
-                                  child: DropdownButton<String>(
-                                      value: administrationFoncierState
-                                          .departementSelected,
-                                      onChanged: (String? newValue) {
-                                        setState(() {
-                                          administrationFoncierState
-                                              .departementSelected = newValue!;
-                                        });
-                                      },
-                                      items: snapshot.data!.docs
-                                          .map((e) => DropdownMenuItem(
-                                              value: e.id,
-                                              child: Text(
-                                                  "${e.get("code")}-${e.get("nom")}")))
-                                          .toList()),
+                                  child: StreamBuilder<QuerySnapshot>(
+                                    stream: FirebaseFirestore.instance.collection("departements").snapshots(),
+                                    builder: (context, snap) {
+                                      return !snap.hasData ? Container() : DropdownButton<String>(
+                                          value: administrationFoncierState
+                                              .departementSelected,
+                                          onChanged: (String? newValue) {
+                                            setState(() {
+                                              administrationFoncierState
+                                                  .departementSelected = newValue!;
+                                            });
+                                          },
+                                          items: snap.data!.docs
+                                              .map((e) => DropdownMenuItem(
+                                                  value: e.id,
+                                                  child: Text(
+                                                      "${e.get("code")}-${e.get("nom")}")))
+                                              .toList());
+                                    }
+                                  ),
                                   decoration: BoxDecoration(),
                                 ),
                                 Spacer(),
                                 GestureDetector(
                                   onTap: () => dialogAddCommune(
                                       context: context,
-                                      idPays: administrationFoncierState
-                                          .paysSelected,
-                                      idRegion: administrationFoncierState
-                                          .regionSlected,
                                       idDepartement: administrationFoncierState
                                           .departementSelected),
                                   child: Container(
@@ -127,15 +105,6 @@ adminCommune({required BuildContext context}) async {
                               builder: (context, constraints) {
                                 return StreamBuilder<QuerySnapshot>(
                                     stream: FirebaseFirestore.instance
-                                        .collection("pays")
-                                        .doc(administrationFoncierState
-                                            .paysSelected)
-                                        .collection("regions")
-                                        .doc(administrationFoncierState
-                                            .regionSlected)
-                                        .collection("departements")
-                                        .doc(administrationFoncierState
-                                            .departementSelected)
                                         .collection("communes")
                                         .snapshots(),
                                     builder: (context, snapshot) {
@@ -248,23 +217,24 @@ adminCommune({required BuildContext context}) async {
                                           ])
                                         ];
 
-                                        // snapshot.data!.get("regions") as List;
-                                        listes.addAll(
-                                            snapshot.data!.docs.map((e) {
-                                          Timestamp timestamp = e.get('date');
+ 
+                                        for (var item in snapshot.data!.docs) {
+                                          if (item.get("departements") == administrationFoncierState.departementSelected) {
+                                            Timestamp timestamp = item.get('date');
                                           DateTime date = new DateTime
                                                   .fromMicrosecondsSinceEpoch(
                                               timestamp.millisecondsSinceEpoch *
                                                   1000);
-                                          return TableRow(children: [
-                                            Container(
-                                                height:
+                                            listes.add(TableRow(
+                                              children: [
+                                                Container(
+                                                  height:
                                                     constraints.maxHeight * .05,
                                                 child: Row(
                                                   children: [
                                                     Spacer(),
                                                     Text(
-                                                      e.get('code'),
+                                                      item.get('code'),
                                                       style: TextStyle(
                                                           color: vert,
                                                           fontWeight:
@@ -280,7 +250,7 @@ adminCommune({required BuildContext context}) async {
                                                   children: [
                                                     Spacer(),
                                                     Text(
-                                                      e.get('nom'),
+                                                      item.get('nom'),
                                                       style: TextStyle(
                                                           color: vert,
                                                           fontWeight:
@@ -314,16 +284,8 @@ adminCommune({required BuildContext context}) async {
                                                     GestureDetector(
                                                       onTap: () => dialogEditCommune(
                                                           context: context,
-                                                          idPays:
-                                                              administrationFoncierState
-                                                                  .paysSelected,
-                                                          idRegion:
-                                                              administrationFoncierState
-                                                                  .regionSlected,
-                                                          idDepartement:
-                                                              administrationFoncierState
-                                                                  .departementSelected,
-                                                          idCommune: e.id),
+                                                        
+                                                          idCommune: item.id),
                                                       child: Icon(
                                                         Icons.edit,
                                                         color: vert,
@@ -337,16 +299,8 @@ adminCommune({required BuildContext context}) async {
                                                     GestureDetector(
                                                       onTap: () => dialogDeleteCommune(
                                                           context: context,
-                                                          idPays:
-                                                              administrationFoncierState
-                                                                  .paysSelected,
-                                                          idRegion:
-                                                              administrationFoncierState
-                                                                  .regionSlected,
-                                                          idDepartement:
-                                                              administrationFoncierState
-                                                                  .departementSelected,
-                                                          idCommune: e.id),
+                                                          
+                                                          idCommune: item.id),
                                                       child: Icon(
                                                         Icons.delete,
                                                         color: rouge,
@@ -355,8 +309,12 @@ adminCommune({required BuildContext context}) async {
                                                     Spacer(),
                                                   ],
                                                 )),
-                                          ]);
-                                        }).toList());
+                                              ]
+                                            ));
+                                          }
+                                        }
+
+
                                         return Container(
                                           height: constraints.maxHeight,
                                           width: constraints.maxWidth,

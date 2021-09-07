@@ -8,7 +8,7 @@ import 'package:taxane/screen/administration-foncier.dart';
 import 'package:taxane/utils/color-by-dii.dart';
 import 'package:file_picker/file_picker.dart';
 
-addRegroupement({required BuildContext context}) {
+addRegroupement({required BuildContext context , required String idVillage}) {
   Size size = MediaQuery.of(context).size;
   TextEditingController code = TextEditingController();
   TextEditingController nom = TextEditingController();
@@ -231,6 +231,7 @@ addRegroupement({required BuildContext context}) {
                           "phone": tel.text,
                           "email": email.text,
                           "logo_url": value,
+                          "villages" : idVillage,
                           "date": DateTime.now()
                         });
                       });
@@ -249,6 +250,7 @@ addRegroupement({required BuildContext context}) {
                       "phone": tel.text,
                       "email": email.text,
                       "logo_url": "",
+                      "villages" : idVillage,
                       "date": DateTime.now()
                     });
                   }
@@ -338,8 +340,6 @@ showRegroupement(
                               builder: (context, constraints) => StreamBuilder<
                                       QuerySnapshot>(
                                   stream: FirebaseFirestore.instance
-                                      .collection("regroupements")
-                                      .doc(idRegroupement)
                                       .collection("membres")
                                       .snapshots(),
                                   builder: (context, snapshot) {
@@ -828,14 +828,7 @@ addMembreRegroupemen(
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      content: StreamBuilder<DocumentSnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('regroupements')
-            .doc(idRegroupement)
-            .snapshots(),
-        builder: (context, snapshot) => !snapshot.hasData
-            ? Container()
-            : StatefulBuilder(
+      content: StatefulBuilder(
                 builder: (context, setState) => Container(
                   height: size.height * .7,
                   width: size.width * .5,
@@ -1260,8 +1253,6 @@ addMembreRegroupemen(
                               _.ref.getDownloadURL().then((value) {
                                 print("helle");
                                 FirebaseFirestore.instance
-                                    .collection("regroupements")
-                                    .doc(idRegroupement)
                                     .collection("membres")
                                     .add({
                                   "matricule": matricule.text,
@@ -1269,6 +1260,7 @@ addMembreRegroupemen(
                                   "prenom": prenom.text,
                                   "cni": cni.text,
                                   "prenomPere": prenomPere.text,
+                                  "regroupements" : idRegroupement,
                                   "nomMere": nomMere.text,
                                   "prenomMere": prenomMere.text,
                                   "dateNaiss": dateNaiss.text,
@@ -1286,8 +1278,6 @@ addMembreRegroupemen(
                           } catch (e) {
                             print(e);
                             FirebaseFirestore.instance
-                                .collection("regroupements")
-                                .doc(idRegroupement)
                                 .collection("membres")
                                 .add({
                               "matricule": matricule.text,
@@ -1304,6 +1294,7 @@ addMembreRegroupemen(
                                   administrationFoncierState.niveauEtude,
                               "matrimonial":
                                   administrationFoncierState.matrimonial,
+                                  "regroupements" : idRegroupement,
                               "avatar": "",
                               "date": DateTime.now()
                             });
@@ -1336,6 +1327,5 @@ addMembreRegroupemen(
                 ),
               ),
       ),
-    ),
   );
 }

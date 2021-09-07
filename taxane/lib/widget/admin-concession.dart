@@ -9,15 +9,7 @@ AdminConcession({required BuildContext context}) async {
   Size size = MediaQuery.of(context).size;
 
   await FirebaseFirestore.instance
-      .collection("pays")
-      .doc(administrationFoncierState.paysSelected)
-      .collection("regions")
-      .doc(administrationFoncierState.regionSlected)
-      .collection("departements")
-      .doc(administrationFoncierState.departementSelected)
-      .collection("communes")
-      .doc(administrationFoncierState.communeSelected)
-      .collection("villages")
+       .collection("villages")
       .get()
       .then((value) {
     if (value.docs.length > 0) {
@@ -36,15 +28,7 @@ AdminConcession({required BuildContext context}) async {
       return AlertDialog(
         content: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
-              .collection("pays")
-              .doc(administrationFoncierState.paysSelected)
-              .collection("regions")
-              .doc(administrationFoncierState.regionSlected)
-              .collection("departements")
-              .doc(administrationFoncierState.departementSelected)
-              .collection("communes")
-              .doc(administrationFoncierState.communeSelected)
-              .collection("villages")
+              .collection("concessions")
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
@@ -66,37 +50,35 @@ AdminConcession({required BuildContext context}) async {
                               Spacer(),
                               Container(
                                 // width: size.width * .15,
-                                child: DropdownButton<String>(
-                                    value: administrationFoncierState
-                                        .villageSelected,
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        administrationFoncierState.setState(() {
-                                          administrationFoncierState
-                                              .villageSelected = newValue!;
-                                        });
-                                      });
-                                    },
-                                    items: snapshot.data!.docs
-                                        .map((e) => DropdownMenuItem(
-                                            value: e.id,
-                                            child: Text(
-                                                "${e.get("code")}-${e.get("nom")}")))
-                                        .toList()),
+                                child: StreamBuilder<QuerySnapshot>(
+                                  stream: FirebaseFirestore.instance.collection("villages").snapshots(),
+                                  builder: (context, snap) {
+                                    return !snap.hasData ? Container() : DropdownButton<String>(
+                                        value: administrationFoncierState
+                                            .villageSelected,
+                                        onChanged: (String? newValue) {
+                                          setState(() {
+                                            administrationFoncierState.setState(() {
+                                              administrationFoncierState
+                                                  .villageSelected = newValue!;
+                                            });
+                                          });
+                                        },
+                                        items: snap.data!.docs
+                                            .map((e) => DropdownMenuItem(
+                                                value: e.id,
+                                                child: Text(
+                                                    "${e.get("code")}-${e.get("nom")}")))
+                                            .toList());
+                                  }
+                                ),
                                 decoration: BoxDecoration(),
                               ),
                               Spacer(),
                               GestureDetector(
                                 onTap: () => dialogAddConcession(
                                     context: context,
-                                    idPays:
-                                        administrationFoncierState.paysSelected,
-                                    idRegion: administrationFoncierState
-                                        .regionSlected,
-                                    idDepartement: administrationFoncierState
-                                        .departementSelected,
-                                    idCommune: administrationFoncierState
-                                        .communeSelected,
+                                   
                                     idVillage: administrationFoncierState
                                         .villageSelected),
                                 child: Container(
@@ -134,19 +116,6 @@ AdminConcession({required BuildContext context}) async {
                             builder: (context, constraints) =>
                                 StreamBuilder<QuerySnapshot>(
                               stream: FirebaseFirestore.instance
-                                  .collection("pays")
-                                  .doc(administrationFoncierState.paysSelected)
-                                  .collection("regions")
-                                  .doc(administrationFoncierState.regionSlected)
-                                  .collection("departements")
-                                  .doc(administrationFoncierState
-                                      .departementSelected)
-                                  .collection("communes")
-                                  .doc(administrationFoncierState
-                                      .communeSelected)
-                                  .collection("villages")
-                                  .doc(administrationFoncierState
-                                      .villageSelected)
                                   .collection("concessions")
                                   .snapshots(),
                               builder: (context, snapshot) {

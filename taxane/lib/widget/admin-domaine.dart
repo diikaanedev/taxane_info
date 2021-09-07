@@ -3,24 +3,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:taxane/screen/administration-foncier.dart';
 import 'package:taxane/utils/color-by-dii.dart';
-import 'package:taxane/widget/dialog-menage.dart';
+import 'package:taxane/widget/dialog-Domaine.dart';
 
-adminMenage({
+adminDomaine({
   required BuildContext context,
 }) async {
   Size size = MediaQuery.of(context).size;
   await FirebaseFirestore.instance
-     .collection("concessions")
+     .collection("villages")
       .get()
       .then((value) {
     // print(value.docs.length);
     if (value.docs.length > 0) {
       administrationFoncierState.setState(() {
-        administrationFoncierState.concessionSelected = value.docs.first.id;
+        administrationFoncierState.villageSelected = value.docs.first.id;
       });
     } else {
       administrationFoncierState.setState(() {
-        administrationFoncierState.concessionSelected = '';
+        administrationFoncierState.villageSelected = '';
       });
     }
   });
@@ -28,7 +28,7 @@ adminMenage({
       context: context,
       builder: (context) => StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
-               .collection("menages")
+               .collection("domaines")
               .snapshots(),
           builder: (context, snapshot) => !snapshot.hasData
               ? Container(
@@ -50,22 +50,22 @@ adminMenage({
                             width: size.width * .7,
                             child: Row(
                               children: [
-                                Text('Gestions des Ménages'),
+                                Text('Gestions des Domaines'),
                                 Spacer(),
                                 Container(
                                   // width: size.width * .15,
                                   child: StreamBuilder<QuerySnapshot>(
-                                    stream: FirebaseFirestore.instance.collection("concessions").snapshots(),
+                                    stream: FirebaseFirestore.instance.collection("villages").snapshots(),
                                     builder: (context, snap) {
                                       return !snap.hasData ?  Container() : DropdownButton<String>(
                                           value: administrationFoncierState
-                                              .concessionSelected,
+                                              .villageSelected,
                                           onChanged: (String? newValue) {
                                             setState(() {
                                               administrationFoncierState
                                                   .setState(() {
                                                 administrationFoncierState
-                                                    .concessionSelected = newValue!;
+                                                    .villageSelected = newValue!;
                                               });
                                             });
                                           },
@@ -81,11 +81,11 @@ adminMenage({
                                 ),
                                 Spacer(),
                                 GestureDetector(
-                                  onTap: () => addMenage(
+                                  onTap: () => addDomaine(
                                       context: context,
                                       
-                                      idConcession: administrationFoncierState
-                                          .concessionSelected),
+                                      idVillage: administrationFoncierState
+                                          .villageSelected),
                                   child: Container(
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(4),
@@ -99,7 +99,7 @@ adminMenage({
                                         ),
                                         Container(
                                             child: Text(
-                                          '   Ajouter un ménage   ',
+                                          '   Ajouter un Domaine / Lot   ',
                                           style: TextStyle(color: blanc),
                                         )),
                                         SizedBox(
@@ -121,7 +121,7 @@ adminMenage({
                             builder: (context, constraints) =>
                                 StreamBuilder<QuerySnapshot>(
                               stream: FirebaseFirestore.instance
-                                  .collection("menages")
+                                  .collection("domaines")
                                   .snapshots(),
                               builder: (context, snapshot) {
                                 if (!snapshot.hasData) {
@@ -143,7 +143,7 @@ adminMenage({
                                                     constraints.maxWidth * .01,
                                               ),
                                               Text(
-                                                'Code Ménage',
+                                                'Code Domaine',
                                                 style: TextStyle(
                                                     color: vert,
                                                     fontWeight:
@@ -166,7 +166,7 @@ adminMenage({
                                                     constraints.maxWidth * .01,
                                               ),
                                               Text(
-                                                'Nom Chef Ménage',
+                                                'CNI Propriétaire du domaine',
                                                 style: TextStyle(
                                                     color: vert,
                                                     fontWeight:
@@ -226,7 +226,7 @@ adminMenage({
 
                                   for
                                    (var item in snapshot.data!.docs) {
-                                     if (item.get("concessions") == administrationFoncierState.concessionSelected) {
+                                     if (item.get("villages") == administrationFoncierState.villageSelected) {
                                        Timestamp timestamp = item.get('date');
                                     DateTime date =
                                         new DateTime.fromMicrosecondsSinceEpoch(
@@ -254,7 +254,7 @@ Container(
                                             children: [
                                               Spacer(),
                                               Text(
-                                                item.get('nom'),
+                                                item.get('cni'),
                                                 style: TextStyle(
                                                     color: vert,
                                                     fontWeight:
