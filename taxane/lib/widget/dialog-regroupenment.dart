@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/_internal/file_picker_web.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,9 @@ addRegroupement({required BuildContext context , required String idVillage}) {
   TextEditingController description = TextEditingController();
   TextEditingController tel = TextEditingController();
   TextEditingController email = TextEditingController();
+  TextEditingController admin_email = TextEditingController();
+  TextEditingController admin_password = TextEditingController();
+  TextEditingController admin_password_confirm = TextEditingController();
   return showDialog(
     context: context,
     builder: (context) => AlertDialog(
@@ -209,51 +213,133 @@ addRegroupement({required BuildContext context , required String idVillage}) {
                     borderRadius: BorderRadius.circular(8)),
               ),
               SizedBox(
+                height: size.height * .05,
+              ),
+              Container(
+                height: size.height * .05,
+                width: size.width * .4,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: TextField(
+                    cursorColor: vert,
+                    controller: admin_email,
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        labelText: "email admin",
+                        icon: Icon(CupertinoIcons.person_fill)),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: vert),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              SizedBox(
+                height: size.height * .05,
+              ),
+              Container(
+                height: size.height * .05,
+                width: size.width * .4,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: TextField(
+                    cursorColor: vert,
+                    obscureText: true,
+                    controller: admin_password,
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        labelText: "password admin",
+                        icon: Icon(CupertinoIcons.eye_slash_fill)),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: vert),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              SizedBox(
+                height: size.height * .05,
+              ),
+              Container(
+                height: size.height * .05,
+                width: size.width * .4,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: TextField(
+                    cursorColor: vert,
+                    controller: admin_password_confirm,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        labelText: "confirm password admin",
+                        icon: Icon(CupertinoIcons.eye_slash_fill)),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: vert),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              SizedBox(
                 height: size.height * .1,
               ),
               GestureDetector(
                 onTap: () async {
-                  try {
-                    print("hello on est bn");
-                    Reference ref = FirebaseStorage.instance.ref(
-                        'regroupement-logo/${new DateTime.now().millisecondsSinceEpoch.toString()}.png');
+                  if (admin_email.text.contains(RegExp(r'@'))) {
+                      if (admin_password.text == admin_password_confirm.text) {
 
-                    ref.putData(administrationFoncierState.fileLogo).then((_) {
-                      _.ref.getDownloadURL().then((value) {
-                        FirebaseFirestore.instance
-                            .collection("regroupements")
-                            .doc(code.text)
-                            .set({
-                          "code": code.text,
-                          "name": nom.text,
-                          "nomRepresentant": nomRepresentant.text,
-                          "description": description.text,
-                          "phone": tel.text,
-                          "email": email.text,
-                          "logo_url": value,
-                          "villages" : idVillage,
-                          "date": DateTime.now()
-                        });
-                      });
-                    });
-                  } catch (e) {
-                    print(e);
+                          FirebaseAuth.instance.createUserWithEmailAndPassword(email: admin_email.text.toLowerCase(), password: admin_password.text).then((adminUserGroup) {
+                            adminUserGroup.user!.sendEmailVerification();
+                            FirebaseFirestore.instance.collection("users").add({
+                              "username" : admin_email.text.split("@")[0].toLowerCase(),
+                              "role" : 2,
+                            });
+                          try {
+                         
+                            
+                            Reference ref = FirebaseStorage.instance.ref(
+                                'regroupement-logo/${new DateTime.now().millisecondsSinceEpoch.toString()}.png');
 
-                    FirebaseFirestore.instance
-                        .collection("regroupements")
-                        .doc(code.text)
-                        .set({
-                      "code": code.text,
-                      "name": nom.text,
-                      "nomRepresentant": nomRepresentant.text,
-                      "description": description.text,
-                      "phone": tel.text,
-                      "email": email.text,
-                      "logo_url": "",
-                      "villages" : idVillage,
-                      "date": DateTime.now()
-                    });
-                  }
+                            ref.putData(administrationFoncierState.fileLogo).then((_) {
+                              _.ref.getDownloadURL().then((value) {
+                                FirebaseFirestore.instance
+                                    .collection("regroupements")
+                                    .doc(code.text)
+                                    .set({
+                                  "code": code.text,
+                                  "name": nom.text,
+                                  "nomRepresentant": nomRepresentant.text,
+                                  "description": description.text,
+                                  "phone": tel.text,
+                                  "email": email.text,
+                                  "logo_url": value,
+                                  "villages" : idVillage,
+                                  "date": DateTime.now()
+                                });
+                              });
+                            });
+                          } catch (e) {
+                            print(e);
+
+                            FirebaseFirestore.instance
+                                .collection("regroupements")
+                                .doc(code.text)
+                                .set({
+                              "code": code.text,
+                              "name": nom.text,
+                              "nomRepresentant": nomRepresentant.text,
+                              "description": description.text,
+                              "phone": tel.text,
+                              "email": email.text,
+                              "logo_url": "",
+                              "villages" : idVillage,
+                              "date": DateTime.now()
+                            });
+                          }
+                          });
+
+                      } else {
+                      }
+                    } else {
+                    }
+                
                 },
                 child: Container(
                   height: size.height * .05,
@@ -367,6 +453,7 @@ showRegroupement(
                                                     'Code ',
                                                     style: TextStyle(
                                                         color: vert,
+                                                        fontSize: 12,
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
@@ -391,6 +478,7 @@ showRegroupement(
                                                   Text(
                                                     'Nom ',
                                                     style: TextStyle(
+                                                        fontSize: 12,
                                                         color: vert,
                                                         fontWeight:
                                                             FontWeight.bold),
@@ -416,6 +504,7 @@ showRegroupement(
                                                   Text(
                                                     'Sexe',
                                                     style: TextStyle(
+                                                        fontSize: 12,
                                                         color: vert,
                                                         fontWeight:
                                                             FontWeight.bold),
@@ -442,6 +531,7 @@ showRegroupement(
                                                     'Paramètres',
                                                     style: TextStyle(
                                                         color: vert,
+                                                        fontSize: 12,
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
@@ -451,16 +541,21 @@ showRegroupement(
                                         ])
                                       ];
 
-                                      listes.addAll(snapshot.data!.docs
-                                          .map((e) => TableRow(children: [
+                                      for (QueryDocumentSnapshot item in snapshot.data!.docs) {
+                                        if (item.get("regroupements") == idRegroupement ) {
+                                          listes.add(
+                                             TableRow(children: [
                                                 Container(
                                                     height: size.height * .05,
                                                     child: Row(
                                                       children: [
                                                         Spacer(),
                                                         Text(
-                                                          e.get('matricule'),
+                                                          item.get('matricule'),
+                                                          overflow: TextOverflow.ellipsis,
+
                                                           style: TextStyle(
+                                          fontSize: 12,
                                                               color: vert,
                                                               fontWeight:
                                                                   FontWeight
@@ -475,8 +570,10 @@ showRegroupement(
                                                       children: [
                                                         Spacer(),
                                                         Text(
-                                                          "${e.get('prenom')} ${e.get('name')}",
+                                                          "${item.get('prenom')} ${item.get('name')}",
+                                                          overflow: TextOverflow.ellipsis,
                                                           style: TextStyle(
+                                          fontSize: 10,
                                                               color: vert,
                                                               fontWeight:
                                                                   FontWeight
@@ -491,8 +588,9 @@ showRegroupement(
                                                       children: [
                                                         Spacer(),
                                                         Text(
-                                                          e.get('sexe'),
+                                                          item.get('sexe'),
                                                           style: TextStyle(
+                                          fontSize: 12,
                                                               color: vert,
                                                               fontWeight:
                                                                   FontWeight
@@ -539,8 +637,12 @@ showRegroupement(
                                                         Spacer(),
                                                       ],
                                                     )),
-                                              ]))
-                                          .toList());
+                                              ])
+                                          );
+                                        } 
+                                      }
+
+                                     
                                       return Container(
                                         child: ListView(
                                           children: [

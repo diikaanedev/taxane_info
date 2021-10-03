@@ -196,6 +196,7 @@ adminRegouprement({required BuildContext context}) async {
                                       item.get('code'),
                                       style: TextStyle(
                                           color: vert,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.w300),
                                     ),
                                     Spacer(),
@@ -209,6 +210,7 @@ adminRegouprement({required BuildContext context}) async {
                                     Text(
                                     item.get('name'),
                                       style: TextStyle(
+                                          fontSize: 12,
                                           color: vert,
                                           fontWeight: FontWeight.w300),
                                     ),

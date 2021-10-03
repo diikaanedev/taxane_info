@@ -117,11 +117,9 @@ class _LoginLaptopState extends State<LoginLaptop> {
                               width: constraints.maxWidth * .01,
                             ),
                             Text('Mot de passe '),
-                            SizedBox(
-                              width: constraints.maxWidth * .03,
-                            ),
+                           Spacer(),
                             Container(
-                              width: constraints.maxWidth * .5,
+                               width: constraints.maxWidth * .45, 
                               child: TextField(
                                 obscureText: isVisible,
                                 onChanged: (value) => setState(() {
@@ -142,7 +140,8 @@ class _LoginLaptopState extends State<LoginLaptop> {
                                                 color: Colors.black))),
                                 cursorColor: Colors.black,
                               ),
-                            )
+                            ),
+                            
                           ],
                         ),
                         decoration: BoxDecoration(

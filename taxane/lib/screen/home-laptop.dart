@@ -118,10 +118,10 @@ class _HomeLaptopState extends State<HomeLaptop> {
                                 ),
                                 Spacer(),
                                 Container(
-                                  width: constraints.maxWidth * .1,
+                                  /* width: constraints.maxWidth * .1, */
                                   child: Center(
                                     child: Text(
-                                      'Ajouter utilisateur',
+                                      '   Ajouter utilisateur   ',
                                       style: TextStyle(color: blanc),
                                     ),
                                   ),
@@ -201,6 +201,7 @@ class _HomeLaptopState extends State<HomeLaptop> {
                                         Spacer(),
                                         Container(
                                           width: constraints.maxWidth * .6,
+                                          color: jaune,
                                           child: Column(
                                             children: [
                                               Text('Tableau des Associations')
@@ -300,7 +301,7 @@ class _HomeLaptopState extends State<HomeLaptop> {
                                         child: FieldDataMoth(
                                             color: vert,
                                             mois: 'Mars',
-                                            taille: .85),
+                                            taille: .5),
                                       ),
                                       SizedBox(
                                         width: constraints.maxWidth * .01,

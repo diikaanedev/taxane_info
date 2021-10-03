@@ -82,43 +82,55 @@ class MenuLeftHome extends StatelessWidget {
                 Container(
                   height: constraints.maxHeight * .05,
                   width: constraints.maxWidth,
-                  child: MenuLeft(
-                      test: "Home",
-                      icon: CupertinoIcons.home,
-                      isSelect: choice == 1),
+                  child: GestureDetector(
+                    onTap: () => Navigator.popAndPushNamed(context, "/home"),
+                    child: MenuLeft(
+                        test: "Home",
+                        icon: CupertinoIcons.home,
+                        isSelect: choice == 1),
+                  ),
                 ),
                 SizedBox(
                   height: constraints.maxHeight * .01,
                 ),
-                Container(
-                  height: constraints.maxHeight * .05,
-                  width: constraints.maxWidth,
-                  child: MenuLeft(
-                      test: 'Administration & Foncier',
-                      icon: CupertinoIcons.person_3_fill,
-                      isSelect: choice == 2),
-                ),
-                SizedBox(
-                  height: constraints.maxHeight * .01,
-                ),
-                Container(
+                GestureDetector(
+                    onTap: () => Navigator.popAndPushNamed(context, "/administration-foncier"),
+                  child: Container(
                     height: constraints.maxHeight * .05,
                     width: constraints.maxWidth,
                     child: MenuLeft(
-                      test: 'Equipements Collectifs',
-                      icon: CupertinoIcons.map_pin_ellipse,
-                      isSelect: choice == 3,
-                    )),
+                        test: 'Administration & Foncier',
+                        icon: CupertinoIcons.person_3_fill,
+                        isSelect: choice == 2),
+                  ),
+                ),
+                SizedBox(
+                  height: constraints.maxHeight * .01,
+                ),
+                GestureDetector(
+                    onTap: () => Navigator.popAndPushNamed(context, "/equipement-collectif"),
+                  child: Container(
+                      height: constraints.maxHeight * .05,
+                      width: constraints.maxWidth,
+                      child: MenuLeft(
+                        test: 'Equipements Collectifs',
+                        icon: CupertinoIcons.map_pin_ellipse,
+                        isSelect: choice == 3,
+                      )),
+                ),
                 SizedBox(
                   height: constraints.maxHeight * .01,
                 ),
                 Container(
                   height: constraints.maxHeight * .05,
                   width: constraints.maxWidth,
-                  child: MenuLeft(
-                      test: 'Agriculture & Horticulture',
-                      icon: CupertinoIcons.leaf_arrow_circlepath,
-                      isSelect: choice == 4),
+                  child: GestureDetector(
+                    onTap: () => Navigator.popAndPushNamed(context, "/agriculture-horticulture"),
+                    child: MenuLeft(
+                        test: 'Agriculture & Horticulture',
+                        icon: CupertinoIcons.leaf_arrow_circlepath,
+                        isSelect: choice == 4),
+                  ),
                 ),
                 SizedBox(
                   height: constraints.maxHeight * .01,
@@ -126,10 +138,13 @@ class MenuLeftHome extends StatelessWidget {
                 Container(
                   height: constraints.maxHeight * .05,
                   width: constraints.maxWidth,
-                  child: MenuLeft(
-                      test: 'Élevage',
-                      icon: CupertinoIcons.home,
-                      isSelect: choice == 5),
+                  child: GestureDetector(
+                    onTap: () => Navigator.popAndPushNamed(context, "/elevage"),
+                    child: MenuLeft(
+                        test: 'Élevage',
+                        icon: CupertinoIcons.home,
+                        isSelect: choice == 5),
+                  ),
                 ),
                 SizedBox(
                   height: size.height * .05,
