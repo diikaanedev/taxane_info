@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: titre,
       debugShowCheckedModeBanner: false,
-      initialRoute: '/',
+      initialRoute: '/agriculture-horticulture',
      
       routes: {
         '/home': (context) => HomeLaptop(),

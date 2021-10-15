@@ -29,6 +29,14 @@ class _AgricultureHortocultureState extends State<AgricultureHortoculture> {
   late String idproduit ;
   DateTime dateLivraison = DateTime.now(); 
   DateTime datePaiement = DateTime.now(); 
+  late String champ ;
+  late String materiels ;
+  late String materielsNom ;
+  late String materielsCode ;
+  late String production ;
+
+
+  String perso = "";
   bool chargement = false;
 
   @override
@@ -47,6 +55,10 @@ class _AgricultureHortocultureState extends State<AgricultureHortoculture> {
           idproduit = value.docs.first.id;
           produit = value.docs.first.get('nom');
         }));
+        FirebaseFirestore.instance.collection("materiels").get().then((value) => setState((){
+          materiels = value.docs.first.id;
+        }));
+
 
   }
   @override

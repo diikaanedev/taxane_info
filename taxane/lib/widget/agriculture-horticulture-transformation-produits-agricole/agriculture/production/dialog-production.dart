@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:taxane/screen/agriculture-hortoculture.dart';
 import 'package:taxane/utils/color-by-dii.dart';
 
-addProduction({required BuildContext context}) {
+addProduction({required BuildContext context , required String idChamps}) {
   Size size = MediaQuery.of(context).size;
   showDialog(context: context, builder: (context) {
     TextEditingController code =
@@ -134,6 +134,8 @@ Spacer(),
                           "code" : code.text,
                           "nomProduit" : agricultureHortocultureState.produit,
                           "idProduit" : agricultureHortocultureState.idproduit,
+                          "quantite" : quantite.text,
+                          "champs" : idChamps,
                           "date" : DateTime.now()
                         }).then((value) => Navigator.pop(context)); 
                       },  

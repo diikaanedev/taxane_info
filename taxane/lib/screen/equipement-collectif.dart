@@ -86,8 +86,165 @@ class _EquipementCollectifState extends State<EquipementCollectif> {
                                     children: [
                                       
                                       // Foncier by dii
-                                      Container(
-                                        color: rouge,
+                                      Stack(
+                                        children: [
+                                          Container(
+                                            height: constraints.maxHeight,
+                                            width: constraints.maxWidth,
+                                            child: Column(
+                                              children: [
+                                                Spacer(),
+                                                Container(
+                                                  height:
+                                                      constraints.maxHeight *
+                                                          .25,
+                                                  child: Row(
+                                                    children: [
+                                                      // Spacer(),
+                                                      Spacer(),
+                                                      GestureDetector(
+                                                        onTap: () =>null,
+                                                        child: Container(
+                                                          width: constraints
+                                                                  .maxWidth *
+                                                              .3,
+                                                          child: Center(
+                                                            child: Text(
+                                                              'Caractéristiques',
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      constraints
+                                                                              .maxHeight *
+                                                                          .02,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w800,
+                                                                  color: blanc),
+                                                            ),
+                                                          ),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8),
+                                                            color: jaune,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Spacer(),
+                                                      GestureDetector(
+                                                        onTap: () =>null,
+                                                        child: Container(
+                                                          width: constraints
+                                                                  .maxWidth *
+                                                              .3,
+                                                          child: Center(
+                                                            child: Text(
+                                                              'Usagers  ',
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      constraints
+                                                                              .maxHeight *
+                                                                          .02,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w800,
+                                                                  color: blanc),
+                                                            ),
+                                                          ),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8),
+                                                            color: rouge,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Spacer(),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Spacer(),
+                                                Container(
+                                                  height:
+                                                      constraints.maxHeight *
+                                                          .25,
+                                                  child: Row(
+                                                    children: [
+                                                      Spacer(),
+                                                      GestureDetector(
+                                                        onTap: () =>null,
+                                                        child: Container(
+                                                          width: constraints
+                                                                  .maxWidth *
+                                                              .3,
+                                                          child: Center(
+                                                            child: Text(
+                                                              'Recettes & charge',
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      constraints
+                                                                              .maxHeight *
+                                                                          .02,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w800,
+                                                                  color: blanc),
+                                                            ),
+                                                          ),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8),
+                                                            color: vert,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Spacer(),
+                                                      GestureDetector(
+                                                        onTap: () =>null,
+                                                        child: Container(
+                                                          width: constraints
+                                                                  .maxWidth *
+                                                              .3,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        8),
+                                                            color: jaune,
+                                                          ),
+                                                          child: Center(
+                                                            child: Text(
+                                                              'Compte d’exploitation ',
+                                                              style: TextStyle(
+                                                                  fontSize:
+                                                                      constraints
+                                                                              .maxHeight *
+                                                                          .02,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w800,
+                                                                  color: blanc),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Spacer(),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Spacer(),
+                                              ],
+                                            ),
+                                          )
+                                        ],
                                       ),
                                     ],
                                   ),

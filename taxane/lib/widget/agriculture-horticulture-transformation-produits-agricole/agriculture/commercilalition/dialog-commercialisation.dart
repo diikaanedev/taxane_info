@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:taxane/screen/agriculture-hortoculture.dart';
 import 'package:taxane/utils/color-by-dii.dart';
 
-addCommercialisation({required BuildContext context}) {
+addCommercialisation({required BuildContext context , required String idProduction}) {
   Size size = MediaQuery.of(context).size;
   showDialog(context: context, builder: (context) {
     TextEditingController code =
@@ -58,56 +58,7 @@ addCommercialisation({required BuildContext context}) {
                           border: Border.all(color: vert),
                           borderRadius: BorderRadius.circular(8)),
                     ),
-                    SizedBox(
-                      height: size.height * .01,
-                    ),
-                   Container(
-                          height: size.height * .04,
-                          width: size.width * .4,
-                          child: Padding(
-                              padding: const EdgeInsets.only(left: 8),
-                              child: Row(
-                                children: [
-                                  SizedBox(
-                                    width: 8,
-                                  ),
-                                  Text('Produit / '),
-                                  StreamBuilder<QuerySnapshot>(
-                                    stream: FirebaseFirestore.instance.collection("cultures").snapshots(),
-                                    builder: (context, snaps) {
-                                      return !snaps.hasData ? Container() : StatefulBuilder(
-                                        builder: (context, setState) =>
-                                            DropdownButton<String>(
-                                                value:agricultureHortocultureState.idproduit,
-                                                underline: Container(),
-                                                onChanged: (String? newValue) async {
-                                                 setState((){
-                                                  // ignore: invalid_use_of_protected_member
-                                                  agricultureHortocultureState.setState(() {
-                                                    agricultureHortocultureState.idproduit = newValue!;
-                                                  });
-                                                  FirebaseFirestore.instance.collection('cultures').doc(agricultureHortocultureState.idproduit).get().then((value) {
-                                                    setState((){
-                                                         agricultureHortocultureState.setState(() {
-                                                    agricultureHortocultureState.produit = value.get("nom");
-                                                  });
-                                                    });
-                                                  });
-                                                 });
-                                                },
-                                                items: snaps.data!.docs.toList().map((e) => DropdownMenuItem(
-                                                  value: e.id,
-                                                  child: Text(e.get('nom')))).toList()
-                                            ),
-                                      );
-                                    }
-                                  ),
-                                ],
-                              )),
-                          decoration: BoxDecoration(
-                              border: Border.all(color: vert),
-                              borderRadius: BorderRadius.circular(8)),
-                        ),
+                   
                      SizedBox(
                       height: size.height * .01,
                     ),
@@ -122,6 +73,27 @@ addCommercialisation({required BuildContext context}) {
                           decoration: InputDecoration(
                               border: InputBorder.none,
                               labelText: 'Quantité Produit en (kg)',
+                              icon: Icon(CupertinoIcons.map)),
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: vert),
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                      SizedBox(
+                      height: size.height * .01,
+                    ),
+                    Container(
+                      height: size.height * .05,
+                      width: size.width * .4,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8),
+                        child: TextField(
+                          cursorColor: vert,
+                          controller: valeur,
+                          decoration: InputDecoration(
+                              border: InputBorder.none,
+                              labelText: 'Valeur du (k) en (FCFA) ',
                               icon: Icon(CupertinoIcons.map)),
                         ),
                       ),
@@ -150,27 +122,7 @@ addCommercialisation({required BuildContext context}) {
                           border: Border.all(color: vert),
                           borderRadius: BorderRadius.circular(8)),
                     ),
-                     SizedBox(
-                      height: size.height * .01,
-                    ),
-                    Container(
-                      height: size.height * .05,
-                      width: size.width * .4,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: TextField(
-                          cursorColor: vert,
-                          controller: valeur,
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                              labelText: 'Valeur en (FCFA) ',
-                              icon: Icon(CupertinoIcons.map)),
-                        ),
-                      ),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: vert),
-                          borderRadius: BorderRadius.circular(8)),
-                    ),
+                   
                       SizedBox(
                       height: size.height * .01,
                     ),
@@ -300,7 +252,7 @@ addCommercialisation({required BuildContext context}) {
                     ),
                      GestureDetector(
                       onTap: () async {
-                         FirebaseFirestore.instance.collection('operateur-stockeur').get().then((value)  {
+                         FirebaseFirestore.instance.collection('operateur-stockeur').get().then((value) async {
                              String idMembre = 'nothing';
                              
                               print(matriculeMOS.text.toLowerCase().trim());
@@ -312,18 +264,35 @@ addCommercialisation({required BuildContext context}) {
 
                            
                             if (idMembre !='nothing') {
-                               FirebaseFirestore.instance.collection("commercialisations").add({
-                                "code" :code.text,
-                                "operateur-stockeur" : idMembre,
-                                "valeur" : valeur.text,
-                                "quitance" : numeroQuitance.text,
-                                "reliquat" : reliquat.text,
-                                "produit": agricultureHortocultureState.produit,
-                                "idProduit" : agricultureHortocultureState.idproduit,
-                                "dateLivraison" : agricultureHortocultureState.dateLivraison.toString(),
-                                "datePaiement" : agricultureHortocultureState.datePaiement.toString(),
-                                "date": DateTime.now()
-                              }).then((value) => Navigator.pop(context));
+                               FirebaseFirestore.instance.collection("productions").doc(idProduction).get().then((value) {
+                                 if (double.parse(value.get("quantite").toString()) >= double.parse(quantite.text)) {
+                                   print("heree");
+                                    FirebaseFirestore.instance.collection("commercialisations").add({
+                                      "code" :code.text,
+                                      "operateur-stockeur" : idMembre,
+                                      "valeur" : valeur.text,
+                                      "quitance" : numeroQuitance.text,
+                                      "quantite" : quantite.text, 
+                                      "reliquat" : reliquat.text,
+                                       "produit": value.get("nomProduit"),
+                                      "idProduit" : value.get("idProduit"),
+                                      "dateLivraison" : agricultureHortocultureState.dateLivraison.toString(),
+                                      "datePaiement" : agricultureHortocultureState.datePaiement.toString(),
+                                      "productionID" : idProduction,
+                                      "date": DateTime.now()  
+                                    }).then((_) async {
+                                      await FirebaseFirestore.instance.collection("productions").doc(idProduction).update({
+                                        "quantite" : (double.parse(value.get("quantite").toString()) - double.parse(quantite.text)).toString(),
+                                      });
+                                      Navigator.pop(context);
+                                    });
+                                 }else {
+                                   print("double.parse(value.get(quantite).toString()) : ${double.parse(value.get("quantite").toString())}");
+                                   print("double.parse(quantite.text)) : ${double.parse(quantite.text)}");
+                                 }
+                                  
+                              });
+                              
                             }
                            
 
