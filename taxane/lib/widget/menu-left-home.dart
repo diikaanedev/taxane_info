@@ -3,12 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:taxane/utils/color-by-dii.dart';
 import 'package:taxane/widget/menu-letf.dart';
 
-class MenuLeftHome extends StatelessWidget {
+class MenuLeftHome extends StatefulWidget {
   final int choice;
   const MenuLeftHome({
     Key? key,
     required this.choice,
   }) : super(key: key);
+
+  @override
+  State<MenuLeftHome> createState() => _MenuLeftHomeState();
+}
+
+class _MenuLeftHomeState extends State<MenuLeftHome> {
+
+  @override
+  void initState() {
+    super.initState();
+    
+  }
+
+  void getdDataUser() {
+    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +103,7 @@ class MenuLeftHome extends StatelessWidget {
                     child: MenuLeft(
                         test: "Home",
                         icon: CupertinoIcons.home,
-                        isSelect: choice == 1),
+                        isSelect: widget.choice == 1),
                   ),
                 ),
                 SizedBox(
@@ -101,7 +117,7 @@ class MenuLeftHome extends StatelessWidget {
                     child: MenuLeft(
                         test: 'Administration & Foncier',
                         icon: CupertinoIcons.person_3_fill,
-                        isSelect: choice == 2),
+                        isSelect: widget.choice == 2),
                   ),
                 ),
                 SizedBox(
@@ -115,7 +131,7 @@ class MenuLeftHome extends StatelessWidget {
                       child: MenuLeft(
                         test: 'Equipements Collectifs',
                         icon: CupertinoIcons.map_pin_ellipse,
-                        isSelect: choice == 3,
+                        isSelect: widget.choice == 3,
                       )),
                 ),
                 SizedBox(
@@ -129,7 +145,7 @@ class MenuLeftHome extends StatelessWidget {
                     child: MenuLeft(
                         test: 'Agriculture & Horticulture',
                         icon: CupertinoIcons.leaf_arrow_circlepath,
-                        isSelect: choice == 4),
+                        isSelect: widget.choice == 4),
                   ),
                 ),
                 SizedBox(
@@ -143,7 +159,7 @@ class MenuLeftHome extends StatelessWidget {
                     child: MenuLeft(
                         test: 'Élevage',
                         icon: CupertinoIcons.home,
-                        isSelect: choice == 5),
+                        isSelect: widget.choice == 5),
                   ),
                 ),
                 SizedBox(
@@ -163,7 +179,7 @@ class MenuLeftHome extends StatelessWidget {
                         child: MenuLeft(
                             test: 'Violence Basée sur le Genre',
                             icon: Icons.baby_changing_station_rounded,
-                            isSelect: choice == 6),
+                            isSelect: widget.choice == 6),
                       ),
                       SizedBox(
                         height: constraints.maxHeight * .02,
@@ -174,7 +190,7 @@ class MenuLeftHome extends StatelessWidget {
                         child: MenuLeft(
                             test: 'Mortalité Maternelle',
                             icon: Icons.female,
-                            isSelect: choice == 7),
+                            isSelect: widget.choice == 7),
                       ),
                       SizedBox(
                         height: constraints.maxHeight * .02,
@@ -185,7 +201,7 @@ class MenuLeftHome extends StatelessWidget {
                         child: MenuLeft(
                             test: 'Mortalité Infantile',
                             icon: Icons.child_care,
-                            isSelect: choice == 8),
+                            isSelect: widget.choice == 8),
                       ),
                       Spacer(),
                     ],
