@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:taxane/screen/administration-foncier.dart';
 import 'package:taxane/utils/color-by-dii.dart';
-import 'package:taxane/widget/dialog-Domaine.dart';
+import 'package:taxane/widget/dialog-domaine.dart';
 
 adminDomaine({
   required BuildContext context,

@@ -290,6 +290,8 @@ addRegroupement({required BuildContext context , required String idVillage}) {
                             FirebaseFirestore.instance.collection("users").add({
                               "username" : admin_email.text.split("@")[0].toLowerCase(),
                               "role" : 2,
+                              "village" : idVillage,
+                              "regroupement" : code.text
                             });
                           try {
                          

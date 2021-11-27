@@ -8,9 +8,12 @@ import 'package:taxane/widget/dialog-regroupenment.dart';
 
 adminRegouprement({required BuildContext context}) async {
   Size size = MediaQuery.of(context).size;
-  await FirebaseFirestore.instance.collection("villages").get().then((value) => administrationFoncierState.setState(() {
-      administrationFoncierState.villageSelected = value.docs.first.id;
-  }));
+  await FirebaseFirestore.instance
+      .collection("villages")
+      .get()
+      .then((value) => administrationFoncierState.setState(() {
+            administrationFoncierState.villageSelected = value.docs.first.id;
+          }));
   return showDialog(
     context: context,
     builder: (context) => AlertDialog(content: StatefulBuilder(
@@ -30,28 +33,35 @@ adminRegouprement({required BuildContext context}) async {
                     Container(
                       /* width: size.width * .4, */
                       child: StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance.collection("villages").snapshots(),
-                        builder: (ctx , snap) => !snap.hasData ? Container() :  DropdownButton<String>(
-                                        value: administrationFoncierState
-                                            .villageSelected,
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            administrationFoncierState.setState(() {
-                                              administrationFoncierState
-                                                  .villageSelected = newValue!;
-                                            });
-                                          });
-                                        },
-                                        items: snap.data!.docs
-                                            .map((e) => DropdownMenuItem(
-                                                value: e.id,
-                                                child: Text(
-                                                    "${e.get("code")}-${e.get("nom")}")))
-                                            .toList())),
+                          stream: FirebaseFirestore.instance
+                              .collection("villages")
+                              .snapshots(),
+                          builder: (ctx, snap) => !snap.hasData
+                              ? Container()
+                              : DropdownButton<String>(
+                                  value: administrationFoncierState
+                                      .villageSelected,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      administrationFoncierState.setState(() {
+                                        administrationFoncierState
+                                            .villageSelected = newValue!;
+                                      });
+                                    });
+                                  },
+                                  items: snap.data!.docs
+                                      .map((e) => DropdownMenuItem(
+                                          value: e.id,
+                                          child: Text(
+                                              "${e.get("code")}-${e.get("nom")}")))
+                                      .toList())),
                     ),
                     Spacer(),
                     GestureDetector(
-                      onTap: () => addRegroupement(context: context , idVillage: administrationFoncierState.villageSelected ),
+                      onTap: () => addRegroupement(
+                          context: context,
+                          idVillage:
+                              administrationFoncierState.villageSelected),
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
@@ -181,98 +191,97 @@ adminRegouprement({required BuildContext context}) async {
                         ];
 
                         for (var item in snapshot.data!.docs) {
-                          if (item.get("villages") == administrationFoncierState.villageSelected) {
-                              Timestamp timestamp = item.get('date');
-                          DateTime date =
-                              new DateTime.fromMicrosecondsSinceEpoch(
-                                  timestamp.millisecondsSinceEpoch * 1000);
-                          listes.add(TableRow(children: [
- Container(
-                                height: size.height * .05,
-                                child: Row(
-                                  children: [
-                                    Spacer(),
-                                    Text(
-                                      item.get('code'),
-                                      style: TextStyle(
-                                          color: vert,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w300),
-                                    ),
-                                    Spacer(),
-                                  ],
-                                )),
-                            Container(
-                                height: size.height * .05,
-                                child: Row(
-                                  children: [
-                                    Spacer(),
-                                    Text(
-                                    item.get('name'),
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: vert,
-                                          fontWeight: FontWeight.w300),
-                                    ),
-                                    Spacer(),
-                                  ],
-                                )),
-                            Container(
-                                height: size.height * .05,
-                                child: Row(
-                                  children: [
-                                    Spacer(),
-                                    Text(
-                                      dateFormatter(date),
-                                      style: TextStyle(
-                                          color: vert,
-                                          fontWeight: FontWeight.w300),
-                                    ),
-                                    Spacer(),
-                                  ],
-                                )),
-                            Container(
-                                height: size.height * .05,
-                                child: Row(
-                                  children: [
-                                    Spacer(),
-                                    GestureDetector(
-                                      onTap: () => showRegroupement(
-                                          context: context,
-                                          idRegroupement: item.id),
-                                      child: Icon(
-                                        CupertinoIcons.eye_fill,
-                                        color: jaune,
+                          if (item.get("villages") ==
+                              administrationFoncierState.villageSelected) {
+                            Timestamp timestamp = item.get('date');
+                            DateTime date =
+                                new DateTime.fromMicrosecondsSinceEpoch(
+                                    timestamp.millisecondsSinceEpoch * 1000);
+                            listes.add(TableRow(children: [
+                              Container(
+                                  height: size.height * .05,
+                                  child: Row(
+                                    children: [
+                                      Spacer(),
+                                      Text(
+                                        item.get('code'),
+                                        style: TextStyle(
+                                            color: vert,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w300),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: size.width * .01,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () => null,
-                                      child: Icon(
-                                        Icons.edit,
-                                        color: vert,
+                                      Spacer(),
+                                    ],
+                                  )),
+                              Container(
+                                  height: size.height * .05,
+                                  child: Row(
+                                    children: [
+                                      Spacer(),
+                                      Text(
+                                        item.get('name'),
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: vert,
+                                            fontWeight: FontWeight.w300),
                                       ),
-                                    ),
-                                    SizedBox(
-                                      width: size.width * .01,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () => null,
-                                      child: Icon(
-                                        Icons.delete,
-                                        color: rouge,
+                                      Spacer(),
+                                    ],
+                                  )),
+                              Container(
+                                  height: size.height * .05,
+                                  child: Row(
+                                    children: [
+                                      Spacer(),
+                                      Text(
+                                        dateFormatter(date),
+                                        style: TextStyle(
+                                            color: vert,
+                                            fontWeight: FontWeight.w300),
                                       ),
-                                    ),
-                                    Spacer(),
-                                  ],
-                                )),
-                          ]));
+                                      Spacer(),
+                                    ],
+                                  )),
+                              Container(
+                                  height: size.height * .05,
+                                  child: Row(
+                                    children: [
+                                      Spacer(),
+                                      GestureDetector(
+                                        onTap: () => showRegroupement(
+                                            context: context,
+                                            idRegroupement: item.id),
+                                        child: Icon(
+                                          CupertinoIcons.eye_fill,
+                                          color: jaune,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: size.width * .01,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () => null,
+                                        child: Icon(
+                                          Icons.edit,
+                                          color: vert,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: size.width * .01,
+                                      ),
+                                      GestureDetector(
+                                        onTap: () => null,
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: rouge,
+                                        ),
+                                      ),
+                                      Spacer(),
+                                    ],
+                                  )),
+                            ]));
                           }
                         }
-
-                       
 
                         return LayoutBuilder(
                           builder: (context, constraints) {

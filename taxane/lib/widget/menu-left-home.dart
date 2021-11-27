@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:taxane/utils/color-by-dii.dart';
@@ -46,18 +48,24 @@ class _MenuLeftHomeState extends State<MenuLeftHome> {
                         width: constraints.maxWidth * .05,
                       ),
                       Text(
-                        'Taxan-info',
+                        'Taxane-info',
                         style: TextStyle(
                             color: blanc,
                             fontSize: constraints.maxHeight * .02,
                             fontWeight: FontWeight.bold),
                       ),
                       Spacer(),
-                      CircleAvatar(
-                        backgroundColor: vert,
-                        radius: constraints.maxWidth * .05,
-                        backgroundImage: NetworkImage(
-                          'https://firebasestorage.googleapis.com/v0/b/taxane-info.appspot.com/o/logo%2FLOGO%20FOCUS.jpg?alt=media&token=2d710f10-d0b6-4e8f-a414-27f0c0c2027f',
+                      GestureDetector(
+                        onTap: () async {
+                          await FirebaseAuth.instance.signOut();
+                          Navigator.popAndPushNamed(context, "/");
+                        },
+                        child: CircleAvatar(
+                          backgroundColor: beige,
+                          radius: constraints.maxWidth * .05,
+                         child: Center(
+                           child: Icon(Icons.logout, color: vert,),
+                         ),
                         ),
                       ),
                       SizedBox(
@@ -78,12 +86,17 @@ class _MenuLeftHomeState extends State<MenuLeftHome> {
                 SizedBox(
                   height: constraints.maxHeight * .01,
                 ),
-                Text(
-                  'root@root.sn',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: constraints.maxHeight * .02,
-                      color: blanc),
+                StreamBuilder<DocumentSnapshot>(
+                  stream: FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).snapshots(),
+                  builder: (context, snapshot) {
+                    return !snapshot.hasData  ? Text('') : Text(
+                      snapshot.data!.get("username"),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: constraints.maxHeight * .02,
+                          color: blanc),
+                    );
+                  }
                 ),
                 SizedBox(
                   height: constraints.maxHeight * .01,
@@ -123,16 +136,21 @@ class _MenuLeftHomeState extends State<MenuLeftHome> {
                 SizedBox(
                   height: constraints.maxHeight * .01,
                 ),
-                GestureDetector(
-                    onTap: () => Navigator.popAndPushNamed(context, "/equipement-collectif"),
-                  child: Container(
-                      height: constraints.maxHeight * .05,
-                      width: constraints.maxWidth,
-                      child: MenuLeft(
-                        test: 'Equipements Collectifs',
-                        icon: CupertinoIcons.map_pin_ellipse,
-                        isSelect: widget.choice == 3,
-                      )),
+                StreamBuilder<DocumentSnapshot>(
+                  stream: FirebaseFirestore.instance.collection("users").doc(FirebaseAuth.instance.currentUser!.uid).snapshots(),
+                  builder: (context, snapshot) {
+                    return !snapshot.hasData ? Text('') : GestureDetector(
+                        onTap: () => snapshot.data!.get('role') == 1 ?  Navigator.popAndPushNamed(context, "/equipement-collectif") : Navigator.popAndPushNamed(context, "/comptabilite") ,
+                      child: Container(
+                          height: constraints.maxHeight * .05,
+                          width: constraints.maxWidth,
+                          child: MenuLeft(
+                            test: snapshot.data!.get('role') ==1 ? 'Equipements Collectifs' : 'Comptabilté',
+                            icon: snapshot.data!.get('role') ==1 ?  CupertinoIcons.map_pin_ellipse : CupertinoIcons.money_rubl_circle,
+                            isSelect: widget.choice == 3,
+                          )),
+                    );
+                  }
                 ),
                 SizedBox(
                   height: constraints.maxHeight * .01,

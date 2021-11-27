@@ -117,9 +117,9 @@ class _LoginLaptopState extends State<LoginLaptop> {
                               width: constraints.maxWidth * .01,
                             ),
                             Text('Mot de passe '),
-                           Spacer(),
+                            Spacer(),
                             Container(
-                               width: constraints.maxWidth * .45, 
+                              width: constraints.maxWidth * .45,
                               child: TextField(
                                 obscureText: isVisible,
                                 onChanged: (value) => setState(() {
@@ -141,7 +141,6 @@ class _LoginLaptopState extends State<LoginLaptop> {
                                 cursorColor: Colors.black,
                               ),
                             ),
-                            
                           ],
                         ),
                         decoration: BoxDecoration(
@@ -176,6 +175,11 @@ class _LoginLaptopState extends State<LoginLaptop> {
                                 });
                               }
                               Navigator.popAndPushNamed(context, "/home");
+                            }).catchError((err) {
+                              print("we haeve error");
+                              setState(() {
+                                chargement = false;
+                              });
                             });
                           });
                         },
@@ -203,114 +207,7 @@ class _LoginLaptopState extends State<LoginLaptop> {
                   ),
                 ),
               )),
-          Positioned(
-              bottom: 0,
-              child: Container(
-                height: size.height * .2,
-                width: size.width,
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return Container(
-                      height: constraints.maxHeight,
-                      width: constraints.maxWidth,
-                      // color: Colors.black45,
-                      child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        physics: BouncingScrollPhysics(),
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: constraints.maxWidth * .2,
-                              child: Image.network(
-                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUX8SoXFrf-n1aei5x1oMdAFawT661j9sACQ&usqp=CAU',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: constraints.maxWidth * .2,
-                              child: Image.network(
-                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuYWKEPJQwwCnFWn26Kr1ttHRFDg5NB4AJNQjNWSglBLQx7gtmdxTUWTv9vAgvwZogSYM&usqp=CAU',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: constraints.maxWidth * .2,
-                              child: Image.network(
-                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8eQv4mM-p_thhb_z8UbyijLPLrmt-zTKrzw&usqp=CAU',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: constraints.maxWidth * .2,
-                              child: Image.network(
-                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUX8SoXFrf-n1aei5x1oMdAFawT661j9sACQ&usqp=CAU',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: constraints.maxWidth * .2,
-                              child: Image.network(
-                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuYWKEPJQwwCnFWn26Kr1ttHRFDg5NB4AJNQjNWSglBLQx7gtmdxTUWTv9vAgvwZogSYM&usqp=CAU',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Container(
-                              width: constraints.maxWidth * .2,
-                              child: Image.network(
-                                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8eQv4mM-p_thhb_z8UbyijLPLrmt-zTKrzw&usqp=CAU',
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              )),
-          Positioned(
-              bottom: size.height * .2,
-              child: Container(
-                height: size.height * .05,
-                width: size.width,
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return Container(
-                      height: constraints.maxHeight,
-                      width: constraints.maxWidth,
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: constraints.maxWidth * .01,
-                          ),
-                          Text(
-                            'Nos Partenaires',
-                            style: TextStyle(
-                                color: rouge,
-                                fontSize: constraints.maxHeight * .5),
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              )),
+          
         ],
       ),
     );

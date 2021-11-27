@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:taxane/utils/color-by-dii.dart';
@@ -13,6 +14,10 @@ import 'package:taxane/widget/admin-regions.dart';
 import 'package:taxane/widget/admin-regroupement.dart';
 import 'package:taxane/widget/admin-village.dart';
 import 'package:taxane/widget/menu-left-home.dart';
+import 'package:taxane/widget/menu-role/administrationrole1.dart';
+import 'package:taxane/widget/menu-role/administrationrole2.dart';
+import 'package:taxane/widget/menu-role/foncierrole1.dart';
+import 'package:taxane/widget/menu-role/foncierrole2.dart';
 
 late _AdministrationFoncierState administrationFoncierState;
 
@@ -55,17 +60,17 @@ class _AdministrationFoncierState extends State<AdministrationFoncier> {
         paysSelected = value.docs.first.id;
         chargement = true;
       });
-      FirebaseFirestore.instance
-          .collection("regions")
-          .get()
-          .then((value) {
+      FirebaseFirestore.instance.collection("regions").get().then((value) {
         setState(() {
           regionSlected = value.docs.first.id;
         });
 
-        FirebaseFirestore.instance.collection("departements").get().then((value) => setState((){
-          departementSelected = value.docs.first.id;
-        }));
+        FirebaseFirestore.instance
+            .collection("departements")
+            .get()
+            .then((value) => setState(() {
+                  departementSelected = value.docs.first.id;
+                }));
       });
     });
   }
@@ -185,170 +190,39 @@ class _AdministrationFoncierState extends State<AdministrationFoncier> {
                                           Container(
                                             height: constraints.maxHeight,
                                             width: constraints.maxWidth,
-                                            child: Column(
-                                              children: [
-                                                Spacer(),
-                                                Container(
-                                                  height:
-                                                      constraints.maxHeight *
-                                                          .25,
-                                                  child: Row(
-                                                    children: [
-                                                      // Spacer(),
-                                                      Spacer(),
-                                                      GestureDetector(
-                                                        onTap: () =>
-                                                            adminRegion(
-                                                                context:
-                                                                    context , idPays: paysSelected),
-                                                        child: Container(
-                                                          width: constraints
-                                                                  .maxWidth *
-                                                              .3,
-                                                          child: Center(
-                                                            child: Text(
-                                                              'Gestion des Régions',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      constraints
-                                                                              .maxHeight *
-                                                                          .02,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w800,
-                                                                  color: blanc),
-                                                            ),
-                                                          ),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8),
-                                                            color: jaune,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Spacer(),
-                                                      GestureDetector(
-                                                        onTap: () =>
-                                                            adminDepartement(
-                                                                context:
-                                                                    context),
-                                                        child: Container(
-                                                          width: constraints
-                                                                  .maxWidth *
-                                                              .3,
-                                                          child: Center(
-                                                            child: Text(
-                                                              'Gestion des Départements',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      constraints
-                                                                              .maxHeight *
-                                                                          .02,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w800,
-                                                                  color: blanc),
-                                                            ),
-                                                          ),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8),
-                                                            color: rouge,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Spacer(),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Spacer(),
-                                                Container(
-                                                  height:
-                                                      constraints.maxHeight *
-                                                          .25,
-                                                  child: Row(
-                                                    children: [
-                                                      Spacer(),
-                                                      GestureDetector(
-                                                        onTap: () =>
-                                                            adminCommune(
-                                                                context:
-                                                                    context),
-                                                        child: Container(
-                                                          width: constraints
-                                                                  .maxWidth *
-                                                              .3,
-                                                          child: Center(
-                                                            child: Text(
-                                                              'Gestion des communes',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      constraints
-                                                                              .maxHeight *
-                                                                          .02,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w800,
-                                                                  color: blanc),
-                                                            ),
-                                                          ),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8),
-                                                            color: vert,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Spacer(),
-                                                      GestureDetector(
-                                                        onTap: () =>
-                                                            adminVillage(
-                                                                context:
-                                                                    context),
-                                                        child: Container(
-                                                          width: constraints
-                                                                  .maxWidth *
-                                                              .3,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8),
-                                                            color: jaune,
-                                                          ),
-                                                          child: Center(
-                                                            child: Text(
-                                                              'Gestion des Villages / Quartiers',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      constraints
-                                                                              .maxHeight *
-                                                                          .02,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w800,
-                                                                  color: blanc),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Spacer(),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Spacer(),
-                                              ],
-                                            ),
+                                            child:
+                                                StreamBuilder<DocumentSnapshot>(
+                                                    stream: FirebaseFirestore
+                                                        .instance
+                                                        .collection("users")
+                                                        .doc(FirebaseAuth
+                                                            .instance
+                                                            .currentUser!
+                                                            .uid)
+                                                        .snapshots(),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      return !snapshot.hasData
+                                                          ? Text("")
+                                                          : snapshot.data!.get(
+                                                                      "role") ==
+                                                                  1
+                                                              ? getMenuAd(
+                                                                  constraints:
+                                                                      constraints,
+                                                                  context:
+                                                                      context)
+                                                              : snapshot.data!.get(
+                                                                          'role') ==
+                                                                      2
+                                                                  ? getMenuAdRole2(
+                                                                      constraints:
+                                                                          constraints,
+                                                                      context:
+                                                                          context , idRegroupement: snapshot.data!.get(
+                                                                          'regroupement'))
+                                                                  : Container();
+                                                    }),
                                           )
                                         ],
                                       ),
@@ -359,176 +233,37 @@ class _AdministrationFoncierState extends State<AdministrationFoncier> {
                                           Container(
                                             height: constraints.maxHeight,
                                             width: constraints.maxWidth,
-                                            child: Column(
-                                              children: [
-                                                Spacer(),
-                                                // Container(
-                                                //   height:
-                                                //       constraints.maxHeight *
-                                                //           .25,
-                                                //   color: jaune,
-                                                //   child: Row(
-                                                //     children: [
-                                                //       // Spacer(),
-                                                //       Spacer(),
-
-                                                //       Spacer(),
-                                                //     ],
-                                                //   ),
-                                                // ),
-                                                // Spacer(),
-                                                Container(
-                                                  height:
-                                                      constraints.maxHeight *
-                                                          .25,
-                                                  // color: vert,
-                                                  child: Row(
-                                                    children: [
-                                                      Spacer(),
-                                                      GestureDetector(
-                                                        onTap: () =>
-                                                            adminRegouprement(
-                                                                context:
-                                                                    context),
-                                                        child: Container(
-                                                          width: constraints
-                                                                  .maxWidth *
-                                                              .3,
-                                                          child: Center(
-                                                            child: Text(
-                                                              'Gestion des Regroupemments / Associations',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      constraints
-                                                                              .maxHeight *
-                                                                          .02,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w800,
-                                                                  color: blanc),
-                                                            ),
-                                                          ),
-                                                          decoration: BoxDecoration(
-                                                              color: vert,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8)),
-                                                        ),
-                                                      ),
-                                                      Spacer(),
-                                                      GestureDetector(
-                                                        onTap: () =>
-                                                            AdminConcession(
-                                                                context:
-                                                                    context),
-                                                        child: Container(
-                                                          width: constraints
-                                                                  .maxWidth *
-                                                              .3,
-                                                          child: Center(
-                                                            child: Text(
-                                                              'Gestion des Concessions / Villa',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      constraints
-                                                                              .maxHeight *
-                                                                          .02,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w800,
-                                                                  color: blanc),
-                                                            ),
-                                                          ),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8),
-                                                            color: rouge,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      Spacer(),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Spacer(),
-                                                Container(
-                                                  height:
-                                                      constraints.maxHeight *
-                                                          .25,
-                                                  child: Row(
-                                                    children: [
-                                                      Spacer(),
-                                                      GestureDetector(
-                                                        onTap: () =>
-                                                            adminMenage(
-                                                                context:
-                                                                    context),
-                                                        child: Container(
-                                                          width: constraints
-                                                                  .maxWidth *
-                                                              .3,
-                                                          child: Center(
-                                                            child: Text(
-                                                              'Gestion des Ménages',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      constraints
-                                                                              .maxHeight *
-                                                                          .02,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w800,
-                                                                  color: blanc),
-                                                            ),
-                                                          ),
-                                                          decoration: BoxDecoration(
-                                                              color: jaune,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8)),
-                                                        ),
-                                                      ),
-                                                      Spacer(),
-                                                      GestureDetector(
-                                                        onTap: () => adminDomaine(context: context),
-                                                        child: Container(
-                                                          width: constraints
-                                                                  .maxWidth *
-                                                              .3,
-                                                          child: Center(
-                                                            child: Text(
-                                                              'Gestion des Domaines ou Lots',
-                                                              style: TextStyle(
-                                                                  fontSize:
-                                                                      constraints
-                                                                              .maxHeight *
-                                                                          .02,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w800,
-                                                                  color: blanc),
-                                                            ),
-                                                          ),
-                                                          decoration: BoxDecoration(
-                                                              color: rouge,
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          8)),
-                                                        ),
-                                                      ),
-                                                      Spacer(),
-                                                    ],
-                                                  ),
-                                                ),
-                                                Spacer(),
-                                              ],
-                                            ),
+                                            child: StreamBuilder<DocumentSnapshot>(
+                                                    stream: FirebaseFirestore
+                                                        .instance
+                                                        .collection("users")
+                                                        .doc(FirebaseAuth
+                                                            .instance
+                                                            .currentUser!
+                                                            .uid)
+                                                        .snapshots(),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      return !snapshot.hasData
+                                                          ? Text("")
+                                                          : snapshot.data!.get(
+                                                                      "role") ==
+                                                                  1
+                                                              ? foncierRole1(
+                                                                  constraints:
+                                                                      constraints,
+                                                                  context:
+                                                                      context)
+                                                              : snapshot.data!.get(
+                                                                          'role') ==
+                                                                      2
+                                                                  ? foncierRole2(
+                                                                      constraints:
+                                                                          constraints,
+                                                                      context:
+                                                                          context)
+                                                                  : Container();
+                                                    }),
                                           )
                                         ],
                                       ),
