@@ -1,17 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:taxane/utils/color-by-dii.dart';
+import 'package:taxane/widget/comptabilite/gestion-journal-caisse/admin_journal_caisse.dart';
 import 'package:taxane/widget/menu-left-home.dart';
+
+late _ComptabiliteState comptabiliteState;
 
 class Comptabilite extends StatefulWidget {
   const Comptabilite({Key? key}) : super(key: key);
 
   @override
-  _ComptabiliteState createState() => _ComptabiliteState();
+  _ComptabiliteState createState() {
+    comptabiliteState = _ComptabiliteState();
+    return comptabiliteState;
+  }
 }
 
 class _ComptabiliteState extends State<Comptabilite> {
   late Size size;
+  String typeEntresSortie = "entrees";
+  DateTime date = DateTime.now();
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
@@ -121,7 +129,9 @@ class _ComptabiliteState extends State<Comptabilite> {
                                                 // Spacer(),
                                                 Spacer(),
                                                 GestureDetector(
-                                                  onTap: () => null,
+                                                  onTap: () =>
+                                                      adminJournalCaisse(
+                                                          context: context),
                                                   child: Container(
                                                     width:
                                                         constraints.maxWidth *
@@ -184,7 +194,7 @@ class _ComptabiliteState extends State<Comptabilite> {
                                   ],
                                 ),
                                 //Gestion des Budgets
-                                 Stack(
+                                Stack(
                                   children: [
                                     Container(
                                       height: constraints.maxHeight,
@@ -197,7 +207,7 @@ class _ComptabiliteState extends State<Comptabilite> {
                                             child: Row(
                                               children: [
                                                 // Spacer(),
-                                               
+
                                                 Spacer(),
                                                 GestureDetector(
                                                   onTap: () => null,

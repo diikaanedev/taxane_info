@@ -33,6 +33,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: titre,
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
      

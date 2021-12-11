@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:taxane/utils/color-by-dii.dart';
 import 'package:taxane/widget/gestion-des-membres/admin_gestion_membres.dart';
+import 'package:taxane/widget/gestion_des_evenements/admin_gestion_evenement.dart';
 
 Widget getMenuAdRole2({required BoxConstraints constraints , required BuildContext context , required String idRegroupement})  {
   return Column(
@@ -33,7 +34,7 @@ Widget getMenuAdRole2({required BoxConstraints constraints , required BuildConte
             ),
             Spacer(),
             GestureDetector(
-              onTap: () =>null,
+              onTap: () =>adminGestionEvenement(context: context, idRegroupement: idRegroupement),
               child: Container(
                 width: constraints.maxWidth * .3,
                 child: Center(

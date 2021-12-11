@@ -20,7 +20,7 @@ class HomeLaptop extends StatefulWidget {
 class _HomeLaptopState extends State<HomeLaptop> {
   late Size size;
   String valueData = "Agriculture";
-  late String regroupement ;
+  late String regroupement;
 
   String localite = "Sénégal";
   int y = int.parse(DateFormat('y').format(DateTime.now()));
@@ -35,9 +35,9 @@ class _HomeLaptopState extends State<HomeLaptop> {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get()
         .then((user) {
-          setState(() {
-            regroupement = user.get('regroupement');
-          });
+      setState(() {
+        regroupement = user.get('regroupement');
+      });
       if (user.get('role') == 2) {
         FirebaseFirestore.instance
             .collection("villages")
@@ -237,9 +237,12 @@ class _HomeLaptopState extends State<HomeLaptop> {
                                                   .snapshots(),
                                               builder: (context, snapshot) {
                                                 if (snapshot.hasData) {
-                                                  int i = 0 ;
-                                                  for (var item in snapshot.data!.docs) {
-                                                    if (item.get("regroupements")==regroupement) {
+                                                  int i = 0;
+                                                  for (var item
+                                                      in snapshot.data!.docs) {
+                                                    if (item.get(
+                                                            "regroupements") ==
+                                                        regroupement) {
                                                       i++;
                                                     }
                                                   }
@@ -527,11 +530,15 @@ class _HomeLaptopState extends State<HomeLaptop> {
                                                                                 )),
                                                                             Positioned(
                                                                                 right: 0,
-                                                                                child: Container(
-                                                                                  height: contrain.maxHeight * .5,
-                                                                                  width: contrain.maxWidth * .2,
-                                                                                  decoration: BoxDecoration(image: DecorationImage(image: NetworkImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo05SW--M6eevwEpRdeYDDh0Nb3_4Qoe4fdw&usqp=CAU"))),
-                                                                                )),
+                                                                                child: StreamBuilder<DocumentSnapshot>(
+                                                                                    stream: FirebaseFirestore.instance.collection("regroupements").doc(regroupement).snapshots(),
+                                                                                    builder: (context, snapshot) {
+                                                                                      return !snapshot.hasData ? Text("") : Container(
+                                                                                        height: contrain.maxHeight * .5,
+                                                                                        width: contrain.maxWidth * .2,
+                                                                                        decoration: BoxDecoration(image: DecorationImage(image: NetworkImage(snapshot.data!.get("logo_url")))),
+                                                                                      );
+                                                                                    })),
                                                                             Positioned(
                                                                                 top: contrain.maxHeight * .55,
                                                                                 right: 0,

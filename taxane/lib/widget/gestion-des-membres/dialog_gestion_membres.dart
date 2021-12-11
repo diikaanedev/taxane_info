@@ -474,6 +474,8 @@ addMembreGestionMembre(
                                   "date": DateTime.now()
                                 });
                               });
+                            Navigator.pop(context);
+
                             });
                           } catch (e) {
                             print(e);
@@ -498,6 +500,7 @@ addMembreGestionMembre(
                               "avatar": "",
                               "date": DateTime.now()
                             });
+                            Navigator.pop(context);
                           }
                         },
                         child: Container(

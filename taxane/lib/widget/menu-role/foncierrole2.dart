@@ -4,27 +4,13 @@ import 'package:taxane/widget/admin-concession.dart';
 import 'package:taxane/widget/admin-domaine.dart';
 import 'package:taxane/widget/admin-menage.dart';
 import 'package:taxane/widget/admin-regroupement.dart';
+import 'package:taxane/widget/equipement-collectif/caracteristique/admin_caracteristique.dart';
 
 Widget foncierRole2(
-    {required BoxConstraints constraints, required BuildContext context}) {
+    {required BoxConstraints constraints, required BuildContext context , required String idVillage}) {
   return Column(
     children: [
       Spacer(),
-      // Container(
-      //   height:
-      //       constraints.maxHeight *
-      //           .25,
-      //   color: jaune,
-      //   child: Row(
-      //     children: [
-      //       // Spacer(),
-      //       Spacer(),
-
-      //       Spacer(),
-      //     ],
-      //   ),
-      // ),
-      // Spacer(),
       Container(
         height: constraints.maxHeight * .25,
         // color: vert,
@@ -32,7 +18,7 @@ Widget foncierRole2(
           children: [
             Spacer(),
             GestureDetector(
-              onTap: () => null,
+              onTap: () => adminCaracteristiqueRole2(context: context, idVillage: idVillage),
               child: Container(
                 width: constraints.maxWidth * .3,
                 child: Center(
@@ -50,7 +36,7 @@ Widget foncierRole2(
             ),
             Spacer(),
             GestureDetector(
-              onTap: () => AdminConcession(context: context),
+              onTap: () => AdminConcessionRole2(context: context , idVillage: idVillage),
               child: Container(
                 width: constraints.maxWidth * .3,
                 child: Center(
@@ -79,7 +65,7 @@ Widget foncierRole2(
           children: [
             Spacer(),
             GestureDetector(
-              onTap: () => adminMenage(context: context),
+              onTap: () => adminMenageRole2(context: context, idVillage: idVillage),
               child: Container(
                 width: constraints.maxWidth * .3,
                 child: Center(
@@ -97,7 +83,7 @@ Widget foncierRole2(
             ),
             Spacer(),
             GestureDetector(
-              onTap: () => adminDomaine(context: context),
+              onTap: () => adminDomaineRole2(context: context , idVillage: idVillage),
               child: Container(
                 width: constraints.maxWidth * .3,
                 child: Center(

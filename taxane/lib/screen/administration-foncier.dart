@@ -5,14 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:taxane/utils/color-by-dii.dart';
-import 'package:taxane/widget/admin-commune.dart';
-import 'package:taxane/widget/admin-concession.dart';
-import 'package:taxane/widget/admin-departement.dart';
-import 'package:taxane/widget/admin-domaine.dart';
-import 'package:taxane/widget/admin-menage.dart';
-import 'package:taxane/widget/admin-regions.dart';
-import 'package:taxane/widget/admin-regroupement.dart';
-import 'package:taxane/widget/admin-village.dart';
 import 'package:taxane/widget/menu-left-home.dart';
 import 'package:taxane/widget/menu-role/administrationrole1.dart';
 import 'package:taxane/widget/menu-role/administrationrole2.dart';
@@ -40,18 +32,26 @@ class _AdministrationFoncierState extends State<AdministrationFoncier> {
   late String villageSelected;
   late String concessionSelected;
 
+  String domaineHydrolique = "hydrolique";
+  DateTime dateInnauguration = DateTime.now();
+
   String energie = "electricite";
   String eau = "robinet";
   String sexe = "homme";
   String niveauEtude = "befm";
   String matrimonial = "celibataire";
-  bool chargement = false;
+  String typeEvenement  = "reunion";
+  bool chargement = true;
   late Uint8List fileLogo;
   String logoName = "";
+
+  DateTime initialPeriod = DateTime.now();
+  DateTime initialFinal = DateTime.now();
+
   @override
   void initState() {
     super.initState();
-    getData();
+    //getData();
   }
 
   getData() async {
@@ -261,7 +261,8 @@ class _AdministrationFoncierState extends State<AdministrationFoncier> {
                                                                       constraints:
                                                                           constraints,
                                                                       context:
-                                                                          context)
+                                                                          context , idVillage: snapshot.data!.get(
+                                                                      "village") )
                                                                   : Container();
                                                     }),
                                           )
