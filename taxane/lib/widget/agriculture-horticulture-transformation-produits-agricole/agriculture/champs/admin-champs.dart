@@ -368,3 +368,308 @@ adminAgriculture({
             ],
           ));
 }
+
+adminAgricultureRole2(
+    {required BuildContext context, required String villageId}) {
+  Size size = MediaQuery.of(context).size;
+
+  showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+            content: StatefulBuilder(builder: (context, setState) {
+              return Container(
+                  height: size.height * .9,
+                  width: size.width * .7,
+                  child: Container(
+                      height: size.height * .9,
+                      width: size.width * .7,
+                      child: Column(
+                        children: [
+                          Container(
+                            width: size.width * .7,
+                            child: Row(
+                              children: [
+                                SizedBox(
+                                  width: size.width * .01,
+                                ),
+                                Text('Gestion des Champs'),
+                                Spacer(),
+                                GestureDetector(
+                                  onTap: () => addChamps(
+                                      context: context, idVillage: villageId),
+                                  child: Container(
+                                    width: size.width * .1,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 4,
+                                        ),
+                                        Text(
+                                          'Ajouter une champs',
+                                          style: TextStyle(
+                                              fontSize: size.height * .015,
+                                              color: blanc),
+                                        ),
+                                        SizedBox(
+                                          height: 4,
+                                        ),
+                                      ],
+                                    ),
+                                    decoration: BoxDecoration(
+                                        color: vert,
+                                        borderRadius: BorderRadius.circular(4)),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: size.width * .01,
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: size.height * .01,
+                          ),
+                          Container(
+                            height: size.height * .7,
+                            width: size.width * .7,
+                            child: LayoutBuilder(
+                              builder: (context, constraints) => StreamBuilder<
+                                      QuerySnapshot>(
+                                  stream: FirebaseFirestore.instance
+                                      .collection("champs")
+                                      .snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData) {
+                                      return Container();
+                                    } else {
+                                      List<TableRow> listes = [
+                                        TableRow(children: [
+                                          Container(
+                                              height:
+                                                  constraints.maxHeight * .05,
+                                              child: Row(
+                                                children: [
+                                                  Spacer(),
+                                                  Icon(
+                                                    Icons.format_list_numbered,
+                                                    color: vert,
+                                                  ),
+                                                  SizedBox(
+                                                    width:
+                                                        constraints.maxWidth *
+                                                            .01,
+                                                  ),
+                                                  Text(
+                                                    'Code Champs',
+                                                    style: TextStyle(
+                                                        color: vert,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Spacer(),
+                                                ],
+                                              )),
+                                          Container(
+                                              height:
+                                                  constraints.maxHeight * .05,
+                                              child: Row(
+                                                children: [
+                                                  Spacer(),
+                                                  Icon(
+                                                    CupertinoIcons.globe,
+                                                    color: vert,
+                                                  ),
+                                                  SizedBox(
+                                                    width:
+                                                        constraints.maxWidth *
+                                                            .01,
+                                                  ),
+                                                  Text(
+                                                    'Surface Champs en m²',
+                                                    style: TextStyle(
+                                                        color: vert,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Spacer(),
+                                                ],
+                                              )),
+                                          Container(
+                                              height:
+                                                  constraints.maxHeight * .05,
+                                              child: Row(
+                                                children: [
+                                                  Spacer(),
+                                                  Icon(
+                                                    Icons.date_range_rounded,
+                                                    color: vert,
+                                                  ),
+                                                  SizedBox(
+                                                    width:
+                                                        constraints.maxWidth *
+                                                            .01,
+                                                  ),
+                                                  Text(
+                                                    'Date',
+                                                    style: TextStyle(
+                                                        color: vert,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Spacer(),
+                                                ],
+                                              )),
+                                          Container(
+                                              height:
+                                                  constraints.maxHeight * .05,
+                                              child: Row(
+                                                children: [
+                                                  Spacer(),
+                                                  Icon(
+                                                    Icons.settings,
+                                                    color: vert,
+                                                  ),
+                                                  SizedBox(
+                                                    width:
+                                                        constraints.maxWidth *
+                                                            .01,
+                                                  ),
+                                                  Text(
+                                                    'Paramètres',
+                                                    style: TextStyle(
+                                                        color: vert,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Spacer(),
+                                                ],
+                                              )),
+                                        ])
+                                      ];
+
+                                      for (var item in snapshot.data!.docs) {
+                                        if (item.get("village") == villageId) {
+                                          Timestamp timestamp = item.get('date');
+                                          DateTime date = new DateTime
+                                                  .fromMicrosecondsSinceEpoch(
+                                              timestamp.millisecondsSinceEpoch *
+                                                  1000);
+                                          listes.add(TableRow(children: [
+                                            Container(
+                                                height:
+                                                    constraints.maxHeight * .05,
+                                                child: Row(
+                                                  children: [
+                                                    Spacer(),
+                                                    Text(
+                                                      item.get('code'),
+                                                      style: TextStyle(
+                                                          color: vert,
+                                                          fontWeight:
+                                                              FontWeight.w300),
+                                                    ),
+                                                    Spacer(),
+                                                  ],
+                                                )),
+                                            Container(
+                                                height:
+                                                    constraints.maxHeight * .05,
+                                                child: Row(
+                                                  children: [
+                                                    Spacer(),
+                                                    Text(
+                                                      "${item.get('surface')}",
+                                                      style: TextStyle(
+                                                          color: vert,
+                                                          fontWeight:
+                                                              FontWeight.w300),
+                                                    ),
+                                                    Spacer(),
+                                                  ],
+                                                )),
+                                            Container(
+                                                height:
+                                                    constraints.maxHeight * .05,
+                                                child: Row(
+                                                  children: [
+                                                    Spacer(),
+                                                    Text(
+                                                      dateFormatter(date),
+                                                      style: TextStyle(
+                                                          color: vert,
+                                                          fontWeight:
+                                                              FontWeight.w300),
+                                                    ),
+                                                    Spacer(),
+                                                  ],
+                                                )),
+                                            Container(
+                                                height:
+                                                    constraints.maxHeight * .05,
+                                                child: Row(
+                                                  children: [
+                                                    Spacer(),
+                                                    GestureDetector(
+                                                      onTap: () => null,
+                                                      child: Icon(
+                                                        Icons.edit,
+                                                        color: vert,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width:
+                                                          constraints.maxWidth *
+                                                              .01,
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () => null,
+                                                      child: Icon(
+                                                        Icons.delete,
+                                                        color: rouge,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                  ],
+                                                )),
+                                          ]));
+                                        }
+                                      }
+
+                                    
+
+                                      return Container(
+                                        height: constraints.maxHeight,
+                                        width: constraints.maxWidth,
+                                        child: ListView(
+                                          children: [
+                                            Container(
+                                              child: Table(
+                                                border: TableBorder.all(
+                                                    color: vert),
+                                                children: listes,
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    }
+                                  }),
+                            ),
+                          ),
+                        ],
+                      )));
+            }),
+            actions: [
+              RaisedButton(
+                  color: rouge,
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    "   Fermer   ",
+                    style: TextStyle(
+                        fontSize: size.height * .015,
+                        fontWeight: FontWeight.bold,
+                        color: blanc),
+                  ))
+            ],
+          ));
+}

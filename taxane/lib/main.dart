@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:taxane/screen/25_novembre.dart';
 import 'package:taxane/screen/administration-foncier.dart';
 import 'package:taxane/screen/agriculture-hortoculture.dart';
 import 'package:taxane/screen/comptabilite.dart';
@@ -47,6 +48,7 @@ class _MyAppState extends State<MyApp> {
         '/agriculture-horticulture': (context) => AgricultureHortoculture(),
         '/elevage': (context) => Elevage(),
         '/comptabilite': (context) => Comptabilite(),
+        '/25-novembre': (context) => VingtCinqNovembre(),
       },
     );
   }

@@ -183,50 +183,55 @@ class _MenuLeftHomeState extends State<MenuLeftHome> {
                 SizedBox(
                   height: size.height * .05,
                 ),
-                Container(
-                  height: constraints.maxHeight * .3,
-                  width: constraints.maxWidth * .8,
-                  child: Column(
-                    children: [
-                      Spacer(),
-                      Text('25 NOVEMBRE'),
-                      Spacer(),
-                      Container(
-                        height: constraints.maxHeight * .04,
-                        width: constraints.maxWidth * .7,
-                        child: MenuLeft(
-                            test: 'Violence Basée sur le Genre',
-                            icon: Icons.baby_changing_station_rounded,
-                            isSelect: widget.choice == 6),
-                      ),
-                      SizedBox(
-                        height: constraints.maxHeight * .02,
-                      ),
-                      Container(
-                        height: constraints.maxHeight * .04,
-                        width: constraints.maxWidth * .7,
-                        child: MenuLeft(
-                            test: 'Mortalité Maternelle',
-                            icon: Icons.female,
-                            isSelect: widget.choice == 7),
-                      ),
-                      SizedBox(
-                        height: constraints.maxHeight * .02,
-                      ),
-                      Container(
-                        height: constraints.maxHeight * .04,
-                        width: constraints.maxWidth * .7,
-                        child: MenuLeft(
-                            test: 'Mortalité Infantile',
-                            icon: Icons.child_care,
-                            isSelect: widget.choice == 8),
-                      ),
-                      Spacer(),
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: vert3,
+                GestureDetector(
+                  onTap: () =>  Navigator.popAndPushNamed(context, "/25-novembre") ,
+                  child: Container(
+                    height: constraints.maxHeight * .3,
+                    width: constraints.maxWidth * .8,
+                    child: Column(
+                      children: [
+                        Spacer(),
+                        Text('25 NOVEMBRE', style: TextStyle(
+                          color: widget.choice == 6 ? vert : blanc,
+                        ),),
+                        Spacer(),
+                        Container(
+                          height: constraints.maxHeight * .04,
+                          width: constraints.maxWidth * .7,
+                          child: MenuLeft(
+                              test: 'Violence Basée sur le Genre',
+                              icon: Icons.baby_changing_station_rounded,
+                              isSelect: widget.choice == 7),
+                        ),
+                        SizedBox(
+                          height: constraints.maxHeight * .02,
+                        ),
+                        Container(
+                          height: constraints.maxHeight * .04,
+                          width: constraints.maxWidth * .7,
+                          child: MenuLeft(
+                              test: 'Mortalité Maternelle',
+                              icon: Icons.female,
+                              isSelect: widget.choice == 7),
+                        ),
+                        SizedBox(
+                          height: constraints.maxHeight * .02,
+                        ),
+                        Container(
+                          height: constraints.maxHeight * .04,
+                          width: constraints.maxWidth * .7,
+                          child: MenuLeft(
+                              test: 'Mortalité Infantile',
+                              icon: Icons.child_care,
+                              isSelect: widget.choice == 7),
+                        ),
+                        Spacer(),
+                      ],
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: widget.choice == 6 ? beige : vert3,
+                    ),
                   ),
                 ),
                 Spacer(),
