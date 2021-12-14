@@ -9,17 +9,28 @@ import 'package:taxane/widget/agriculture-horticulture-transformation-produits-a
 import 'package:taxane/widget/agriculture-horticulture-transformation-produits-agricole/agriculture/materiel/admin-materiel.dart';
 import 'package:taxane/widget/agriculture-horticulture-transformation-produits-agricole/agriculture/production/admin-production.dart';
 import 'package:taxane/widget/menu-left-home.dart';
+ 
+late _VingtCinqNovembreState vingtCinqNovembreState;
 
 class VingtCinqNovembre extends StatefulWidget {
   const VingtCinqNovembre({Key? key}) : super(key: key);
 
   @override
-  _VingtCinqNovembreState createState() => _VingtCinqNovembreState();
+  _VingtCinqNovembreState createState() {
+    vingtCinqNovembreState = _VingtCinqNovembreState();
+    return vingtCinqNovembreState;
+  }
 }
 
 class _VingtCinqNovembreState extends State<VingtCinqNovembre> {
   late Size size;
   late String villageSelected;
+
+  String liens = "domestique";
+  String degats = "blessure";
+  String decisionJudiciaire = "ammende";
+
+  DateTime dateDesFaits = DateTime.now();
 
   bool chargement = false;
 

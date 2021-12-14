@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:taxane/utils/color-by-dii.dart';
+import 'package:taxane/widget/25-novembre/violence-base-genre/dialog_violence_base_genre.dart';
 
 adminViolenceBaseGenre({required BuildContext context}) async {
   Size size = MediaQuery.of(context).size;
@@ -348,7 +349,7 @@ adminViolenceBaseGenreRole2(
                       Text('Gestions des Violence basée sur le genre'),
                       Spacer(),
                       GestureDetector(
-                        onTap: () => null,
+                        onTap: () => addOperationViolenceBaseGenre(context: context , idVillage: idVillage),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
