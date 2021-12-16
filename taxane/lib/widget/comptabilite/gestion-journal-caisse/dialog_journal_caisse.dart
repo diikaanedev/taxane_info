@@ -15,7 +15,7 @@ addOperationCaisseJournal({required BuildContext context}) {
       content: StatefulBuilder(
         builder: (context, setState) => Container(
           height: size.height * .7,
-          width: size.width * .5,
+          width: size.width * .7,
           child: ListView(
             physics: BouncingScrollPhysics(),
             children: [

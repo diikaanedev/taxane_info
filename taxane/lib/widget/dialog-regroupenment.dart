@@ -9,7 +9,7 @@ import 'package:taxane/screen/administration-foncier.dart';
 import 'package:taxane/utils/color-by-dii.dart';
 import 'package:file_picker/file_picker.dart';
 
-addRegroupement({required BuildContext context , required String idVillage}) {
+addRegroupement({required BuildContext context, required String idVillage}) {
   Size size = MediaQuery.of(context).size;
   TextEditingController code = TextEditingController();
   TextEditingController nom = TextEditingController();
@@ -283,65 +283,69 @@ addRegroupement({required BuildContext context , required String idVillage}) {
               GestureDetector(
                 onTap: () async {
                   if (admin_email.text.contains(RegExp(r'@'))) {
-                      if (admin_password.text == admin_password_confirm.text) {
+                    if (admin_password.text == admin_password_confirm.text) {
+                      FirebaseAuth.instance
+                          .createUserWithEmailAndPassword(
+                              email: admin_email.text.toLowerCase(),
+                              password: admin_password.text)
+                          .then((adminUserGroup) {
+                        adminUserGroup.user!.sendEmailVerification();
+                        FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(adminUserGroup.user!.uid)
+                            .set({
+                          "username":
+                              admin_email.text.split("@")[0].toLowerCase(),
+                          "role": 2,
+                          "village": idVillage,
+                          "regroupement": code.text,
+                          "avatar": ""
+                        });
+                        try {
+                          Reference ref = FirebaseStorage.instance.ref(
+                              'regroupement-logo/${new DateTime.now().millisecondsSinceEpoch.toString()}.png');
 
-                          FirebaseAuth.instance.createUserWithEmailAndPassword(email: admin_email.text.toLowerCase(), password: admin_password.text).then((adminUserGroup) {
-                            adminUserGroup.user!.sendEmailVerification();
-                            FirebaseFirestore.instance.collection("users").add({
-                              "username" : admin_email.text.split("@")[0].toLowerCase(),
-                              "role" : 2,
-                              "village" : idVillage,
-                              "regroupement" : code.text
-                            });
-                          try {
-                         
-                            
-                            Reference ref = FirebaseStorage.instance.ref(
-                                'regroupement-logo/${new DateTime.now().millisecondsSinceEpoch.toString()}.png');
-
-                            ref.putData(administrationFoncierState.fileLogo).then((_) {
-                              _.ref.getDownloadURL().then((value) {
-                                FirebaseFirestore.instance
-                                    .collection("regroupements")
-                                    .doc(code.text)
-                                    .set({
-                                  "code": code.text,
-                                  "name": nom.text,
-                                  "nomRepresentant": nomRepresentant.text,
-                                  "description": description.text,
-                                  "phone": tel.text,
-                                  "email": email.text,
-                                  "logo_url": value,
-                                  "villages" : idVillage,
-                                  "date": DateTime.now()
-                                });
+                          ref
+                              .putData(administrationFoncierState.fileLogo)
+                              .then((_) {
+                            _.ref.getDownloadURL().then((value) {
+                              FirebaseFirestore.instance
+                                  .collection("regroupements")
+                                  .doc(code.text)
+                                  .set({
+                                "code": code.text,
+                                "name": nom.text,
+                                "nomRepresentant": nomRepresentant.text,
+                                "description": description.text,
+                                "phone": tel.text,
+                                "email": email.text,
+                                "logo_url": value,
+                                "villages": idVillage,
+                                "date": DateTime.now()
                               });
                             });
-                          } catch (e) {
-                            print(e);
-
-                            FirebaseFirestore.instance
-                                .collection("regroupements")
-                                .doc(code.text)
-                                .set({
-                              "code": code.text,
-                              "name": nom.text,
-                              "nomRepresentant": nomRepresentant.text,
-                              "description": description.text,
-                              "phone": tel.text,
-                              "email": email.text,
-                              "logo_url": "",
-                              "villages" : idVillage,
-                              "date": DateTime.now()
-                            });
-                          }
                           });
+                        } catch (e) {
+                          print(e);
 
-                      } else {
-                      }
-                    } else {
-                    }
-                
+                          FirebaseFirestore.instance
+                              .collection("regroupements")
+                              .doc(code.text)
+                              .set({
+                            "code": code.text,
+                            "name": nom.text,
+                            "nomRepresentant": nomRepresentant.text,
+                            "description": description.text,
+                            "phone": tel.text,
+                            "email": email.text,
+                            "logo_url": "",
+                            "villages": idVillage,
+                            "date": DateTime.now()
+                          });
+                        }
+                      });
+                    } else {}
+                  } else {}
                 },
                 child: Container(
                   height: size.height * .05,
@@ -543,108 +547,102 @@ showRegroupement(
                                         ])
                                       ];
 
-                                      for (QueryDocumentSnapshot item in snapshot.data!.docs) {
-                                        if (item.get("regroupements") == idRegroupement ) {
-                                          listes.add(
-                                             TableRow(children: [
-                                                Container(
-                                                    height: size.height * .05,
-                                                    child: Row(
-                                                      children: [
-                                                        Spacer(),
-                                                        Text(
-                                                          item.get('matricule'),
-                                                          overflow: TextOverflow.ellipsis,
-
-                                                          style: TextStyle(
-                                          fontSize: 12,
-                                                              color: vert,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300),
-                                                        ),
-                                                        Spacer(),
-                                                      ],
-                                                    )),
-                                                Container(
-                                                    height: size.height * .05,
-                                                    child: Row(
-                                                      children: [
-                                                        Spacer(),
-                                                        Text(
-                                                          "${item.get('prenom')} ${item.get('name')}",
-                                                          overflow: TextOverflow.ellipsis,
-                                                          style: TextStyle(
-                                          fontSize: 10,
-                                                              color: vert,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300),
-                                                        ),
-                                                        Spacer(),
-                                                      ],
-                                                    )),
-                                                Container(
-                                                    height: size.height * .05,
-                                                    child: Row(
-                                                      children: [
-                                                        Spacer(),
-                                                        Text(
-                                                          item.get('sexe'),
-                                                          style: TextStyle(
-                                          fontSize: 12,
-                                                              color: vert,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w300),
-                                                        ),
-                                                        Spacer(),
-                                                      ],
-                                                    )),
-                                                Container(
-                                                    height: size.height * .05,
-                                                    child: Row(
-                                                      children: [
-                                                        Spacer(),
-                                                        GestureDetector(
-                                                          onTap: () => null,
-                                                          child: Icon(
-                                                            CupertinoIcons
-                                                                .eye_fill,
-                                                            color: jaune,
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width:
-                                                              size.width * .01,
-                                                        ),
-                                                        GestureDetector(
-                                                          onTap: () => null,
-                                                          child: Icon(
-                                                            Icons.edit,
-                                                            color: vert,
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          width:
-                                                              size.width * .01,
-                                                        ),
-                                                        GestureDetector(
-                                                          onTap: () => null,
-                                                          child: Icon(
-                                                            Icons.delete,
-                                                            color: rouge,
-                                                          ),
-                                                        ),
-                                                        Spacer(),
-                                                      ],
-                                                    )),
-                                              ])
-                                          );
-                                        } 
+                                      for (QueryDocumentSnapshot item
+                                          in snapshot.data!.docs) {
+                                        if (item.get("regroupements") ==
+                                            idRegroupement) {
+                                          listes.add(TableRow(children: [
+                                            Container(
+                                                height: size.height * .05,
+                                                child: Row(
+                                                  children: [
+                                                    Spacer(),
+                                                    Text(
+                                                      item.get('matricule'),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: vert,
+                                                          fontWeight:
+                                                              FontWeight.w300),
+                                                    ),
+                                                    Spacer(),
+                                                  ],
+                                                )),
+                                            Container(
+                                                height: size.height * .05,
+                                                child: Row(
+                                                  children: [
+                                                    Spacer(),
+                                                    Text(
+                                                      "${item.get('prenom')} ${item.get('name')}",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontSize: 10,
+                                                          color: vert,
+                                                          fontWeight:
+                                                              FontWeight.w300),
+                                                    ),
+                                                    Spacer(),
+                                                  ],
+                                                )),
+                                            Container(
+                                                height: size.height * .05,
+                                                child: Row(
+                                                  children: [
+                                                    Spacer(),
+                                                    Text(
+                                                      item.get('sexe'),
+                                                      style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: vert,
+                                                          fontWeight:
+                                                              FontWeight.w300),
+                                                    ),
+                                                    Spacer(),
+                                                  ],
+                                                )),
+                                            Container(
+                                                height: size.height * .05,
+                                                child: Row(
+                                                  children: [
+                                                    Spacer(),
+                                                    GestureDetector(
+                                                      onTap: () => null,
+                                                      child: Icon(
+                                                        CupertinoIcons.eye_fill,
+                                                        color: jaune,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: size.width * .01,
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () => null,
+                                                      child: Icon(
+                                                        Icons.edit,
+                                                        color: vert,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: size.width * .01,
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () => null,
+                                                      child: Icon(
+                                                        Icons.delete,
+                                                        color: rouge,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                  ],
+                                                )),
+                                          ]));
+                                        }
                                       }
 
-                                     
                                       return Container(
                                         child: ListView(
                                           children: [
@@ -933,503 +931,483 @@ addMembreRegroupemen(
     context: context,
     builder: (context) => AlertDialog(
       content: StatefulBuilder(
-                builder: (context, setState) => Container(
-                  height: size.height * .7,
-                  width: size.width * .5,
-                  child: ListView(
-                    physics: BouncingScrollPhysics(),
-                    children: [
-                      Text(
-                        'Formulaire d\' ajout d\'un membre',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: noir,
-                            fontSize: size.height * .03,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: size.height * .05,
-                      ),
-                      Container(
-                        height: size.height * .04,
-                        width: size.width * .4,
-                        child: Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Icon(administrationFoncierState.sexe == "homme"
-                                    ? Icons.male
-                                    : Icons.female),
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                Text('Sexe / '),
-                                DropdownButton<String>(
-                                    value: administrationFoncierState.sexe,
-                                    underline: Container(),
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        administrationFoncierState.setState(() {
-                                          administrationFoncierState.sexe =
-                                              newValue!;
-                                        });
-                                      });
-                                    },
-                                    items: [
-                                      "homme",
-                                      "femme",
-                                    ]
-                                        .map((e) => DropdownMenuItem(
-                                            value: e,
-                                            child: Text(e.toUpperCase())))
-                                        .toList()),
-                              ],
-                            )),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: vert),
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      SizedBox(
-                        height: size.height * .05,
-                      ),
-                      Container(
-                        height: size.height * .05,
-                        width: size.width * .4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: TextField(
-                            cursorColor: vert,
-                            controller: matricule,
-                            decoration: InputDecoration(
-                                border: InputBorder.none,
-                                labelText: 'Matricule',
-                                icon: Icon(CupertinoIcons.command)),
-                          ),
+        builder: (context, setState) => Container(
+          height: size.height * .7,
+          width: size.width * .5,
+          child: ListView(
+            physics: BouncingScrollPhysics(),
+            children: [
+              Text(
+                'Formulaire d\' ajout d\'un membre',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: noir,
+                    fontSize: size.height * .03,
+                    fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: size.height * .05,
+              ),
+              Container(
+                height: size.height * .04,
+                width: size.width * .4,
+                child: Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 8,
                         ),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: vert),
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      SizedBox(
-                        height: size.height * .05,
-                      ),
-                      Container(
-                        height: size.height * .05,
-                        width: size.width * .4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: TextField(
-                            cursorColor: vert,
-                            controller: nom,
-                            decoration: InputDecoration(
-                                labelText: 'Nom Membre',
-                                border: InputBorder.none,
-                                icon: Icon(CupertinoIcons.globe)),
-                          ),
+                        Icon(administrationFoncierState.sexe == "homme"
+                            ? Icons.male
+                            : Icons.female),
+                        SizedBox(
+                          width: 4,
                         ),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: vert),
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      SizedBox(
-                        height: size.height * .05,
-                      ),
-                      Container(
-                        height: size.height * .05,
-                        width: size.width * .4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: TextField(
-                            cursorColor: vert,
-                            controller: prenom,
-                            decoration: InputDecoration(
-                                labelText: 'Prenom Membre',
-                                border: InputBorder.none,
-                                icon: Icon(CupertinoIcons.globe)),
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: vert),
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      SizedBox(
-                        height: size.height * .05,
-                      ),
-                      Container(
-                        height: size.height * .05,
-                        width: size.width * .4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: TextField(
-                            cursorColor: vert,
-                            controller: prenom,
-                            decoration: InputDecoration(
-                                labelText: 'Prenom Membre',
-                                border: InputBorder.none,
-                                icon: Icon(CupertinoIcons.globe)),
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: vert),
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      SizedBox(
-                        height: size.height * .05,
-                      ),
-                      Container(
-                        height: size.height * .05,
-                        width: size.width * .4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: TextField(
-                            cursorColor: vert,
-                            controller: cni,
-                            decoration: InputDecoration(
-                                labelText: 'CNI',
-                                border: InputBorder.none,
-                                icon: Icon(CupertinoIcons.globe)),
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: vert),
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      SizedBox(
-                        height: size.height * .05,
-                      ),
-                      Container(
-                        height: size.height * .05,
-                        width: size.width * .4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: TextField(
-                            cursorColor: vert,
-                            controller: prenomPere,
-                            decoration: InputDecoration(
-                                labelText: 'Prenom Père',
-                                border: InputBorder.none,
-                                icon: Icon(CupertinoIcons.globe)),
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: vert),
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      SizedBox(
-                        height: size.height * .05,
-                      ),
-                      Container(
-                        height: size.height * .05,
-                        width: size.width * .4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: TextField(
-                            cursorColor: vert,
-                            controller: nomMere,
-                            decoration: InputDecoration(
-                                labelText: 'Nom Mère',
-                                border: InputBorder.none,
-                                icon: Icon(CupertinoIcons.globe)),
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: vert),
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      SizedBox(
-                        height: size.height * .05,
-                      ),
-                      Container(
-                        height: size.height * .05,
-                        width: size.width * .4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: TextField(
-                            cursorColor: vert,
-                            controller: prenomMere,
-                            decoration: InputDecoration(
-                                labelText: 'Prenom Mère',
-                                border: InputBorder.none,
-                                icon: Icon(CupertinoIcons.globe)),
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: vert),
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      SizedBox(
-                        height: size.height * .05,
-                      ),
-                      Container(
-                        height: size.height * .05,
-                        width: size.width * .4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: TextField(
-                            cursorColor: vert,
-                            controller: dateNaiss,
-                            decoration: InputDecoration(
-                                labelText: 'Date de Naissance',
-                                border: InputBorder.none,
-                                icon: Icon(CupertinoIcons.globe)),
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: vert),
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      SizedBox(
-                        height: size.height * .05,
-                      ),
-                      Container(
-                        height: size.height * .05,
-                        width: size.width * .4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 8),
-                          child: TextField(
-                            cursorColor: vert,
-                            controller: lieuxNaiss,
-                            decoration: InputDecoration(
-                                labelText: 'Lieux de Naissance',
-                                border: InputBorder.none,
-                                icon: Icon(CupertinoIcons.globe)),
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: vert),
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      SizedBox(
-                        height: size.height * .05,
-                      ),
-                      Container(
-                        height: size.height * .05,
-                        width: size.width * .4,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 24),
-                          child: Row(
-                            children: [
-                              Text(administrationFoncierState.logoName == ""
-                                  ? 'Image profile Membre'
-                                  : administrationFoncierState.logoName),
-                              SizedBox(
-                                width: size.width * .05,
-                              ),
-                              RaisedButton(
-                                child: Icon(CupertinoIcons.upload_circle_fill),
-                                color: Colors.transparent,
-                                onPressed: () async {
-                                  final result = await FilePickerWeb.platform
-                                      .pickFiles(
-                                          type: FileType.any,
-                                          allowMultiple: false);
-                                  if (result!.files.first != null) {
-                                    var fileBytes = result.files.first.bytes;
-                                    var fileName = result.files.first.name;
-                                    setState(() {
-                                      administrationFoncierState.setState(() {
-                                        administrationFoncierState.fileLogo =
-                                            fileBytes!;
-                                        administrationFoncierState.logoName =
-                                            fileName;
-                                      });
-                                    });
-                                  }
-                                },
-                              )
-                            ],
-                          ),
-                        ),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: vert),
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      SizedBox(
-                        height: size.height * .05,
-                      ),
-                      Container(
-                        height: size.height * .04,
-                        width: size.width * .4,
-                        child: Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Icon(Icons.school),
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                Text('Niveau Étude / '),
-                                DropdownButton<String>(
-                                    value:
-                                        administrationFoncierState.niveauEtude,
-                                    underline: Container(),
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        administrationFoncierState.setState(() {
-                                          administrationFoncierState
-                                              .niveauEtude = newValue!;
-                                        });
-                                      });
-                                    },
-                                    items: [
-                                      "coranique",
-                                      "cm2",
-                                      "befm",
-                                      "baccalaureat",
-                                      "licence",
-                                      "master",
-                                      "doctorant",
-                                    ]
-                                        .map((e) => DropdownMenuItem(
-                                            value: e,
-                                            child: Text(e.toUpperCase())))
-                                        .toList()),
-                              ],
-                            )),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: vert),
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      SizedBox(
-                        height: size.height * .05,
-                      ),
-                      Container(
-                        height: size.height * .04,
-                        width: size.width * .4,
-                        child: Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Icon(Icons.school),
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                Text('NSituation Matrimonial / '),
-                                DropdownButton<String>(
-                                    value:
-                                        administrationFoncierState.matrimonial,
-                                    underline: Container(),
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        administrationFoncierState.setState(() {
-                                          administrationFoncierState
-                                              .matrimonial = newValue!;
-                                        });
-                                      });
-                                    },
-                                    items: [
-                                      "celibataire",
-                                      "marier",
-                                    ]
-                                        .map((e) => DropdownMenuItem(
-                                            value: e,
-                                            child: Text(e.toUpperCase())))
-                                        .toList()),
-                              ],
-                            )),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: vert),
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      SizedBox(
-                        height: size.height * .05,
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          try {
-                            print("oh c con");
-
-                            Reference ref = FirebaseStorage.instance.ref(
-                                'regroupement-membre/${new DateTime.now().millisecondsSinceEpoch.toString()}');
-
-                            ref
-                                .putData(administrationFoncierState.fileLogo)
-                                .then((_) {
-                              _.ref.getDownloadURL().then((value) {
-                                print("helle");
-                                FirebaseFirestore.instance
-                                    .collection("membres")
-                                    .add({
-                                  "matricule": matricule.text,
-                                  "name": nom.text,
-                                  "prenom": prenom.text,
-                                  "cni": cni.text,
-                                  "prenomPere": prenomPere.text,
-                                  "regroupements" : idRegroupement,
-                                  "nomMere": nomMere.text,
-                                  "prenomMere": prenomMere.text,
-                                  "dateNaiss": dateNaiss.text,
-                                  "lieuxNaiss": lieuxNaiss.text,
-                                  "sexe": administrationFoncierState.sexe,
-                                  "niveauEtude":
-                                      administrationFoncierState.niveauEtude,
-                                  "matrimonial":
-                                      administrationFoncierState.matrimonial,
-                                  "avatar": value,
-                                  "date": DateTime.now()
+                        Text('Sexe / '),
+                        DropdownButton<String>(
+                            value: administrationFoncierState.sexe,
+                            underline: Container(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                administrationFoncierState.setState(() {
+                                  administrationFoncierState.sexe = newValue!;
                                 });
                               });
-                            });
-                          } catch (e) {
-                            print(e);
-                            FirebaseFirestore.instance
-                                .collection("membres")
-                                .add({
-                              "matricule": matricule.text,
-                              "name": nom.text,
-                              "prenom": prenom.text,
-                              "cni": cni.text,
-                              "prenomPere": prenomPere.text,
-                              "nomMere": nomMere.text,
-                              "prenomMere": prenomMere.text,
-                              "dateNaiss": dateNaiss.text,
-                              "lieuxNaiss": lieuxNaiss.text,
-                              "sexe": administrationFoncierState.sexe,
-                              "niveauEtude":
-                                  administrationFoncierState.niveauEtude,
-                              "matrimonial":
-                                  administrationFoncierState.matrimonial,
-                                  "regroupements" : idRegroupement,
-                              "avatar": "",
-                              "date": DateTime.now()
+                            },
+                            items: [
+                              "homme",
+                              "femme",
+                            ]
+                                .map((e) => DropdownMenuItem(
+                                    value: e, child: Text(e.toUpperCase())))
+                                .toList()),
+                      ],
+                    )),
+                decoration: BoxDecoration(
+                    border: Border.all(color: vert),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              SizedBox(
+                height: size.height * .05,
+              ),
+              Container(
+                height: size.height * .05,
+                width: size.width * .4,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: TextField(
+                    cursorColor: vert,
+                    controller: matricule,
+                    decoration: InputDecoration(
+                        border: InputBorder.none,
+                        labelText: 'Matricule',
+                        icon: Icon(CupertinoIcons.command)),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: vert),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              SizedBox(
+                height: size.height * .05,
+              ),
+              Container(
+                height: size.height * .05,
+                width: size.width * .4,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: TextField(
+                    cursorColor: vert,
+                    controller: nom,
+                    decoration: InputDecoration(
+                        labelText: 'Nom Membre',
+                        border: InputBorder.none,
+                        icon: Icon(CupertinoIcons.globe)),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: vert),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              SizedBox(
+                height: size.height * .05,
+              ),
+              Container(
+                height: size.height * .05,
+                width: size.width * .4,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: TextField(
+                    cursorColor: vert,
+                    controller: prenom,
+                    decoration: InputDecoration(
+                        labelText: 'Prenom Membre',
+                        border: InputBorder.none,
+                        icon: Icon(CupertinoIcons.globe)),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: vert),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              SizedBox(
+                height: size.height * .05,
+              ),
+              Container(
+                height: size.height * .05,
+                width: size.width * .4,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: TextField(
+                    cursorColor: vert,
+                    controller: prenom,
+                    decoration: InputDecoration(
+                        labelText: 'Prenom Membre',
+                        border: InputBorder.none,
+                        icon: Icon(CupertinoIcons.globe)),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: vert),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              SizedBox(
+                height: size.height * .05,
+              ),
+              Container(
+                height: size.height * .05,
+                width: size.width * .4,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: TextField(
+                    cursorColor: vert,
+                    controller: cni,
+                    decoration: InputDecoration(
+                        labelText: 'CNI',
+                        border: InputBorder.none,
+                        icon: Icon(CupertinoIcons.globe)),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: vert),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              SizedBox(
+                height: size.height * .05,
+              ),
+              Container(
+                height: size.height * .05,
+                width: size.width * .4,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: TextField(
+                    cursorColor: vert,
+                    controller: prenomPere,
+                    decoration: InputDecoration(
+                        labelText: 'Prenom Père',
+                        border: InputBorder.none,
+                        icon: Icon(CupertinoIcons.globe)),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: vert),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              SizedBox(
+                height: size.height * .05,
+              ),
+              Container(
+                height: size.height * .05,
+                width: size.width * .4,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: TextField(
+                    cursorColor: vert,
+                    controller: nomMere,
+                    decoration: InputDecoration(
+                        labelText: 'Nom Mère',
+                        border: InputBorder.none,
+                        icon: Icon(CupertinoIcons.globe)),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: vert),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              SizedBox(
+                height: size.height * .05,
+              ),
+              Container(
+                height: size.height * .05,
+                width: size.width * .4,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: TextField(
+                    cursorColor: vert,
+                    controller: prenomMere,
+                    decoration: InputDecoration(
+                        labelText: 'Prenom Mère',
+                        border: InputBorder.none,
+                        icon: Icon(CupertinoIcons.globe)),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: vert),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              SizedBox(
+                height: size.height * .05,
+              ),
+              Container(
+                height: size.height * .05,
+                width: size.width * .4,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: TextField(
+                    cursorColor: vert,
+                    controller: dateNaiss,
+                    decoration: InputDecoration(
+                        labelText: 'Date de Naissance',
+                        border: InputBorder.none,
+                        icon: Icon(CupertinoIcons.globe)),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: vert),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              SizedBox(
+                height: size.height * .05,
+              ),
+              Container(
+                height: size.height * .05,
+                width: size.width * .4,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 8),
+                  child: TextField(
+                    cursorColor: vert,
+                    controller: lieuxNaiss,
+                    decoration: InputDecoration(
+                        labelText: 'Lieux de Naissance',
+                        border: InputBorder.none,
+                        icon: Icon(CupertinoIcons.globe)),
+                  ),
+                ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: vert),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              SizedBox(
+                height: size.height * .05,
+              ),
+              Container(
+                height: size.height * .05,
+                width: size.width * .4,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 24),
+                  child: Row(
+                    children: [
+                      Text(administrationFoncierState.logoName == ""
+                          ? 'Image profile Membre'
+                          : administrationFoncierState.logoName),
+                      SizedBox(
+                        width: size.width * .05,
+                      ),
+                      RaisedButton(
+                        child: Icon(CupertinoIcons.upload_circle_fill),
+                        color: Colors.transparent,
+                        onPressed: () async {
+                          final result = await FilePickerWeb.platform.pickFiles(
+                              type: FileType.any, allowMultiple: false);
+                          if (result!.files.first != null) {
+                            var fileBytes = result.files.first.bytes;
+                            var fileName = result.files.first.name;
+                            setState(() {
+                              administrationFoncierState.setState(() {
+                                administrationFoncierState.fileLogo =
+                                    fileBytes!;
+                                administrationFoncierState.logoName = fileName;
+                              });
                             });
                           }
                         },
-                        child: Container(
-                          height: size.height * .05,
-                          width: size.width * .5,
-                          child: Center(
-                            child: Container(
-                              height: size.height * .05,
-                              width: size.width * .2,
-                              child: Center(
-                                child: Text(
-                                  'Ajouter',
-                                  style: TextStyle(
-                                      color: jaune,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              decoration: BoxDecoration(
-                                  border: Border.all(color: jaune),
-                                  borderRadius: BorderRadius.circular(8)),
-                            ),
-                          ),
-                        ),
-                      ),
+                      )
                     ],
                   ),
                 ),
+                decoration: BoxDecoration(
+                    border: Border.all(color: vert),
+                    borderRadius: BorderRadius.circular(8)),
               ),
+              SizedBox(
+                height: size.height * .05,
+              ),
+              Container(
+                height: size.height * .04,
+                width: size.width * .4,
+                child: Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Icon(Icons.school),
+                        SizedBox(
+                          width: 4,
+                        ),
+                        Text('Niveau Étude / '),
+                        DropdownButton<String>(
+                            value: administrationFoncierState.niveauEtude,
+                            underline: Container(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                administrationFoncierState.setState(() {
+                                  administrationFoncierState.niveauEtude =
+                                      newValue!;
+                                });
+                              });
+                            },
+                            items: [
+                              "coranique",
+                              "cm2",
+                              "befm",
+                              "baccalaureat",
+                              "licence",
+                              "master",
+                              "doctorant",
+                            ]
+                                .map((e) => DropdownMenuItem(
+                                    value: e, child: Text(e.toUpperCase())))
+                                .toList()),
+                      ],
+                    )),
+                decoration: BoxDecoration(
+                    border: Border.all(color: vert),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              SizedBox(
+                height: size.height * .05,
+              ),
+              Container(
+                height: size.height * .04,
+                width: size.width * .4,
+                child: Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Icon(Icons.school),
+                        SizedBox(
+                          width: 4,
+                        ),
+                        Text('NSituation Matrimonial / '),
+                        DropdownButton<String>(
+                            value: administrationFoncierState.matrimonial,
+                            underline: Container(),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                administrationFoncierState.setState(() {
+                                  administrationFoncierState.matrimonial =
+                                      newValue!;
+                                });
+                              });
+                            },
+                            items: [
+                              "celibataire",
+                              "marier",
+                            ]
+                                .map((e) => DropdownMenuItem(
+                                    value: e, child: Text(e.toUpperCase())))
+                                .toList()),
+                      ],
+                    )),
+                decoration: BoxDecoration(
+                    border: Border.all(color: vert),
+                    borderRadius: BorderRadius.circular(8)),
+              ),
+              SizedBox(
+                height: size.height * .05,
+              ),
+              GestureDetector(
+                onTap: () async {
+                  try {
+                    print("oh c con");
+
+                    Reference ref = FirebaseStorage.instance.ref(
+                        'regroupement-membre/${new DateTime.now().millisecondsSinceEpoch.toString()}');
+
+                    ref.putData(administrationFoncierState.fileLogo).then((_) {
+                      _.ref.getDownloadURL().then((value) {
+                        print("helle");
+                        FirebaseFirestore.instance.collection("membres").add({
+                          "matricule": matricule.text,
+                          "name": nom.text,
+                          "prenom": prenom.text,
+                          "cni": cni.text,
+                          "prenomPere": prenomPere.text,
+                          "regroupements": idRegroupement,
+                          "nomMere": nomMere.text,
+                          "prenomMere": prenomMere.text,
+                          "dateNaiss": dateNaiss.text,
+                          "lieuxNaiss": lieuxNaiss.text,
+                          "sexe": administrationFoncierState.sexe,
+                          "niveauEtude": administrationFoncierState.niveauEtude,
+                          "matrimonial": administrationFoncierState.matrimonial,
+                          "avatar": value,
+                          "date": DateTime.now()
+                        });
+                      });
+                    });
+                  } catch (e) {
+                    print(e);
+                    FirebaseFirestore.instance.collection("membres").add({
+                      "matricule": matricule.text,
+                      "name": nom.text,
+                      "prenom": prenom.text,
+                      "cni": cni.text,
+                      "prenomPere": prenomPere.text,
+                      "nomMere": nomMere.text,
+                      "prenomMere": prenomMere.text,
+                      "dateNaiss": dateNaiss.text,
+                      "lieuxNaiss": lieuxNaiss.text,
+                      "sexe": administrationFoncierState.sexe,
+                      "niveauEtude": administrationFoncierState.niveauEtude,
+                      "matrimonial": administrationFoncierState.matrimonial,
+                      "regroupements": idRegroupement,
+                      "avatar": "",
+                      "date": DateTime.now()
+                    });
+                  }
+                },
+                child: Container(
+                  height: size.height * .05,
+                  width: size.width * .5,
+                  child: Center(
+                    child: Container(
+                      height: size.height * .05,
+                      width: size.width * .2,
+                      child: Center(
+                        child: Text(
+                          'Ajouter',
+                          style: TextStyle(
+                              color: jaune, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                          border: Border.all(color: jaune),
+                          borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
+    ),
   );
 }

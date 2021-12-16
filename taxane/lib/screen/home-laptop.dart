@@ -35,6 +35,7 @@ class _HomeLaptopState extends State<HomeLaptop> {
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .get()
         .then((user) {
+          print(user.get("nom"));
       setState(() {
         regroupement = user.get('regroupement');
       });
@@ -48,6 +49,7 @@ class _HomeLaptopState extends State<HomeLaptop> {
                 }));
       }
     });
+   
   }
 
   @override
@@ -237,20 +239,13 @@ class _HomeLaptopState extends State<HomeLaptop> {
                                                   .snapshots(),
                                               builder: (context, snapshot) {
                                                 if (snapshot.hasData) {
-                                                  int i = 0;
-                                                  for (var item
-                                                      in snapshot.data!.docs) {
-                                                    if (item.get(
-                                                            "regroupements") ==
-                                                        regroupement) {
-                                                      i++;
-                                                    }
-                                                  }
                                                   return CardMenuHome(
                                                     title: 'Nombre Utilisateur',
                                                     icon: CupertinoIcons
                                                         .person_circle,
-                                                    nombre: i.toString(),
+                                                    nombre: snapshot
+                                                        .data!.docs.length
+                                                        .toString(),
                                                   );
                                                 } else {
                                                   return Container(
@@ -269,7 +264,8 @@ class _HomeLaptopState extends State<HomeLaptop> {
                                 ),
                                 Spacer(),
                                 Container(
-                                  height: constraints.maxHeight * .4,
+                                  height: constraints.maxHeight * .5,
+                                  width: constraints.maxWidth * .95,
                                   child: LayoutBuilder(
                                     builder:
                                         (context, constraints) =>
@@ -280,331 +276,505 @@ class _HomeLaptopState extends State<HomeLaptop> {
                                                     .doc(FirebaseAuth.instance
                                                         .currentUser!.uid)
                                                     .snapshots(),
-                                                builder: (context, snap) {
-                                                  return !snap.hasData
-                                                      ? Text('')
-                                                      : Row(
-                                                          children: [
-                                                            SizedBox(
-                                                              width: constraints
-                                                                      .maxWidth *
-                                                                  .03,
-                                                            ),
-                                                            Container(
-                                                              width: constraints
-                                                                      .maxWidth *
-                                                                  .93,
-                                                              child: LayoutBuilder(
-                                                                  builder:
-                                                                      (constext,
-                                                                          contrain) {
-                                                                return StreamBuilder<
-                                                                        DocumentSnapshot>(
-                                                                    stream: FirebaseFirestore
-                                                                        .instance
-                                                                        .collection(
-                                                                            "regroupements")
-                                                                        .doc(snap
-                                                                            .data!
-                                                                            .get(
-                                                                                'regroupement'))
-                                                                        .snapshots(),
-                                                                    builder:
-                                                                        (context,
-                                                                            snaps) {
-                                                                      if (!snaps
-                                                                          .hasData) {
-                                                                        return Text(
-                                                                            '');
-                                                                      } else {
-                                                                        return Stack(
+                                                builder: (context, snapUser) {
+                                                  if (!snapUser.hasData) {
+                                                    return Text('');
+                                                  } else {
+                                                    if (snapUser.data!
+                                                            .get("role") ==
+                                                        1) {
+                                                      return StreamBuilder<
+                                                              QuerySnapshot>(
+                                                          stream: FirebaseFirestore
+                                                              .instance
+                                                              .collection(
+                                                                  "regroupements")
+                                                              .snapshots(),
+                                                          builder: (context,
+                                                              snapshotRegroupement) {
+                                                            if (!snapshotRegroupement
+                                                                .hasData) {
+                                                              return Text("");
+                                                            } else {
+                                                              List<TableRow>
+                                                                  listes = [
+                                                                TableRow(
+                                                                    children: [
+                                                                      Container(
+                                                                          height: constraints.maxHeight *
+                                                                              .1,
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              Spacer(),
+                                                                              Icon(
+                                                                                Icons.format_list_numbered,
+                                                                                color: vert,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: constraints.maxWidth * .01,
+                                                                              ),
+                                                                              Text(
+                                                                                'Code ',
+                                                                                style: TextStyle(color: vert, fontSize: 12, fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                              Spacer(),
+                                                                            ],
+                                                                          )),
+                                                                      Container(
+                                                                          height: constraints.maxHeight *
+                                                                              .1,
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              Spacer(),
+                                                                              Icon(
+                                                                                CupertinoIcons.globe,
+                                                                                color: vert,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: constraints.maxWidth * .01,
+                                                                              ),
+                                                                              Text(
+                                                                                'Nom Regroupement',
+                                                                                style: TextStyle(fontSize: 12, color: vert, fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                              Spacer(),
+                                                                            ],
+                                                                          )),
+                                                                      Container(
+                                                                          height: constraints.maxHeight *
+                                                                              .1,
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              Spacer(),
+                                                                              Icon(
+                                                                                Icons.date_range_rounded,
+                                                                                color: vert,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: constraints.maxWidth * .01,
+                                                                              ),
+                                                                              Text(
+                                                                                'Date',
+                                                                                style: TextStyle(fontSize: 12, color: vert, fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                              Spacer(),
+                                                                            ],
+                                                                          )),
+                                                                      Container(
+                                                                          height: constraints.maxHeight *
+                                                                              .1,
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              Spacer(),
+                                                                              Icon(
+                                                                                Icons.settings,
+                                                                                color: vert,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: constraints.maxWidth * .01,
+                                                                              ),
+                                                                              Text(
+                                                                                'Paramètres',
+                                                                                style: TextStyle(color: vert, fontSize: 12, fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                              Spacer(),
+                                                                            ],
+                                                                          )),
+                                                                    ])
+                                                              ];
+
+                                                              for (QueryDocumentSnapshot item
+                                                                  in snapshotRegroupement
+                                                                      .data!
+                                                                      .docs) {
+                                                                Timestamp
+                                                                    timestamp =
+                                                                    item.get(
+                                                                        'date');
+                                                                DateTime date =
+                                                                    new DateTime
+                                                                        .fromMicrosecondsSinceEpoch(timestamp
+                                                                            .millisecondsSinceEpoch *
+                                                                        1000);
+                                                                if (true) {
+                                                                  listes.add(
+                                                                      TableRow(
                                                                           children: [
-                                                                            Container(
-                                                                              height: contrain.maxHeight,
-                                                                              width: contrain.maxWidth,
-                                                                            ),
-                                                                            Positioned(
-                                                                                child: Container(
-                                                                              height: contrain.maxHeight * .1,
-                                                                              child: Row(
-                                                                                children: [
-                                                                                  Container(
-                                                                                    width: 3,
+                                                                        Container(
+                                                                            height: size.height *
+                                                                                .05,
+                                                                            child:
+                                                                                Row(
+                                                                              children: [
+                                                                                Spacer(),
+                                                                                Text(
+                                                                                  item.get('code'),
+                                                                                  overflow: TextOverflow.ellipsis,
+                                                                                  style: TextStyle(fontSize: 12, color: vert, fontWeight: FontWeight.w300),
+                                                                                ),
+                                                                                Spacer(),
+                                                                              ],
+                                                                            )),
+                                                                        Container(
+                                                                            height: size.height *
+                                                                                .05,
+                                                                            child:
+                                                                                Row(
+                                                                              children: [
+                                                                                Spacer(),
+                                                                                Text(
+                                                                                  item.get('name'),
+                                                                                  overflow: TextOverflow.ellipsis,
+                                                                                  style: TextStyle(fontSize: 10, color: vert, fontWeight: FontWeight.w300),
+                                                                                ),
+                                                                                Spacer(),
+                                                                              ],
+                                                                            )),
+                                                                        Container(
+                                                                            height: size.height *
+                                                                                .05,
+                                                                            child:
+                                                                                Row(
+                                                                              children: [
+                                                                                Spacer(),
+                                                                                Text(
+                                                                                  dateFormatter(date),
+                                                                                  style: TextStyle(fontSize: 12, color: vert, fontWeight: FontWeight.w300),
+                                                                                ),
+                                                                                Spacer(),
+                                                                              ],
+                                                                            )),
+                                                                        Container(
+                                                                            height: size.height *
+                                                                                .05,
+                                                                            child:
+                                                                                Row(
+                                                                              children: [
+                                                                                Spacer(),
+                                                                                GestureDetector(
+                                                                                  onTap: () => null,
+                                                                                  child: Icon(
+                                                                                    CupertinoIcons.eye_fill,
+                                                                                    color: jaune,
+                                                                                  ),
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: size.width * .01,
+                                                                                ),
+                                                                                GestureDetector(
+                                                                                  onTap: () => null,
+                                                                                  child: Icon(
+                                                                                    Icons.edit,
                                                                                     color: vert,
                                                                                   ),
-                                                                                  SizedBox(
-                                                                                    width: contrain.maxWidth * .005,
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: size.width * .01,
+                                                                                ),
+                                                                                GestureDetector(
+                                                                                  onTap: () => null,
+                                                                                  child: Icon(
+                                                                                    Icons.delete,
+                                                                                    color: rouge,
                                                                                   ),
-                                                                                  Text(
-                                                                                    snaps.data!.get('name'),
-                                                                                    style: TextStyle(fontSize: contrain.maxHeight * .05, fontWeight: FontWeight.bold, color: vert),
-                                                                                  ),
-                                                                                ],
-                                                                              ),
+                                                                                ),
+                                                                                Spacer(),
+                                                                              ],
                                                                             )),
-                                                                            Positioned(
-                                                                                top: contrain.maxHeight * .12,
-                                                                                child: Container(
-                                                                                  height: contrain.maxHeight * .9,
-                                                                                  width: constraints.maxWidth * .7,
-                                                                                  child: StreamBuilder<QuerySnapshot>(
-                                                                                    stream: FirebaseFirestore.instance.collection("membres").snapshots(),
-                                                                                    builder: (context, snapMembre) {
-                                                                                      if (!snapMembre.hasData) {
-                                                                                        return Text('');
-                                                                                      } else {
-                                                                                        List<TableRow> listes = [
-                                                                                          TableRow(children: [
-                                                                                            Container(
-                                                                                                height: constraints.maxHeight * .1,
-                                                                                                child: Row(
-                                                                                                  children: [
-                                                                                                    Spacer(),
-                                                                                                    Icon(
-                                                                                                      Icons.format_list_numbered,
-                                                                                                      color: vert,
-                                                                                                    ),
-                                                                                                    SizedBox(
-                                                                                                      width: constraints.maxWidth * .01,
-                                                                                                    ),
-                                                                                                    Text(
-                                                                                                      'Code ',
-                                                                                                      style: TextStyle(color: vert, fontSize: 12, fontWeight: FontWeight.bold),
-                                                                                                    ),
-                                                                                                    Spacer(),
-                                                                                                  ],
-                                                                                                )),
-                                                                                            Container(
-                                                                                                height: constraints.maxHeight * .1,
-                                                                                                child: Row(
-                                                                                                  children: [
-                                                                                                    Spacer(),
-                                                                                                    Icon(
-                                                                                                      CupertinoIcons.globe,
-                                                                                                      color: vert,
-                                                                                                    ),
-                                                                                                    SizedBox(
-                                                                                                      width: constraints.maxWidth * .01,
-                                                                                                    ),
-                                                                                                    Text(
-                                                                                                      'Nom ',
-                                                                                                      style: TextStyle(fontSize: 12, color: vert, fontWeight: FontWeight.bold),
-                                                                                                    ),
-                                                                                                    Spacer(),
-                                                                                                  ],
-                                                                                                )),
-                                                                                            Container(
-                                                                                                height: constraints.maxHeight * .1,
-                                                                                                child: Row(
-                                                                                                  children: [
-                                                                                                    Spacer(),
-                                                                                                    Icon(
-                                                                                                      Icons.date_range_rounded,
-                                                                                                      color: vert,
-                                                                                                    ),
-                                                                                                    SizedBox(
-                                                                                                      width: constraints.maxWidth * .01,
-                                                                                                    ),
-                                                                                                    Text(
-                                                                                                      'Sexe',
-                                                                                                      style: TextStyle(fontSize: 12, color: vert, fontWeight: FontWeight.bold),
-                                                                                                    ),
-                                                                                                    Spacer(),
-                                                                                                  ],
-                                                                                                )),
-                                                                                            Container(
-                                                                                                height: constraints.maxHeight * .1,
-                                                                                                child: Row(
-                                                                                                  children: [
-                                                                                                    Spacer(),
-                                                                                                    Icon(
-                                                                                                      Icons.settings,
-                                                                                                      color: vert,
-                                                                                                    ),
-                                                                                                    SizedBox(
-                                                                                                      width: constraints.maxWidth * .01,
-                                                                                                    ),
-                                                                                                    Text(
-                                                                                                      'Paramètres',
-                                                                                                      style: TextStyle(color: vert, fontSize: 12, fontWeight: FontWeight.bold),
-                                                                                                    ),
-                                                                                                    Spacer(),
-                                                                                                  ],
-                                                                                                )),
-                                                                                          ])
-                                                                                        ];
+                                                                      ]));
+                                                                }
+                                                              }
+                                                              return Column(
+                                                                children: [
+                                                                  SizedBox(
+                                                                    height:
+                                                                        constraints.maxHeight *
+                                                                            .03,
+                                                                  ),
+                                                                  Container(
+                                                                    child: Text(
+                                                                      'Tableau des Associations',
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              noir,
+                                                                          fontSize:
+                                                                              16,
+                                                                          fontWeight:
+                                                                              FontWeight.bold),
+                                                                    ),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height:
+                                                                        constraints.maxHeight *
+                                                                            .03,
+                                                                  ),
+                                                                  Container(
+                                                                    height:
+                                                                        constraints.maxHeight *
+                                                                            .5,
+                                                                    child:
+                                                                        ListView(
+                                                                      children: [
+                                                                        Table(
+                                                                          border:
+                                                                              TableBorder.all(color: vert),
+                                                                          children:
+                                                                              listes,
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  )
+                                                                ],
+                                                              );
+                                                            }
+                                                          });
+                                                    } else {
+                                                      return StreamBuilder<
+                                                              QuerySnapshot>(
+                                                          stream:
+                                                              FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      "membres")
+                                                                  .snapshots(),
+                                                          builder: (context,
+                                                              snapshotMembre) {
+                                                            if (!snapshotMembre
+                                                                .hasData) {
+                                                              return Text('');
+                                                            } else {
+                                                              List<TableRow>
+                                                                  listes = [
+                                                                TableRow(
+                                                                    children: [
+                                                                      Container(
+                                                                          height: constraints.maxHeight *
+                                                                              .1,
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              Spacer(),
+                                                                              Icon(
+                                                                                Icons.format_list_numbered,
+                                                                                color: vert,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: constraints.maxWidth * .01,
+                                                                              ),
+                                                                              Text(
+                                                                                'Code ',
+                                                                                style: TextStyle(color: vert, fontSize: 12, fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                              Spacer(),
+                                                                            ],
+                                                                          )),
+                                                                      Container(
+                                                                          height: constraints.maxHeight *
+                                                                              .1,
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              Spacer(),
+                                                                              Icon(
+                                                                                CupertinoIcons.globe,
+                                                                                color: vert,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: constraints.maxWidth * .01,
+                                                                              ),
+                                                                              Text(
+                                                                                'Nom ',
+                                                                                style: TextStyle(fontSize: 12, color: vert, fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                              Spacer(),
+                                                                            ],
+                                                                          )),
+                                                                      Container(
+                                                                          height: constraints.maxHeight *
+                                                                              .1,
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              Spacer(),
+                                                                              Icon(
+                                                                                Icons.date_range_rounded,
+                                                                                color: vert,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: constraints.maxWidth * .01,
+                                                                              ),
+                                                                              Text(
+                                                                                'Sexe',
+                                                                                style: TextStyle(fontSize: 12, color: vert, fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                              Spacer(),
+                                                                            ],
+                                                                          )),
+                                                                      Container(
+                                                                          height: constraints.maxHeight *
+                                                                              .1,
+                                                                          child:
+                                                                              Row(
+                                                                            children: [
+                                                                              Spacer(),
+                                                                              Icon(
+                                                                                Icons.settings,
+                                                                                color: vert,
+                                                                              ),
+                                                                              SizedBox(
+                                                                                width: constraints.maxWidth * .01,
+                                                                              ),
+                                                                              Text(
+                                                                                'Paramètres',
+                                                                                style: TextStyle(color: vert, fontSize: 12, fontWeight: FontWeight.bold),
+                                                                              ),
+                                                                              Spacer(),
+                                                                            ],
+                                                                          )),
+                                                                    ])
+                                                              ];
 
-                                                                                        for (QueryDocumentSnapshot item in snapMembre.data!.docs) {
-                                                                                          if (item.get("regroupements") == snap.data!.get('regroupement')) {
-                                                                                            listes.add(TableRow(children: [
-                                                                                              Container(
-                                                                                                  height: size.height * .05,
-                                                                                                  child: Row(
-                                                                                                    children: [
-                                                                                                      Spacer(),
-                                                                                                      Text(
-                                                                                                        item.get('matricule'),
-                                                                                                        overflow: TextOverflow.ellipsis,
-                                                                                                        style: TextStyle(fontSize: 12, color: vert, fontWeight: FontWeight.w300),
-                                                                                                      ),
-                                                                                                      Spacer(),
-                                                                                                    ],
-                                                                                                  )),
-                                                                                              Container(
-                                                                                                  height: size.height * .05,
-                                                                                                  child: Row(
-                                                                                                    children: [
-                                                                                                      Spacer(),
-                                                                                                      Text(
-                                                                                                        "${item.get('prenom')} ${item.get('name')}",
-                                                                                                        overflow: TextOverflow.ellipsis,
-                                                                                                        style: TextStyle(fontSize: 10, color: vert, fontWeight: FontWeight.w300),
-                                                                                                      ),
-                                                                                                      Spacer(),
-                                                                                                    ],
-                                                                                                  )),
-                                                                                              Container(
-                                                                                                  height: size.height * .05,
-                                                                                                  child: Row(
-                                                                                                    children: [
-                                                                                                      Spacer(),
-                                                                                                      Text(
-                                                                                                        item.get('sexe'),
-                                                                                                        style: TextStyle(fontSize: 12, color: vert, fontWeight: FontWeight.w300),
-                                                                                                      ),
-                                                                                                      Spacer(),
-                                                                                                    ],
-                                                                                                  )),
-                                                                                              Container(
-                                                                                                  height: size.height * .05,
-                                                                                                  child: Row(
-                                                                                                    children: [
-                                                                                                      Spacer(),
-                                                                                                      GestureDetector(
-                                                                                                        onTap: () => null,
-                                                                                                        child: Icon(
-                                                                                                          CupertinoIcons.eye_fill,
-                                                                                                          color: jaune,
-                                                                                                        ),
-                                                                                                      ),
-                                                                                                      SizedBox(
-                                                                                                        width: size.width * .01,
-                                                                                                      ),
-                                                                                                      GestureDetector(
-                                                                                                        onTap: () => null,
-                                                                                                        child: Icon(
-                                                                                                          Icons.edit,
-                                                                                                          color: vert,
-                                                                                                        ),
-                                                                                                      ),
-                                                                                                      SizedBox(
-                                                                                                        width: size.width * .01,
-                                                                                                      ),
-                                                                                                      GestureDetector(
-                                                                                                        onTap: () => null,
-                                                                                                        child: Icon(
-                                                                                                          Icons.delete,
-                                                                                                          color: rouge,
-                                                                                                        ),
-                                                                                                      ),
-                                                                                                      Spacer(),
-                                                                                                    ],
-                                                                                                  )),
-                                                                                            ]));
-                                                                                          }
-                                                                                        }
-
-                                                                                        return Container(
-                                                                                          child: ListView(
-                                                                                            children: [
-                                                                                              Table(
-                                                                                                border: TableBorder.all(color: vert),
-                                                                                                children: listes,
-                                                                                              ),
-                                                                                            ],
-                                                                                          ),
-                                                                                        );
-                                                                                      }
-                                                                                    },
+                                                              for (QueryDocumentSnapshot item
+                                                                  in snapshotMembre
+                                                                      .data!
+                                                                      .docs) {
+                                                                if (item.get(
+                                                                        "regroupements") ==
+                                                                    snapUser
+                                                                        .data!
+                                                                        .get(
+                                                                            'regroupement')) {
+                                                                  listes.add(
+                                                                      TableRow(
+                                                                          children: [
+                                                                        Container(
+                                                                            height: size.height *
+                                                                                .05,
+                                                                            child:
+                                                                                Row(
+                                                                              children: [
+                                                                                Spacer(),
+                                                                                Text(
+                                                                                  item.get('matricule'),
+                                                                                  overflow: TextOverflow.ellipsis,
+                                                                                  style: TextStyle(fontSize: 12, color: vert, fontWeight: FontWeight.w300),
+                                                                                ),
+                                                                                Spacer(),
+                                                                              ],
+                                                                            )),
+                                                                        Container(
+                                                                            height: size.height *
+                                                                                .05,
+                                                                            child:
+                                                                                Row(
+                                                                              children: [
+                                                                                Spacer(),
+                                                                                Text(
+                                                                                  "${item.get('prenom')} ${item.get('name')}",
+                                                                                  overflow: TextOverflow.ellipsis,
+                                                                                  style: TextStyle(fontSize: 10, color: vert, fontWeight: FontWeight.w300),
+                                                                                ),
+                                                                                Spacer(),
+                                                                              ],
+                                                                            )),
+                                                                        Container(
+                                                                            height: size.height *
+                                                                                .05,
+                                                                            child:
+                                                                                Row(
+                                                                              children: [
+                                                                                Spacer(),
+                                                                                Text(
+                                                                                  item.get('sexe'),
+                                                                                  style: TextStyle(fontSize: 12, color: vert, fontWeight: FontWeight.w300),
+                                                                                ),
+                                                                                Spacer(),
+                                                                              ],
+                                                                            )),
+                                                                        Container(
+                                                                            height: size.height *
+                                                                                .05,
+                                                                            child:
+                                                                                Row(
+                                                                              children: [
+                                                                                Spacer(),
+                                                                                GestureDetector(
+                                                                                  onTap: () => null,
+                                                                                  child: Icon(
+                                                                                    CupertinoIcons.eye_fill,
+                                                                                    color: jaune,
                                                                                   ),
-                                                                                )),
-                                                                            Positioned(
-                                                                                right: 0,
-                                                                                child: StreamBuilder<DocumentSnapshot>(
-                                                                                    stream: FirebaseFirestore.instance.collection("regroupements").doc(regroupement).snapshots(),
-                                                                                    builder: (context, snapshot) {
-                                                                                      return !snapshot.hasData ? Text("") : Container(
-                                                                                        height: contrain.maxHeight * .5,
-                                                                                        width: contrain.maxWidth * .2,
-                                                                                        decoration: BoxDecoration(image: DecorationImage(image: NetworkImage(snapshot.data!.get("logo_url")))),
-                                                                                      );
-                                                                                    })),
-                                                                            Positioned(
-                                                                                top: contrain.maxHeight * .55,
-                                                                                right: 0,
-                                                                                child: Container(
-                                                                                  height: contrain.maxHeight * .1,
-                                                                                  width: contrain.maxWidth * .2,
-                                                                                  child: Row(
-                                                                                    children: [
-                                                                                      Spacer(),
-                                                                                      Icon(
-                                                                                        Icons.person_add,
-                                                                                        color: blanc,
-                                                                                        size: contrain.maxWidth * .02,
-                                                                                      ),
-                                                                                      SizedBox(
-                                                                                        width: 18,
-                                                                                      ),
-                                                                                      Text(
-                                                                                        'Ajouter un membre',
-                                                                                        style: TextStyle(fontSize: contrain.maxHeight * .05, fontWeight: FontWeight.w400, color: blanc),
-                                                                                      ),
-                                                                                      Spacer(),
-                                                                                    ],
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: size.width * .01,
+                                                                                ),
+                                                                                GestureDetector(
+                                                                                  onTap: () => null,
+                                                                                  child: Icon(
+                                                                                    Icons.edit,
+                                                                                    color: vert,
                                                                                   ),
-                                                                                  decoration: BoxDecoration(color: vert, borderRadius: BorderRadius.circular(4)),
-                                                                                )),
-                                                                            Positioned(
-                                                                                top: contrain.maxHeight * .67,
-                                                                                right: 0,
-                                                                                child: Container(
-                                                                                  height: contrain.maxHeight * .4,
-                                                                                  width: contrain.maxWidth * .2,
-                                                                                  child: Column(
-                                                                                    children: [
-                                                                                      Container(
-                                                                                          width: contrain.maxWidth * .2,
-                                                                                          child: Text(
-                                                                                            'Description ',
-                                                                                            style: TextStyle(fontSize: contrain.maxHeight * .05, color: vert),
-                                                                                          )),
-                                                                                      Container(
-                                                                                        height: contrain.maxHeight * .35,
-                                                                                        child: ListView(
-                                                                                          children: [
-                                                                                            Text(
-                                                                                              snaps.data!.get('description'),
-                                                                                              style: TextStyle(color: noir, fontSize: contrain.maxHeight * .03),
-                                                                                            ),
-                                                                                            SizedBox(
-                                                                                              height: contrain.maxHeight * .07,
-                                                                                            )
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                    ],
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  width: size.width * .01,
+                                                                                ),
+                                                                                GestureDetector(
+                                                                                  onTap: () => null,
+                                                                                  child: Icon(
+                                                                                    Icons.delete,
+                                                                                    color: rouge,
                                                                                   ),
-                                                                                  //decoration: BoxDecoration(color: vert, borderRadius: BorderRadius.circular(4)),
-                                                                                )),
-                                                                          ],
-                                                                        );
-                                                                      }
-                                                                    });
-                                                              }),
-                                                            ),
-                                                          ],
-                                                        );
+                                                                                ),
+                                                                                Spacer(),
+                                                                              ],
+                                                                            )),
+                                                                      ]));
+                                                                }
+                                                              }
+                                                              return Column(
+                                                                children: [
+                                                                  Text(
+                                                                    "Liste des membres",
+                                                                    style: TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontSize:
+                                                                            16,
+                                                                        color:
+                                                                            noir),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    height:
+                                                                        constraints.maxHeight *
+                                                                            .03,
+                                                                  ),
+                                                                  Container(
+                                                                    height:
+                                                                        constraints.maxHeight *
+                                                                            .45,
+                                                                    child:
+                                                                        ListView(
+                                                                      children: [
+                                                                        Table(
+                                                                          border:
+                                                                              TableBorder.all(color: vert),
+                                                                          children:
+                                                                              listes,
+                                                                        ),
+                                                                      ],
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              );
+                                                            }
+                                                          });
+                                                    }
+                                                  }
                                                 }),
                                   ),
                                 ),

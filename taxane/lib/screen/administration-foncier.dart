@@ -51,7 +51,7 @@ class _AdministrationFoncierState extends State<AdministrationFoncier> {
   @override
   void initState() {
     super.initState();
-    //getData();
+    getData();
   }
 
   getData() async {

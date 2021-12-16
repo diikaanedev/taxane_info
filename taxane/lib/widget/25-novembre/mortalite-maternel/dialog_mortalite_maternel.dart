@@ -1,15 +1,17 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:taxane/screen/25_novembre.dart';
 import 'package:taxane/utils/color-by-dii.dart';
 
-addOperationViolenceBaseGenre(
+addOperationMortaliteMaternel(
     {required BuildContext context, required String idVillage}) {
   Size size = MediaQuery.of(context).size;
   TextEditingController code = new TextEditingController();
-  TextEditingController nomAuteur = new TextEditingController();
-  TextEditingController nomVictime = new TextEditingController();
+  TextEditingController nom = new TextEditingController();
+  TextEditingController prenom = new TextEditingController();
+  TextEditingController periode = new TextEditingController();
   TextEditingController faits = new TextEditingController();
   showDialog(
       context: context,
@@ -23,7 +25,7 @@ addOperationViolenceBaseGenre(
                   return ListView(
                     children: [
                       Text(
-                        'Formulaire d\' ajout d\'une opération de violence basée sur le genre ',
+                        'Formulaire d\' ajout d\'une operation de mortalite maternel',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                             color: noir,
@@ -61,10 +63,10 @@ addOperationViolenceBaseGenre(
                           padding: const EdgeInsets.only(left: 8),
                           child: TextField(
                             cursorColor: vert,
-                            controller: nomVictime,
+                            controller: nom,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
-                                labelText: 'Nom complet victime',
+                                labelText: 'Nom victime',
                                 icon: Icon(CupertinoIcons.command)),
                           ),
                         ),
@@ -82,10 +84,10 @@ addOperationViolenceBaseGenre(
                           padding: const EdgeInsets.only(left: 8),
                           child: TextField(
                             cursorColor: vert,
-                            controller: nomAuteur,
+                            controller: prenom,
                             decoration: InputDecoration(
                                 border: InputBorder.none,
-                                labelText: 'Nom complet auteur',
+                                labelText: 'Prenom auteur',
                                 icon: Icon(CupertinoIcons.command)),
                           ),
                         ),
@@ -152,132 +154,30 @@ addOperationViolenceBaseGenre(
                           ),
                         ),
                       ),
+                     
+                     
                       SizedBox(
                         height: size.height * .05,
                       ),
                       Container(
-                        height: size.height * .04,
-                        width: size.width * .4,
-                        child: Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Icon(Icons.cloud),
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                Text('Dégats / '),
-                                DropdownButton<String>(
-                                    value: vingtCinqNovembreState.degats,
-                                    underline: Container(),
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        vingtCinqNovembreState.setState(() {
-                                          vingtCinqNovembreState.degats =
-                                              newValue!;
-                                        });
-                                      });
-                                    },
-                                    items: ["blessure", "mort", "autres"]
-                                        .map((e) => DropdownMenuItem(
-                                            value: e,
-                                            child: Text(e.toUpperCase())))
-                                        .toList()),
-                              ],
-                            )),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: vert),
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      SizedBox(
                         height: size.height * .05,
-                      ),
-                      Container(
-                        height: size.height * .04,
                         width: size.width * .4,
                         child: Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Icon(Icons.code),
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                Text('Décision Judiciare / '),
-                                DropdownButton<String>(
-                                    value: vingtCinqNovembreState
-                                        .decisionJudiciaire,
-                                    underline: Container(),
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        vingtCinqNovembreState.setState(() {
-                                          vingtCinqNovembreState
-                                              .decisionJudiciaire = newValue!;
-                                        });
-                                      });
-                                    },
-                                    items: [
-                                      "ammende",
-                                      "emprisonnement",
-                                      "autres"
-                                    ]
-                                        .map((e) => DropdownMenuItem(
-                                            value: e,
-                                            child: Text(e.toUpperCase())))
-                                        .toList()),
-                              ],
-                            )),
+                          padding: const EdgeInsets.only(left: 8),
+                          child: TextField(
+                            cursorColor: vert,
+                            controller: periode,
+                            decoration: InputDecoration(
+                                border: InputBorder.none,
+                                labelText: 'Période des faits',
+                                icon: Icon(CupertinoIcons.command)),
+                          ),
+                        ),
                         decoration: BoxDecoration(
                             border: Border.all(color: vert),
                             borderRadius: BorderRadius.circular(8)),
                       ),
-                      SizedBox(
-                        height: size.height * .05,
-                      ),
-                      Container(
-                        height: size.height * .04,
-                        width: size.width * .4,
-                        child: Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Row(
-                              children: [
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Icon(Icons.cleaning_services),
-                                SizedBox(
-                                  width: 4,
-                                ),
-                                Text('Liens / '),
-                                DropdownButton<String>(
-                                    value: vingtCinqNovembreState.liens,
-                                    underline: Container(),
-                                    onChanged: (String? newValue) {
-                                      setState(() {
-                                        vingtCinqNovembreState.setState(() {
-                                          vingtCinqNovembreState.liens =
-                                              newValue!;
-                                        });
-                                      });
-                                    },
-                                    items: ["domestique", "parente", "autres"]
-                                        .map((e) => DropdownMenuItem(
-                                            value: e,
-                                            child: Text(e.toUpperCase())))
-                                        .toList()),
-                              ],
-                            )),
-                        decoration: BoxDecoration(
-                            border: Border.all(color: vert),
-                            borderRadius: BorderRadius.circular(8)),
-                      ),
-                      SizedBox(
+                       SizedBox(
                         height: size.height * .05,
                       ),
                       Container(
@@ -308,19 +208,16 @@ addOperationViolenceBaseGenre(
                         child: GestureDetector(
                           onTap: () async {
                             FirebaseFirestore.instance
-                                .collection("violence-basee-sur-le-genre")
+                                .collection("mortalite-maternel")
                                 .add({
-                              "auteurNomComplet": nomAuteur.text,
+                              "nom": nom.text,
+                              "prenom": prenom.text,
                               "code": code.text,
                               "date": DateTime.now(),
+                              "periode" : periode.text,
                               "dateDesFaits":
                                   vingtCinqNovembreState.dateDesFaits,
-                              "decisionJudicaire":
-                                  vingtCinqNovembreState.decisionJudiciaire,
-                              "degats": vingtCinqNovembreState.degats,
-                              "faits": faits.text,
-                              "liens": vingtCinqNovembreState.liens,
-                              "victimeNomComplet": nomVictime.text,
+                              "cause": faits.text,
                               "village": idVillage,
                             }).then((value) => Navigator.pop(context));
                           },

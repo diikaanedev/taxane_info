@@ -3,13 +3,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:taxane/utils/color-by-dii.dart';
+import 'package:taxane/widget/25-novembre/mortalite-infatile/admin_mortalite_infatile.dart';
+import 'package:taxane/widget/25-novembre/mortalite-maternel/admin_mortalite_maternel.dart';
 import 'package:taxane/widget/25-novembre/violence-base-genre/admin_violence_base_genre.dart';
 import 'package:taxane/widget/agriculture-horticulture-transformation-produits-agricole/agriculture/champs/admin-champs.dart';
 import 'package:taxane/widget/agriculture-horticulture-transformation-produits-agricole/agriculture/commercilalition/admin-commercialiation.dart';
 import 'package:taxane/widget/agriculture-horticulture-transformation-produits-agricole/agriculture/materiel/admin-materiel.dart';
 import 'package:taxane/widget/agriculture-horticulture-transformation-produits-agricole/agriculture/production/admin-production.dart';
 import 'package:taxane/widget/menu-left-home.dart';
- 
+
 late _VingtCinqNovembreState vingtCinqNovembreState;
 
 class VingtCinqNovembre extends StatefulWidget {
@@ -148,8 +150,14 @@ class _VingtCinqNovembreState extends State<VingtCinqNovembre> {
                                                                 .get("role") ==
                                                             2) {
                                                           return GestureDetector(
-                                                            onTap: () =>adminViolenceBaseGenreRole2(context: context, idVillage: snapshot.data!
-                                                                .get("village")),
+                                                            onTap: () =>
+                                                                adminViolenceBaseGenreRole2(
+                                                                    context:
+                                                                        context,
+                                                                    idVillage:
+                                                                        snapshot
+                                                                            .data!
+                                                                            .get("village")),
                                                             child: Container(
                                                               width: constraints
                                                                       .maxWidth *
@@ -180,7 +188,10 @@ class _VingtCinqNovembreState extends State<VingtCinqNovembre> {
                                                           );
                                                         } else {
                                                           return GestureDetector(
-                                                            onTap: () => adminViolenceBaseGenre(context: context),
+                                                            onTap: () =>
+                                                                adminViolenceBaseGenre(
+                                                                    context:
+                                                                        context),
                                                             child: Container(
                                                               width: constraints
                                                                       .maxWidth *
@@ -269,10 +280,7 @@ class _VingtCinqNovembreState extends State<VingtCinqNovembre> {
                                                                 .get('role') ==
                                                             1) {
                                                           return GestureDetector(
-                                                            onTap: () =>
-                                                                adminProduction(
-                                                                    context:
-                                                                        context),
+                                                            onTap: () => adminMortaliteMaternel(context: context),
                                                             child: Container(
                                                               width: constraints
                                                                       .maxWidth *
@@ -304,7 +312,7 @@ class _VingtCinqNovembreState extends State<VingtCinqNovembre> {
                                                         } else {
                                                           return GestureDetector(
                                                             onTap: () =>
-                                                                adminProductionRole2(
+                                                                adminMortaliteMaternelRole2(
                                                                     context:
                                                                         context,
                                                                     idVillage:
@@ -374,34 +382,126 @@ class _VingtCinqNovembreState extends State<VingtCinqNovembre> {
                                                       }
                                                     }),
                                                 Spacer(),
-                                                GestureDetector(
-                                                  onTap: () =>
-                                                      adminCommercialisation(
-                                                          context: context),
-                                                  child: Container(
-                                                    width:
-                                                        constraints.maxWidth *
-                                                            .3,
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8),
-                                                      color: rouge,
-                                                    ),
-                                                    child: Center(
-                                                      child: Text(
-                                                        'Mortalite Infantile',
-                                                        style: TextStyle(
-                                                            fontSize: constraints
-                                                                    .maxHeight *
-                                                                .02,
-                                                            fontWeight:
-                                                                FontWeight.w800,
-                                                            color: blanc),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
+                                                StreamBuilder<DocumentSnapshot>(
+                                                    stream: FirebaseFirestore
+                                                        .instance
+                                                        .collection("users")
+                                                        .doc(FirebaseAuth
+                                                            .instance
+                                                            .currentUser!
+                                                            .uid)
+                                                        .snapshots(),
+                                                    builder:
+                                                        (context, snapshot) {
+                                                      if (snapshot.hasData) {
+                                                        if (snapshot.data!
+                                                                .get("role") ==
+                                                            1) {
+                                                          return GestureDetector(
+                                                            onTap: () =>
+                                                                adminMortaliteInfatile(
+                                                                    context:
+                                                                        context),
+                                                            child: Container(
+                                                              width: constraints
+                                                                      .maxWidth *
+                                                                  .3,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8),
+                                                                color: rouge,
+                                                              ),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  'Mortalite Infantile',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          constraints.maxHeight *
+                                                                              .02,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w800,
+                                                                      color:
+                                                                          blanc),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        } else {
+                                                          return GestureDetector(
+                                                            onTap: () =>
+                                                                adminMortaliteInfatileRole2(
+                                                                    context:
+                                                                        context,
+                                                                    idVillage:
+                                                                        snapshot
+                                                                            .data!
+                                                                            .get('village')),
+                                                            child: Container(
+                                                              width: constraints
+                                                                      .maxWidth *
+                                                                  .3,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8),
+                                                                color: rouge,
+                                                              ),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  'Mortalite Infantile',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          constraints.maxHeight *
+                                                                              .02,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w800,
+                                                                      color:
+                                                                          blanc),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          );
+                                                        }
+                                                      } else {
+                                                        return GestureDetector(
+                                                          onTap: () => null,
+                                                          child: Container(
+                                                            width: constraints
+                                                                    .maxWidth *
+                                                                .3,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8),
+                                                              color: rouge,
+                                                            ),
+                                                            child: Center(
+                                                              child: Text(
+                                                                'Mortalite Infantile',
+                                                                style: TextStyle(
+                                                                    fontSize:
+                                                                        constraints.maxHeight *
+                                                                            .02,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w800,
+                                                                    color:
+                                                                        blanc),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        );
+                                                      }
+                                                    }),
                                                 Spacer(),
                                               ],
                                             ),

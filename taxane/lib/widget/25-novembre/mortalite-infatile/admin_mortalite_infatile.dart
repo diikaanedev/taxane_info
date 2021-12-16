@@ -2,9 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:taxane/utils/color-by-dii.dart';
+import 'package:taxane/widget/25-novembre/mortalite-infatile/dialog_mortalite_infatile.dart';
 import 'package:taxane/widget/25-novembre/violence-base-genre/dialog_violence_base_genre.dart';
 
-adminViolenceBaseGenre({required BuildContext context}) async {
+adminMortaliteInfatile({required BuildContext context}) async {
   Size size = MediaQuery.of(context).size;
 
   showDialog(
@@ -22,7 +23,7 @@ adminViolenceBaseGenre({required BuildContext context}) async {
                   width: size.width * .7,
                   child: Row(
                     children: [
-                      Text('Gestions des Violence basée sur le genre'),
+                      Text('Gestions des Mortalite Infantile'),
                       Spacer(),
                       GestureDetector(
                         onTap: () => null,
@@ -61,7 +62,7 @@ adminViolenceBaseGenre({required BuildContext context}) async {
                     builder: (context, constraints) {
                       return StreamBuilder<QuerySnapshot>(
                           stream: FirebaseFirestore.instance
-                              .collection("violence-basee-sur-le-genre")
+                              .collection("mortalite-infantile")
                               .snapshots(),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
@@ -103,7 +104,7 @@ adminViolenceBaseGenre({required BuildContext context}) async {
                                             width: constraints.maxWidth * .01,
                                           ),
                                           Text(
-                                            'Victime',
+                                            'Nom Complet',
                                             style: TextStyle(
                                                 color: vert,
                                                 fontWeight: FontWeight.bold),
@@ -124,7 +125,7 @@ adminViolenceBaseGenre({required BuildContext context}) async {
                                             width: constraints.maxWidth * .01,
                                           ),
                                           Text(
-                                            'Auteur',
+                                            'Cause',
                                             style: TextStyle(
                                                 color: vert,
                                                 fontWeight: FontWeight.bold),
@@ -145,7 +146,7 @@ adminViolenceBaseGenre({required BuildContext context}) async {
                                             width: constraints.maxWidth * .01,
                                           ),
                                           Text(
-                                            'Degats',
+                                            'Periode en (mois)',
                                             style: TextStyle(
                                                 color: vert,
                                                 fontWeight: FontWeight.bold),
@@ -166,7 +167,7 @@ adminViolenceBaseGenre({required BuildContext context}) async {
                                             width: constraints.maxWidth * .01,
                                           ),
                                           Text(
-                                            'Date',
+                                            'Date des Faits',
                                             style: TextStyle(
                                                 color: vert,
                                                 fontWeight: FontWeight.bold),
@@ -200,8 +201,7 @@ adminViolenceBaseGenre({required BuildContext context}) async {
 
                               for (var item in snapshot.data!.docs) {
                                 if (true) {
-                                  Timestamp timestamp =
-                                      item.get('dateDesFaits');
+                                  Timestamp timestamp = item.get('dateDesFaits');
                                   DateTime date =
                                       new DateTime.fromMicrosecondsSinceEpoch(
                                           timestamp.millisecondsSinceEpoch *
@@ -227,7 +227,7 @@ adminViolenceBaseGenre({required BuildContext context}) async {
                                           children: [
                                             Spacer(),
                                             Text(
-                                              item.get('victimeNomComplet'),
+                                               item.get('prenom') + ' ' + item.get('nom'),
                                               style: TextStyle(
                                                   color: vert,
                                                   fontWeight: FontWeight.w300),
@@ -235,13 +235,13 @@ adminViolenceBaseGenre({required BuildContext context}) async {
                                             Spacer(),
                                           ],
                                         )),
-                                    Container(
+                                         Container(
                                         height: constraints.maxHeight * .05,
                                         child: Row(
                                           children: [
                                             Spacer(),
                                             Text(
-                                              item.get('auteurNomComplet'),
+                                               item.get('cause'),
                                               style: TextStyle(
                                                   color: vert,
                                                   fontWeight: FontWeight.w300),
@@ -249,13 +249,13 @@ adminViolenceBaseGenre({required BuildContext context}) async {
                                             Spacer(),
                                           ],
                                         )),
-                                    Container(
+                                        Container(
                                         height: constraints.maxHeight * .05,
                                         child: Row(
                                           children: [
                                             Spacer(),
                                             Text(
-                                              item.get('degats'),
+                                               item.get('periode'),
                                               style: TextStyle(
                                                   color: vert,
                                                   fontWeight: FontWeight.w300),
@@ -356,7 +356,7 @@ adminViolenceBaseGenre({required BuildContext context}) async {
   );
 }
 
-adminViolenceBaseGenreRole2(
+adminMortaliteInfatileRole2(
     {required BuildContext context, required String idVillage}) async {
   Size size = MediaQuery.of(context).size;
 
@@ -367,19 +367,18 @@ adminViolenceBaseGenreRole2(
         builder: (context, setState) {
           return Container(
             height: size.height * 8,
-            width: size.width * .7,
+            width: size.width * .75,
             child: Column(
               children: [
                 Container(
                   height: size.height * .04,
-                  width: size.width * .7,
+                  width: size.width * .75,
                   child: Row(
                     children: [
-                      Text('Gestions des Violence basée sur le genre'),
+                      Text('Gestions des Mortalites infantiles'),
                       Spacer(),
                       GestureDetector(
-                        onTap: () => addOperationViolenceBaseGenre(
-                            context: context, idVillage: idVillage),
+                        onTap: () => addOperationMortaliteInfatile(context: context, idVillage: idVillage),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
@@ -415,13 +414,13 @@ adminViolenceBaseGenreRole2(
                     builder: (context, constraints) {
                       return StreamBuilder<QuerySnapshot>(
                           stream: FirebaseFirestore.instance
-                              .collection("violence-basee-sur-le-genre")
+                              .collection("mortalite-infantile")
                               .snapshots(),
                           builder: (context, snapshot) {
                             if (!snapshot.hasData) {
                               return Container();
                             } else {
-                              List<TableRow> listes = [
+                               List<TableRow> listes = [
                                 TableRow(children: [
                                   Container(
                                       height: constraints.maxHeight * .05,
@@ -457,7 +456,7 @@ adminViolenceBaseGenreRole2(
                                             width: constraints.maxWidth * .01,
                                           ),
                                           Text(
-                                            'Victime',
+                                            'Nom ',
                                             style: TextStyle(
                                                 color: vert,
                                                 fontWeight: FontWeight.bold),
@@ -478,7 +477,7 @@ adminViolenceBaseGenreRole2(
                                             width: constraints.maxWidth * .01,
                                           ),
                                           Text(
-                                            'Auteur',
+                                            'Cause',
                                             style: TextStyle(
                                                 color: vert,
                                                 fontWeight: FontWeight.bold),
@@ -499,7 +498,7 @@ adminViolenceBaseGenreRole2(
                                             width: constraints.maxWidth * .01,
                                           ),
                                           Text(
-                                            'Degats',
+                                            'Periode en (mois)',
                                             style: TextStyle(
                                                 color: vert,
                                                 fontWeight: FontWeight.bold),
@@ -520,7 +519,7 @@ adminViolenceBaseGenreRole2(
                                             width: constraints.maxWidth * .01,
                                           ),
                                           Text(
-                                            'Date',
+                                            'Date des Faits',
                                             style: TextStyle(
                                                 color: vert,
                                                 fontWeight: FontWeight.bold),
@@ -553,9 +552,8 @@ adminViolenceBaseGenreRole2(
                               ];
 
                               for (var item in snapshot.data!.docs) {
-                                if (item.get('village') == idVillage) {
-                                  Timestamp timestamp =
-                                      item.get('dateDesFaits');
+                                if (item.get("village") == idVillage) {
+                                  Timestamp timestamp = item.get('dateDesFaits');
                                   DateTime date =
                                       new DateTime.fromMicrosecondsSinceEpoch(
                                           timestamp.millisecondsSinceEpoch *
@@ -581,7 +579,7 @@ adminViolenceBaseGenreRole2(
                                           children: [
                                             Spacer(),
                                             Text(
-                                              item.get('victimeNomComplet'),
+                                               item.get('prenom') + ' ' + item.get('nom'),
                                               style: TextStyle(
                                                   color: vert,
                                                   fontWeight: FontWeight.w300),
@@ -589,13 +587,13 @@ adminViolenceBaseGenreRole2(
                                             Spacer(),
                                           ],
                                         )),
-                                    Container(
+                                         Container(
                                         height: constraints.maxHeight * .05,
                                         child: Row(
                                           children: [
                                             Spacer(),
                                             Text(
-                                              item.get('auteurNomComplet'),
+                                               item.get('cause'),
                                               style: TextStyle(
                                                   color: vert,
                                                   fontWeight: FontWeight.w300),
@@ -603,13 +601,13 @@ adminViolenceBaseGenreRole2(
                                             Spacer(),
                                           ],
                                         )),
-                                    Container(
+                                        Container(
                                         height: constraints.maxHeight * .05,
                                         child: Row(
                                           children: [
                                             Spacer(),
                                             Text(
-                                              item.get('degats'),
+                                               item.get('periode'),
                                               style: TextStyle(
                                                   color: vert,
                                                   fontWeight: FontWeight.w300),

@@ -164,16 +164,7 @@ class _LoginLaptopState extends State<LoginLaptop> {
                                 .doc(value.user!.uid)
                                 .get()
                                 .then((doc) async {
-                              if (!doc.exists) {
-                                await FirebaseFirestore.instance
-                                    .collection('users')
-                                    .doc(value.user!.uid)
-                                    .set({
-                                  "username": email.split('@')[0],
-                                  "role": 1,
-                                  "avatar": "",
-                                });
-                              }
+                             
                               Navigator.popAndPushNamed(context, "/home");
                             }).catchError((err) {
                               print("we haeve error");
