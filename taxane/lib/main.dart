@@ -7,6 +7,7 @@ import 'package:taxane/screen/agriculture-hortoculture.dart';
 import 'package:taxane/screen/comptabilite.dart';
 import 'package:taxane/screen/elevage.dart';
 import 'package:taxane/screen/equipement-collectif.dart';
+import 'package:taxane/screen/espace_visiteur.dart';
 import 'package:taxane/screen/home-laptop.dart';
 import 'package:taxane/screen/login-laptop.dart';
 import 'package:taxane/utils/color-by-dii.dart';
@@ -36,19 +37,21 @@ class _MyAppState extends State<MyApp> {
       title: titre,
       theme: ThemeData(
         primarySwatch: Colors.green,
+        fontFamily: 'Maven_Pro'
       ),
       debugShowCheckedModeBanner: false,
       initialRoute: '/',
      
       routes: {
         '/home': (context) => HomeLaptop(),
-        '/': (context) => LoginLaptop(),
+        '/': (context) => EspaceVisiteurScreen(),
         '/administration-foncier': (context) => AdministrationFoncier(),
         '/equipement-collectif': (context) => EquipementCollectif(),
         '/agriculture-horticulture': (context) => AgricultureHortoculture(),
         '/elevage': (context) => Elevage(),
         '/comptabilite': (context) => Comptabilite(),
         '/25-novembre': (context) => VingtCinqNovembre(),
+        '/espace-visiteur': (context) => EspaceVisiteurScreen(),
       },
     );
   }
