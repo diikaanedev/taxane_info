@@ -6,7 +6,7 @@ import 'package:taxane/screen/administration-foncier.dart';
 import 'package:taxane/utils/color-by-dii.dart';
 import 'package:taxane/widget/dialog-region.dart';
 
-adminRegion({required BuildContext context ,  required String idPays}) async {
+adminRegion({required BuildContext context, required String idPays}) async {
   Size size = MediaQuery.of(context).size;
   showDialog(
     context: context,
@@ -41,29 +41,33 @@ adminRegion({required BuildContext context ,  required String idPays}) async {
                                   Container(
                                     // width: size.width * .15,
                                     child: StreamBuilder<QuerySnapshot>(
-                                      stream: FirebaseFirestore.instance.collection("pays").snapshots(),
-                                      builder: (context, snap) {
-
-                                        return !snap.hasData ? Container() : DropdownButton<String>(
-                                            value: administrationFoncierState
-                                                .paysSelected,
-                                            onChanged: (String? newValue) {
-                                               setState(() {
-                                                administrationFoncierState
-                                                    .paysSelected = newValue!;
-                                              });
-                                             
-                                            },
-                                            items: snap.data!.docs
-                                                .map((e) => DropdownMenuItem(
-                                                    value: e.id,
-                                                    child: Text(
-                                                        "${e.get("code")}-${e.get("nom")}")))
-                                                .toList());
-                                      }
-                                    ),
+                                        stream: FirebaseFirestore.instance
+                                            .collection("pays")
+                                            .snapshots(),
+                                        builder: (context, snap) {
+                                          return !snap.hasData
+                                              ? Container()
+                                              : DropdownButton<String>(
+                                                  value:
+                                                      administrationFoncierState
+                                                          .paysSelected,
+                                                  onChanged:
+                                                      (String? newValue) {
+                                                    setState(() {
+                                                      administrationFoncierState
+                                                              .paysSelected =
+                                                          newValue!;
+                                                    });
+                                                  },
+                                                  items: snap.data!.docs
+                                                      .map((e) => DropdownMenuItem(
+                                                          value: e.id,
+                                                          child: Text(
+                                                              "${e.get("code")}-${e.get("nom")}")))
+                                                      .toList());
+                                        }),
                                     decoration: BoxDecoration(),
-                                  ), 
+                                  ),
                                   Spacer(),
                                   GestureDetector(
                                     onTap: () => dialogAddRegion(
@@ -215,101 +219,100 @@ adminRegion({required BuildContext context ,  required String idPays}) async {
 
                                       // snapshot.data!.get("regions") as List;
 
-                                        for (var item in snapshot.data!.docs) {
-                                          if (item.get("pays") == administrationFoncierState.paysSelected) {
-                                            Timestamp timestamp = item.get('date');
-                                        DateTime date = new DateTime
-                                                .fromMicrosecondsSinceEpoch(
-                                            timestamp.millisecondsSinceEpoch *
-                                                1000);
-                                            listes.add(TableRow(
-children: [
-                                          Container(
-                                              height: size.height * .05,
-                                              child: Row(
-                                                children: [
-                                                  Spacer(),
-                                                  Text(
-                                                    item.get('code'),
-                                                    style: TextStyle(
-                                                        color: vert,
-                                                        fontWeight:
-                                                            FontWeight.w300),
-                                                  ),
-                                                  Spacer(),
-                                                ],
-                                              )),
-                                          Container(
-                                              height: size.height * .05,
-                                              child: Row(
-                                                children: [
-                                                  Spacer(),
-                                                  Text(
-                                                    item.get('nom'),
-                                                    style: TextStyle(
-                                                        color: vert,
-                                                        fontWeight:
-                                                            FontWeight.w300),
-                                                  ),
-                                                  Spacer(),
-                                                ],
-                                              )),
-                                          Container(
-                                              height: size.height * .05,
-                                              child: Row(
-                                                children: [
-                                                  Spacer(),
-                                                  Text(
-                                                    dateFormatter(date),
-                                                    style: TextStyle(
-                                                        color: vert,
-                                                        fontWeight:
-                                                            FontWeight.w300),
-                                                  ),
-                                                  Spacer(),
-                                                ],
-                                              )),
-                                          Container(
-                                              height: size.height * .05,
-                                              child: Row(
-                                                children: [
-                                                  Spacer(),
-                                                  GestureDetector(
-                                                    onTap: () => dialogEditRegion(
-                                                        context: context,
-                                                        id: administrationFoncierState
-                                                            .paysSelected,
-                                                        idRegion:item.id),
-                                                    child: Icon(
-                                                      Icons.edit,
-                                                      color: vert,
+                                      for (var item in snapshot.data!.docs) {
+                                        if (item.get("pays") ==
+                                            administrationFoncierState
+                                                .paysSelected) {
+                                          Timestamp timestamp =
+                                              item.get('date');
+                                          DateTime date = new DateTime
+                                                  .fromMicrosecondsSinceEpoch(
+                                              timestamp.millisecondsSinceEpoch *
+                                                  1000);
+                                          listes.add(TableRow(children: [
+                                            Container(
+                                                height: size.height * .05,
+                                                child: Row(
+                                                  children: [
+                                                    Spacer(),
+                                                    Text(
+                                                      item.get('code'),
+                                                      style: TextStyle(
+                                                          color: vert,
+                                                          fontWeight:
+                                                              FontWeight.w300),
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: size.width * .01,
-                                                  ),
-                                                  GestureDetector(
-                                                    onTap: () => dialogDeleteRegion(
-                                                        context: context,
-                                                        id: administrationFoncierState
-                                                            .paysSelected,
-                                                        idRegion: item.id),
-                                                    child: Icon(
-                                                      Icons.delete,
-                                                      color: rouge,
+                                                    Spacer(),
+                                                  ],
+                                                )),
+                                            Container(
+                                                height: size.height * .05,
+                                                child: Row(
+                                                  children: [
+                                                    Spacer(),
+                                                    Text(
+                                                      item.get('nom'),
+                                                      style: TextStyle(
+                                                          color: vert,
+                                                          fontWeight:
+                                                              FontWeight.w300),
                                                     ),
-                                                  ),
-                                                  Spacer(),
-                                                ],
-                                              )),
-                                        ]
-                                            ));
-                                          } 
+                                                    Spacer(),
+                                                  ],
+                                                )),
+                                            Container(
+                                                height: size.height * .05,
+                                                child: Row(
+                                                  children: [
+                                                    Spacer(),
+                                                    Text(
+                                                      dateFormatter(date),
+                                                      style: TextStyle(
+                                                          color: vert,
+                                                          fontWeight:
+                                                              FontWeight.w300),
+                                                    ),
+                                                    Spacer(),
+                                                  ],
+                                                )),
+                                            Container(
+                                                height: size.height * .05,
+                                                child: Row(
+                                                  children: [
+                                                    Spacer(),
+                                                    GestureDetector(
+                                                      onTap: () => dialogEditRegion(
+                                                          context: context,
+                                                          id: administrationFoncierState
+                                                              .paysSelected,
+                                                          idRegion: item.id),
+                                                      child: Icon(
+                                                        Icons.edit,
+                                                        color: vert,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: size.width * .01,
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () =>
+                                                          dialogDeleteRegion(
+                                                              context: context,
+                                                              id: administrationFoncierState
+                                                                  .paysSelected,
+                                                              idRegion:
+                                                                  item.id),
+                                                      child: Icon(
+                                                        Icons.delete,
+                                                        color: rouge,
+                                                      ),
+                                                    ),
+                                                    Spacer(),
+                                                  ],
+                                                )),
+                                          ]));
                                         }
-
-                                            
-                                                
-                                         
+                                      }
 
                                       return LayoutBuilder(
                                         builder: (context, constraints) {
