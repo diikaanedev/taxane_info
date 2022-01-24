@@ -22,11 +22,12 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
   bool chargementConnexion = false;
   bool isCharging = false;
   late String cultureSelected;
-  late String cultureSelectedName;
+  late String especeanimalSelected;
   late String materielSelected;
   late String materielSelectedName;
   String requetteSelected = "Choisir une secteur d\'activites";
   String produitSelected = "produits";
+  String mortaliteSelected = "Infantile";
 
   @override
   void initState() {
@@ -49,6 +50,11 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
     FirebaseFirestore.instance.collection("materiels").get().then((value) {
       setState(() {
         materielSelected = value.docs.first.id;
+      });
+    });
+    FirebaseFirestore.instance.collection("animaux").get().then((value) {
+      setState(() {
+        especeanimalSelected = value.docs.first.id;
       });
     });
   }
@@ -584,8 +590,54 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                                                       });
                                                                 }
                                                               })
-                                                    else
-                                                      Text(''),
+                                                    else if (requetteSelected ==
+                                                        "Elevage")
+                                                      StreamBuilder<
+                                                              QuerySnapshot>(
+                                                          stream:
+                                                              FirebaseFirestore
+                                                                  .instance
+                                                                  .collection(
+                                                                      "animaux")
+                                                                  .snapshots(),
+                                                          builder: (context,
+                                                              snapshot) {
+                                                            if (!snapshot
+                                                                .hasData) {
+                                                              return Text("");
+                                                            } else {
+                                                              return DropdownButton(
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          constraints.maxHeight *
+                                                                              .02,
+                                                                      color: noir.withOpacity(
+                                                                          .8)),
+                                                                  value:
+                                                                      especeanimalSelected,
+                                                                  items: snapshot
+                                                                      .data!
+                                                                      .docs
+                                                                      .map((e) => DropdownMenuItem(
+                                                                          value: e
+                                                                              .id,
+                                                                          child: Text(e
+                                                                              .get(
+                                                                                  "nom")
+                                                                              .toString()
+                                                                              .toUpperCase())))
+                                                                      .toList(),
+                                                                  onChanged:
+                                                                      (value) {
+                                                                    setState(
+                                                                        () {
+                                                                      especeanimalSelected =
+                                                                          value
+                                                                              .toString();
+                                                                    });
+                                                                  });
+                                                            }
+                                                          }),
                                                     Spacer(),
                                                     if (requetteSelected ==
                                                         "Agriculture")
@@ -663,117 +715,642 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                                             ),
                                                           ),
                                                         ],
-                                                      )
-                                                    else
-                                                      Row(),
+                                                      ),
+                                                    if (requetteSelected ==
+                                                        "Elevage")
+                                                      Row(
+                                                        children: [
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                produitSelected =
+                                                                    "especes";
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                              child: Text(
+                                                                'Especes',
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    fontSize:
+                                                                        constraints.maxHeight *
+                                                                            .02,
+                                                                    color: rouge
+                                                                        .withOpacity(
+                                                                            .8)),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    if (requetteSelected ==
+                                                        "Mortalite")
+                                                      Row(
+                                                        children: [
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                mortaliteSelected =
+                                                                    "Infantile";
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                              child: Text(
+                                                                'Infantile',
+                                                                style: mortaliteSelected ==
+                                                                        "Infantile"
+                                                                    ? TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontSize:
+                                                                            constraints.maxHeight *
+                                                                                .02,
+                                                                        color: rouge.withOpacity(
+                                                                            .8))
+                                                                    : TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontSize:
+                                                                            constraints.maxHeight *
+                                                                                .015,
+                                                                        color: rouge
+                                                                            .withOpacity(.2)),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          SizedBox(
+                                                            width: constraints
+                                                                    .maxWidth *
+                                                                .05,
+                                                          ),
+                                                          GestureDetector(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                mortaliteSelected =
+                                                                    "Maternel";
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                              child: Text(
+                                                                'Maternel',
+                                                                style: mortaliteSelected ==
+                                                                        "Maternel"
+                                                                    ? TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontSize:
+                                                                            constraints.maxHeight *
+                                                                                .02,
+                                                                        color: rouge.withOpacity(
+                                                                            .8))
+                                                                    : TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        fontSize:
+                                                                            constraints.maxHeight *
+                                                                                .015,
+                                                                        color: rouge
+                                                                            .withOpacity(.2)),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    if (requetteSelected ==
+                                                        "Violence")
+                                                      Row(
+                                                        children: [
+                                                          GestureDetector(
+                                                            onTap: () {},
+                                                            child: Container(
+                                                              child: Text(
+                                                                  'Violences faites aux femmes',
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          constraints.maxHeight *
+                                                                              .02,
+                                                                      color: rouge
+                                                                          .withOpacity(
+                                                                              .8))),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     Spacer(),
                                                   ],
                                                 ),
                                               )),
-                                          Expanded(
-                                              flex: 9,
-                                              child: Container(
-                                                // color: rouge,
-                                                child: Column(
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        Spacer(),
-                                                        Container(
-                                                          width: constraints
-                                                                  .maxWidth *
-                                                              .5,
-                                                          child: getHeader(
-                                                              context: context,
-                                                              titles: [
-                                                                "Régions",
-                                                                "Produit",
-                                                                "Quantité",
-                                                                "Voir"
-                                                              ],
-                                                              width: constraints
-                                                                      .maxWidth *
-                                                                  .07,
-                                                              constraints:
-                                                                  constraints),
-                                                        ),
-                                                        Spacer(),
-                                                        Icon(Icons.download)
-                                                      ],
+                                          requetteSelected ==
+                                                  "Choisir une secteur d\'activites"
+                                              ? Expanded(
+                                                  flex: 9,
+                                                  child: Container(
+                                                    child: Center(
+                                                      child: Text(
+                                                          'Zone des Statistiques'),
                                                     ),
-                                                    Center(
+                                                  ))
+                                              : requetteSelected ==
+                                                          "Agriculture" &&
+                                                      produitSelected ==
+                                                          "produits"
+                                                  ? Expanded(
+                                                      flex: 9,
                                                       child: Container(
-                                                        height: .4,
-                                                        color: Color(0xFF000000)
-                                                            .withOpacity(.15),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      height: constraints
-                                                              .maxHeight *
-                                                          .57,
-                                                      child: StreamBuilder<
-                                                              QuerySnapshot>(
-                                                          stream:
-                                                              FirebaseFirestore
-                                                                  .instance
-                                                                  .collection(
-                                                                      "regions")
-                                                                  .snapshots(),
-                                                          builder: (context,
-                                                              snapshot) {
-                                                            List<TableRow>
-                                                                listes = [];
-                                                            if (!snapshot
-                                                                .hasData) {
-                                                              return Text('');
-                                                            } else {
-                                                              return ListView(
-                                                                children: [
-                                                                  Column(
-                                                                    children: snapshot
-                                                                        .data!
-                                                                        .docs
-                                                                        .map((e) =>
+                                                        // color: rouge,
+                                                        child: Column(
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                Spacer(),
+                                                                Container(
+                                                                  width: constraints
+                                                                          .maxWidth *
+                                                                      .5,
+                                                                  child: getHeader(
+                                                                      context:
+                                                                          context,
+                                                                      titles: [
+                                                                        "Régions",
+                                                                        "Quantité",
+                                                                        "Voir"
+                                                                      ],
+                                                                      width: constraints
+                                                                              .maxWidth *
+                                                                          .07,
+                                                                      constraints:
+                                                                          constraints),
+                                                                ),
+                                                                Spacer(),
+                                                                Icon(Icons
+                                                                    .download)
+                                                              ],
+                                                            ),
+                                                            Center(
+                                                              child: Container(
+                                                                height: .4,
+                                                                color: Color(
+                                                                        0xFF000000)
+                                                                    .withOpacity(
+                                                                        .15),
+                                                              ),
+                                                            ),
+                                                            Container(
+                                                              height: constraints
+                                                                      .maxHeight *
+                                                                  .57,
+                                                              child: StreamBuilder<
+                                                                      QuerySnapshot>(
+                                                                  stream: FirebaseFirestore
+                                                                      .instance
+                                                                      .collection(
+                                                                          "regions")
+                                                                      .snapshots(),
+                                                                  builder: (context,
+                                                                      snapshot) {
+                                                                    List<TableRow>
+                                                                        listes =
+                                                                        [];
+                                                                    if (!snapshot
+                                                                        .hasData) {
+                                                                      return Text(
+                                                                          '');
+                                                                    } else {
+                                                                      return ListView(
+                                                                        children: [
+                                                                          Column(
+                                                                            children: snapshot.data!.docs
+                                                                                .map((e) => Container(
+                                                                                      height: constraints.maxHeight * .05,
+                                                                                      width: constraints.maxWidth,
+                                                                                      child: FutureBuilder(
+                                                                                          future: getNumberProduits(idRegion: e.id, idCulture: cultureSelected),
+                                                                                          builder: (context, valueFuture) {
+                                                                                            return !valueFuture.hasData
+                                                                                                ? Center(child: Container(height: 20, width: 20, child: CircularProgressIndicator()))
+                                                                                                : Row(
+                                                                                                    children: [
+                                                                                                      SizedBox(
+                                                                                                        width: constraints.maxWidth * .06,
+                                                                                                      ),
+                                                                                                      getRowTable(
+                                                                                                          context: context,
+                                                                                                          titles: [
+                                                                                                            e.get("nom"),
+                                                                                                            valueFuture.data.toString(),
+                                                                                                          ],
+                                                                                                          heigth: constraints.maxHeight * .07,
+                                                                                                          width: constraints.maxWidth * .22,
+                                                                                                          choixColor: 12,
+                                                                                                          constraints: constraints),
+                                                                                                    ],
+                                                                                                  );
+                                                                                          }),
+                                                                                    ))
+                                                                                .toList(),
+                                                                          )
+                                                                        ],
+                                                                      );
+                                                                    }
+                                                                  }),
+                                                            )
+                                                          ],
+                                                        ),
+                                                      ))
+                                                  : requetteSelected ==
+                                                              "Agriculture" &&
+                                                          produitSelected ==
+                                                              "materiels"
+                                                      ? Expanded(
+                                                          flex: 9,
+                                                          child: Container(
+                                                            // color: rouge,
+                                                            child: Column(
+                                                              children: [
+                                                                Row(
+                                                                  children: [
+                                                                    Spacer(),
+                                                                    Container(
+                                                                      width:
+                                                                          constraints.maxWidth *
+                                                                              .5,
+                                                                      child: getHeader(
+                                                                          context:
+                                                                              context,
+                                                                          titles: [
+                                                                            "Régions",
+                                                                            "Quantité",
+                                                                            "Voir"
+                                                                          ],
+                                                                          width: constraints.maxWidth *
+                                                                              .07,
+                                                                          constraints:
+                                                                              constraints),
+                                                                    ),
+                                                                    Spacer(),
+                                                                    Icon(Icons
+                                                                        .download)
+                                                                  ],
+                                                                ),
+                                                                Center(
+                                                                  child:
+                                                                      Container(
+                                                                    height: .4,
+                                                                    color: Color(
+                                                                            0xFF000000)
+                                                                        .withOpacity(
+                                                                            .15),
+                                                                  ),
+                                                                ),
+                                                                Container(
+                                                                  height: constraints
+                                                                          .maxHeight *
+                                                                      .57,
+                                                                  child: StreamBuilder<
+                                                                          QuerySnapshot>(
+                                                                      stream: FirebaseFirestore
+                                                                          .instance
+                                                                          .collection(
+                                                                              "regions")
+                                                                          .snapshots(),
+                                                                      builder:
+                                                                          (context,
+                                                                              snapshot) {
+                                                                        List<TableRow>
+                                                                            listes =
+                                                                            [];
+                                                                        if (!snapshot
+                                                                            .hasData) {
+                                                                          return Text(
+                                                                              '');
+                                                                        } else {
+                                                                          return ListView(
+                                                                            children: [
+                                                                              Column(
+                                                                                children: snapshot.data!.docs
+                                                                                    .map((e) => Container(
+                                                                                          height: constraints.maxHeight * .05,
+                                                                                          width: constraints.maxWidth,
+                                                                                          child: FutureBuilder(
+                                                                                              future: getNumberMateriels(idRegion: e.id, idMaterial: materielSelected),
+                                                                                              builder: (context, valueFuture) {
+                                                                                                return !valueFuture.hasData
+                                                                                                    ? Center(child: Container(height: 20, width: 20, child: CircularProgressIndicator()))
+                                                                                                    : Row(
+                                                                                                        children: [
+                                                                                                          SizedBox(
+                                                                                                            width: constraints.maxWidth * .06,
+                                                                                                          ),
+                                                                                                          getRowTable(
+                                                                                                              context: context,
+                                                                                                              titles: [
+                                                                                                                e.get("nom"),
+                                                                                                                valueFuture.data.toString(),
+                                                                                                              ],
+                                                                                                              heigth: constraints.maxHeight * .07,
+                                                                                                              width: constraints.maxWidth * .22,
+                                                                                                              choixColor: 12,
+                                                                                                              constraints: constraints),
+                                                                                                        ],
+                                                                                                      );
+                                                                                              }),
+                                                                                        ))
+                                                                                    .toList(),
+                                                                              )
+                                                                            ],
+                                                                          );
+                                                                        }
+                                                                      }),
+                                                                )
+                                                              ],
+                                                            ),
+                                                          ))
+                                                      : requetteSelected ==
+                                                              "Elevage"
+                                                          ? Expanded(
+                                                              flex: 9,
+                                                              child: Container(
+                                                                // color: rouge,
+                                                                child: Column(
+                                                                  children: [
+                                                                    Row(
+                                                                      children: [
+                                                                        Spacer(),
+                                                                        Container(
+                                                                          width:
+                                                                              constraints.maxWidth * .5,
+                                                                          child: getHeader(
+                                                                              context:
+                                                                                  context,
+                                                                              titles: [
+                                                                                "Régions",
+                                                                                "Nombres",
+                                                                                "Voir"
+                                                                              ],
+                                                                              width: constraints.maxWidth * .07,
+                                                                              constraints: constraints),
+                                                                        ),
+                                                                        Spacer(),
+                                                                        Icon(Icons
+                                                                            .download)
+                                                                      ],
+                                                                    ),
+                                                                    Center(
+                                                                      child:
+                                                                          Container(
+                                                                        height:
+                                                                            .4,
+                                                                        color: Color(0xFF000000)
+                                                                            .withOpacity(.15),
+                                                                      ),
+                                                                    ),
+                                                                    Container(
+                                                                      height:
+                                                                          constraints.maxHeight *
+                                                                              .57,
+                                                                      child: StreamBuilder<
+                                                                              QuerySnapshot>(
+                                                                          stream: FirebaseFirestore
+                                                                              .instance
+                                                                              .collection(
+                                                                                  "regions")
+                                                                              .snapshots(),
+                                                                          builder:
+                                                                              (context, snapshot) {
+                                                                            List<TableRow>
+                                                                                listes =
+                                                                                [];
+                                                                            if (!snapshot.hasData) {
+                                                                              return Text('');
+                                                                            } else {
+                                                                              return ListView(
+                                                                                children: [
+                                                                                  Column(
+                                                                                    children: snapshot.data!.docs
+                                                                                        .map((e) => Container(
+                                                                                              height: constraints.maxHeight * .05,
+                                                                                              width: constraints.maxWidth,
+                                                                                              child: FutureBuilder(
+                                                                                                  future: getNumberEspecspe(idRegion: e.id, idEspece: especeanimalSelected),
+                                                                                                  builder: (context, valueFuture) {
+                                                                                                    return !valueFuture.hasData
+                                                                                                        ? Center(child: Container(height: 20, width: 20, child: CircularProgressIndicator()))
+                                                                                                        : Row(
+                                                                                                            children: [
+                                                                                                              SizedBox(
+                                                                                                                width: constraints.maxWidth * .06,
+                                                                                                              ),
+                                                                                                              getRowTable(
+                                                                                                                  context: context,
+                                                                                                                  titles: [
+                                                                                                                    e.get("nom"),
+                                                                                                                    valueFuture.data.toString(),
+                                                                                                                  ],
+                                                                                                                  heigth: constraints.maxHeight * .07,
+                                                                                                                  width: constraints.maxWidth * .22,
+                                                                                                                  choixColor: 12,
+                                                                                                                  constraints: constraints),
+                                                                                                            ],
+                                                                                                          );
+                                                                                                  }),
+                                                                                            ))
+                                                                                        .toList(),
+                                                                                  )
+                                                                                ],
+                                                                              );
+                                                                            }
+                                                                          }),
+                                                                    )
+                                                                  ],
+                                                                ),
+                                                              ))
+                                                          : requetteSelected ==
+                                                                  "Mortalite"
+                                                              ? Expanded(
+                                                                  flex: 9,
+                                                                  child:
+                                                                      Container(
+                                                                    // color: rouge,
+                                                                    child:
+                                                                        Column(
+                                                                      children: [
+                                                                        Row(
+                                                                          children: [
+                                                                            Spacer(),
                                                                             Container(
-                                                                              height: constraints.maxHeight * .05,
-                                                                              width: constraints.maxWidth,
-                                                                              child: FutureBuilder(
-                                                                                  future: getNumber(idRegion: e.id, idCulture: cultureSelected),
-                                                                                  builder: (context, valueFuture) {
-                                                                                    return  !valueFuture.hasData ? Center(child: Container(
-                                                                                      height: 50,
-                                                                                      width: 50,
-                                                                                      child: CircularProgressIndicator())) : Row(
-                                                                                      children: [
-                                                                                        SizedBox(
-                                                                                          width: constraints.maxWidth * .06,
-                                                                                        ),
-                                                                                        getRowTable(
-                                                                                            context: context,
-                                                                                            titles: [
-                                                                                              e.get("nom"),
-                                                                                              cultureSelected,
-                                                                                              valueFuture.data.toString(),
-                                                                                            ],
-                                                                                            heigth: constraints.maxHeight * .07,
-                                                                                            width: constraints.maxWidth * .15,
-                                                                                            choixColor: 12,
-                                                                                            constraints: constraints),
-                                                                                      ],
-                                                                                    );
-                                                                                  }),
-                                                                            ))
-                                                                        .toList(),
-                                                                  )
-                                                                ],
-                                                              );
-                                                            }
-                                                          }),
-                                                    )
-                                                  ],
-                                                ),
-                                              ))
+                                                                              width: constraints.maxWidth * .5,
+                                                                              child: getHeader(
+                                                                                  context:
+                                                                                      context,
+                                                                                  titles: [
+                                                                                    "Régions",
+                                                                                    "Nombres",
+                                                                                    "Voir"
+                                                                                  ],
+                                                                                  width: constraints.maxWidth * .07,
+                                                                                  constraints: constraints),
+                                                                            ),
+                                                                            Spacer(),
+                                                                            Icon(Icons.download)
+                                                                          ],
+                                                                        ),
+                                                                        Center(
+                                                                          child:
+                                                                              Container(
+                                                                            height:
+                                                                                .4,
+                                                                            color:
+                                                                                Color(0xFF000000).withOpacity(.15),
+                                                                          ),
+                                                                        ),
+                                                                        Container(
+                                                                          height:
+                                                                              constraints.maxHeight * .57,
+                                                                          child: StreamBuilder<QuerySnapshot>(
+                                                                              stream: FirebaseFirestore.instance.collection("regions").snapshots(),
+                                                                              builder: (context, snapshot) {
+                                                                                List<TableRow> listes = [];
+                                                                                if (!snapshot.hasData) {
+                                                                                  return Text('');
+                                                                                } else {
+                                                                                  return ListView(
+                                                                                    children: [
+                                                                                      Column(
+                                                                                        children: snapshot.data!.docs
+                                                                                            .map((e) => Container(
+                                                                                                  height: constraints.maxHeight * .05,
+                                                                                                  width: constraints.maxWidth,
+                                                                                                  child: FutureBuilder(
+                                                                                                      future: getNumberMortalite(idRegion: e.id, type: mortaliteSelected == "Infantile" ? "mortalite-infantile" : "mortalite-maternel"),
+                                                                                                      builder: (context, valueFuture) {
+                                                                                                        return !valueFuture.hasData
+                                                                                                            ? Center(child: Container(height: 20, width: 20, child: CircularProgressIndicator()))
+                                                                                                            : Row(
+                                                                                                                children: [
+                                                                                                                  SizedBox(
+                                                                                                                    width: constraints.maxWidth * .06,
+                                                                                                                  ),
+                                                                                                                  getRowTable(
+                                                                                                                      context: context,
+                                                                                                                      titles: [
+                                                                                                                        e.get("nom"),
+                                                                                                                        valueFuture.data.toString(),
+                                                                                                                      ],
+                                                                                                                      heigth: constraints.maxHeight * .07,
+                                                                                                                      width: constraints.maxWidth * .22,
+                                                                                                                      choixColor: 12,
+                                                                                                                      constraints: constraints),
+                                                                                                                ],
+                                                                                                              );
+                                                                                                      }),
+                                                                                                ))
+                                                                                            .toList(),
+                                                                                      )
+                                                                                    ],
+                                                                                  );
+                                                                                }
+                                                                              }),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ))
+                                                              : Expanded(
+                                                                  flex: 9,
+                                                                  child:
+                                                                      Container(
+                                                                    // color: rouge,
+                                                                    child:
+                                                                        Column(
+                                                                      children: [
+                                                                        Row(
+                                                                          children: [
+                                                                            Spacer(),
+                                                                            Container(
+                                                                              width: constraints.maxWidth * .5,
+                                                                              child: getHeader(
+                                                                                  context:
+                                                                                      context,
+                                                                                  titles: [
+                                                                                    "Régions",
+                                                                                    "Nombres",
+                                                                                    "Voir"
+                                                                                  ],
+                                                                                  width: constraints.maxWidth * .07,
+                                                                                  constraints: constraints),
+                                                                            ),
+                                                                            Spacer(),
+                                                                            Icon(Icons.download)
+                                                                          ],
+                                                                        ),
+                                                                        Center(
+                                                                          child:
+                                                                              Container(
+                                                                            height:
+                                                                                .4,
+                                                                            color:
+                                                                                Color(0xFF000000).withOpacity(.15),
+                                                                          ),
+                                                                        ),
+                                                                        Container(
+                                                                          height:
+                                                                              constraints.maxHeight * .57,
+                                                                          child: StreamBuilder<QuerySnapshot>(
+                                                                              stream: FirebaseFirestore.instance.collection("regions").snapshots(),
+                                                                              builder: (context, snapshot) {
+                                                                                List<TableRow> listes = [];
+                                                                                if (!snapshot.hasData) {
+                                                                                  return Text('');
+                                                                                } else {
+                                                                                  return ListView(
+                                                                                    children: [
+                                                                                      Column(
+                                                                                        children: snapshot.data!.docs
+                                                                                            .map((e) => Container(
+                                                                                                  height: constraints.maxHeight * .05,
+                                                                                                  width: constraints.maxWidth,
+                                                                                                  child: FutureBuilder(
+                                                                                                      future: getNumberViolence(idRegion: e.id),
+                                                                                                      builder: (context, valueFuture) {
+                                                                                                        return !valueFuture.hasData
+                                                                                                            ? Center(child: Container(height: 20, width: 20, child: CircularProgressIndicator()))
+                                                                                                            : Row(
+                                                                                                                children: [
+                                                                                                                  SizedBox(
+                                                                                                                    width: constraints.maxWidth * .06,
+                                                                                                                  ),
+                                                                                                                  getRowTable(
+                                                                                                                      context: context,
+                                                                                                                      titles: [
+                                                                                                                        e.get("nom"),
+                                                                                                                        valueFuture.data.toString(),
+                                                                                                                      ],
+                                                                                                                      heigth: constraints.maxHeight * .07,
+                                                                                                                      width: constraints.maxWidth * .22,
+                                                                                                                      choixColor: 12,
+                                                                                                                      constraints: constraints),
+                                                                                                                ],
+                                                                                                              );
+                                                                                                      }),
+                                                                                                ))
+                                                                                            .toList(),
+                                                                                      )
+                                                                                    ],
+                                                                                  );
+                                                                                }
+                                                                              }),
+                                                                        )
+                                                                      ],
+                                                                    ),
+                                                                  ))
                                         ],
                                       ),
                                     ),

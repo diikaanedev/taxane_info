@@ -61,7 +61,7 @@ Widget getRowTable(
     listes.add(Container(
         height: heigth,
         width: width,
-        // color: bleu,
+        // color: rouge,
         child: Row(
           children: [
             SizedBox(
@@ -82,6 +82,8 @@ Widget getRowTable(
     Container(
         height: heigth,
         width: width * .4,
+        // color: rouge,
+
         child: Row(
           children: [
             
