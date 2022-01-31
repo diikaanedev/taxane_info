@@ -1,4 +1,5 @@
 import 'package:taxane/utils/requette.dart';
+import 'package:taxane/widget/space-visiteur/dialog-show-result.dart';
 import 'package:taxane/widget/table-row-header.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -856,7 +857,12 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                                   child: Container(
                                                     child: Center(
                                                       child: Text(
-                                                          'Zone des Statistiques'),
+                                                        'Réservé au ministere de tutel ',
+                                                        style: TextStyle(
+                                                            fontSize: constraints
+                                                                    .maxHeight *
+                                                                .07),
+                                                      ),
                                                     ),
                                                   ))
                                               : requetteSelected ==
@@ -944,6 +950,11 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                                                                                       ),
                                                                                                       getRowTable(
                                                                                                           context: context,
+                                                                                                          id: e.id,
+                                                                                                          onTap: () {
+                                                                                                            showResultRegionProduit(context: context, idRegion: e.id, idCulture: cultureSelected);
+                                                                                                          },
+                                                                                                          idCulture: cultureSelected,
                                                                                                           titles: [
                                                                                                             e.get("nom"),
                                                                                                             valueFuture.data.toString(),
@@ -1052,6 +1063,8 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                                                                                           ),
                                                                                                           getRowTable(
                                                                                                               context: context,
+                                                                                                              idCulture: cultureSelected,
+                                                                                                              onTap: () => showResultRegionMateriel(context: context, idRegion: e.id, idMateriel: materielSelected),
                                                                                                               titles: [
                                                                                                                 e.get("nom"),
                                                                                                                 valueFuture.data.toString(),
@@ -1059,6 +1072,7 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                                                                                               heigth: constraints.maxHeight * .07,
                                                                                                               width: constraints.maxWidth * .22,
                                                                                                               choixColor: 12,
+                                                                                                              id: e.id,
                                                                                                               constraints: constraints),
                                                                                                         ],
                                                                                                       );
@@ -1151,6 +1165,9 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                                                                                               ),
                                                                                                               getRowTable(
                                                                                                                   context: context,
+                                                                                                                  idCulture: cultureSelected,
+                                                                                                                  onTap: ()=> showResultRegionEspece(context: context, idRegion: e.id, idEspece: especeanimalSelected),
+                                                                                                                  id: e.id,
                                                                                                                   titles: [
                                                                                                                     e.get("nom"),
                                                                                                                     valueFuture.data.toString(),
@@ -1241,6 +1258,9 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                                                                                                   ),
                                                                                                                   getRowTable(
                                                                                                                       context: context,
+                                                                                                                      idCulture: cultureSelected,
+                                                                                                                      onTap: () => showResultRegionMortalite(context: context, idRegion: e.id, idType: mortaliteSelected),
+                                                                                                                      id: e.id,
                                                                                                                       titles: [
                                                                                                                         e.get("nom"),
                                                                                                                         valueFuture.data.toString(),
@@ -1329,6 +1349,11 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                                                                                                   ),
                                                                                                                   getRowTable(
                                                                                                                       context: context,
+                                                                                                                      idCulture: cultureSelected,
+                                                                                                                      onTap: () {
+                                                                                                                        showResultRegionViolence(context: context, idRegion: e.id);
+                                                                                                                      },
+                                                                                                                      id: e.id,
                                                                                                                       titles: [
                                                                                                                         e.get("nom"),
                                                                                                                         valueFuture.data.toString(),

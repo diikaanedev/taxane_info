@@ -43,7 +43,7 @@ class MenuLeft extends StatelessWidget {
                         child: Text(
                           test,
                           style: TextStyle(
-                              fontSize: constraints.maxHeight * .26,
+                              fontSize: constraints.maxWidth * .05,
                               fontWeight: FontWeight.bold,
                               color: isSelect ? noir : blanc),
                         ),

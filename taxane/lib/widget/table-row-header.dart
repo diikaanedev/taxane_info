@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:taxane/utils/color-by-dii.dart';
+import 'package:taxane/widget/space-visiteur/dialog-show-result.dart';
 
 Widget getHeader(
     {required BuildContext context,
@@ -40,11 +42,14 @@ Widget getHeader(
 Widget getRowTable(
     {required BuildContext context,
     required List<String> titles,
+    required String id,
+    required String idCulture,
     required double heigth,
     required double width,
     required int choixColor,
+    required Function onTap,
     required BoxConstraints constraints})  {
-  List<Container> listes = [];
+  List<Widget> listes = [];
   int i = 0;
   Color color = noir;
   for (var item in titles) {
@@ -79,18 +84,21 @@ Widget getRowTable(
   }
 
   listes.add(
-    Container(
-        height: heigth,
-        width: width * .4,
-        // color: rouge,
-
-        child: Row(
-          children: [
-            
-            Icon(CupertinoIcons.eye, color: noir.withOpacity(.8)),
-            Spacer(),
-          ],
-        )),
+    GestureDetector(
+      onTap: () => onTap(),
+      child: Container(
+          height: heigth,
+          width: width * .4,
+          // color: rouge,
+    
+          child: Row(
+            children: [
+              
+              Icon(CupertinoIcons.eye, color: noir.withOpacity(.8)),
+              Spacer(),
+            ],
+          )),
+    ),
   );
 
   return Row(children: listes);

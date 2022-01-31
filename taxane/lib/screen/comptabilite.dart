@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:taxane/utils/color-by-dii.dart';
+import 'package:taxane/widget/comptabilite/gestion-journal-banque/admin_journal_banques.dart';
 import 'package:taxane/widget/comptabilite/gestion-journal-caisse/admin_journal_caisse.dart';
 import 'package:taxane/widget/menu-left-home.dart';
 
@@ -158,7 +159,8 @@ class _ComptabiliteState extends State<Comptabilite> {
                                                 ),
                                                 Spacer(),
                                                 GestureDetector(
-                                                  onTap: () => null,
+                                                  onTap: () => adminJournalBanques(
+                                                          context: context),
                                                   child: Container(
                                                     width:
                                                         constraints.maxWidth *

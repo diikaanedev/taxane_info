@@ -128,7 +128,7 @@ class _MenuLeftHomeState extends State<MenuLeftHome> {
                     height: constraints.maxHeight * .05,
                     width: constraints.maxWidth,
                     child: MenuLeft(
-                        test: 'Administration & Foncier',
+                        test: 'Administration',
                         icon: CupertinoIcons.person_3_fill,
                         isSelect: widget.choice == 2),
                   ),
@@ -161,7 +161,7 @@ class _MenuLeftHomeState extends State<MenuLeftHome> {
                   child: GestureDetector(
                     onTap: () => Navigator.popAndPushNamed(context, "/agriculture-horticulture"),
                     child: MenuLeft(
-                        test: 'Agriculture & Horticulture',
+                        test: 'Agriculture',
                         icon: CupertinoIcons.leaf_arrow_circlepath,
                         isSelect: widget.choice == 4),
                   ),
@@ -191,15 +191,16 @@ class _MenuLeftHomeState extends State<MenuLeftHome> {
                     child: Column(
                       children: [
                         Spacer(),
-                        Text('25 NOVEMBRE', style: TextStyle(
+                        Text('Santé Familliale ', style: TextStyle(
                           color: widget.choice == 6 ? vert : blanc,
+                          fontSize: constraints.maxWidth * .05
                         ),),
                         Spacer(),
                         Container(
                           height: constraints.maxHeight * .04,
                           width: constraints.maxWidth * .7,
                           child: MenuLeft(
-                              test: 'Violence Basée sur le Genre',
+                              test: 'Violences faites aux femmes',
                               icon: Icons.baby_changing_station_rounded,
                               isSelect: widget.choice == 7),
                         ),

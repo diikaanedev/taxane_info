@@ -97,7 +97,7 @@ class _VingtCinqNovembreState extends State<VingtCinqNovembre> {
                                       children: [
                                         Spacer(),
                                         Text(
-                                          '25 NOVEMBRE',
+                                          'Santé Familliale ',
                                           style: TextStyle(
                                               color: vert,
                                               fontSize:
@@ -164,7 +164,7 @@ class _VingtCinqNovembreState extends State<VingtCinqNovembre> {
                                                                   .3,
                                                               child: Center(
                                                                 child: Text(
-                                                                  'Violence basée sur le genre',
+                                                                  'Violences faites aux femmes',
                                                                   style: TextStyle(
                                                                       fontSize:
                                                                           constraints.maxHeight *
@@ -198,7 +198,7 @@ class _VingtCinqNovembreState extends State<VingtCinqNovembre> {
                                                                   .3,
                                                               child: Center(
                                                                 child: Text(
-                                                                  'Violence basée sur le genre',
+                                                                  'Violences faites aux femmes',
                                                                   style: TextStyle(
                                                                       fontSize:
                                                                           constraints.maxHeight *
@@ -230,7 +230,7 @@ class _VingtCinqNovembreState extends State<VingtCinqNovembre> {
                                                                 .3,
                                                             child: Center(
                                                               child: Text(
-                                                                'Violence basée sur le genre',
+                                                                'Violences faites aux femmes',
                                                                 style: TextStyle(
                                                                     fontSize:
                                                                         constraints.maxHeight *
