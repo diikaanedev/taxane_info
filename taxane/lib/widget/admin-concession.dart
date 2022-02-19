@@ -388,8 +388,7 @@ AdminConcessionRole2({required BuildContext context , required String idVillage}
                                 onTap: () => dialogAddConcession(
                                     context: context,
                                    
-                                    idVillage: administrationFoncierState
-                                        .villageSelected),
+                                    idVillage: idVillage),
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(4),
@@ -587,7 +586,7 @@ AdminConcessionRole2({required BuildContext context , required String idVillage}
                                             children: [
                                               Spacer(),
                                               GestureDetector(
-                                                onTap: () => null,
+                                                onTap: () => dialogEditoncession(context: context, idVillage: idVillage, idConcession: item.id),
                                                 child: Icon(
                                                   Icons.edit,
                                                   color: vert,
@@ -598,7 +597,7 @@ AdminConcessionRole2({required BuildContext context , required String idVillage}
                                                     constraints.maxWidth * .01,
                                               ),
                                               GestureDetector(
-                                                onTap: () => null,
+                                                onTap: () => dialogDeleteoncession(context: context, idVillage: idVillage, idConcession: item.id),
                                                 child: Icon(
                                                   Icons.delete,
                                                   color: rouge,

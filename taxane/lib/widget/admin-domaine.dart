@@ -576,7 +576,7 @@ adminDomaineRole2(
                                                 children: [
                                                   Spacer(),
                                                   GestureDetector(
-                                                    onTap: () => null,
+                                                    onTap: () => editDomaine(context: context, idVillage: idVillage, idDomaine: item.id),
                                                     child: Icon(
                                                       Icons.edit,
                                                       color: vert,
@@ -588,7 +588,7 @@ adminDomaineRole2(
                                                             .01,
                                                   ),
                                                   GestureDetector(
-                                                    onTap: () => null,
+                                                    onTap: () => deleteDomaine(context: context, idVillage: idVillage, idDomaine: item.id),
                                                     child: Icon(
                                                       Icons.delete,
                                                       color: rouge,

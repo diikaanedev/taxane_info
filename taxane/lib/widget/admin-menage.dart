@@ -641,7 +641,7 @@ adminMenage({
                                                 children: [
                                                   Spacer(),
                                                   GestureDetector(
-                                                    onTap: () => null,
+                                                    onTap: () => editMenage(context: context, idConcession: administrationFoncierState.concessionSelected , idMenage: item.id),
                                                     child: Icon(
                                                       Icons.edit,
                                                       color: vert,
@@ -653,7 +653,7 @@ adminMenage({
                                                             .01,
                                                   ),
                                                   GestureDetector(
-                                                    onTap: () => null,
+                                                    onTap: () => deleteMenage(context: context, idConcession: administrationFoncierState.concessionSelected , idMenage: item.id),
                                                     child: Icon(
                                                       Icons.delete,
                                                       color: rouge,
