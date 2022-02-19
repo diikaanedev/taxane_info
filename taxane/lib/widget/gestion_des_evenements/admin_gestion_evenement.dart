@@ -249,7 +249,7 @@ adminGestionEvenement(
                                                       .01,
                                                 ),
                                                 GestureDetector(
-                                                  onTap: () => null,
+                                                  onTap: () => editEvenements(context: context, idRegroupement: idRegroupement, idEvenement: item.id),
                                                   child: Icon(
                                                     Icons.edit,
                                                     color: vert,
@@ -260,7 +260,7 @@ adminGestionEvenement(
                                                       .01,
                                                 ),
                                                 GestureDetector(
-                                                  onTap: () => null,
+                                                  onTap: () => deleteEvenements(context: context, idRegroupement: idRegroupement, idEvenement: item.id),
                                                   child: Icon(
                                                     Icons.delete,
                                                     color: rouge,
