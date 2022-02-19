@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:taxane/utils/color-by-dii.dart';
+import 'package:taxane/widget/comptabilite/gestion-des-budget/mise-en-place/admin_mise_en_place_budgetaire.dart';
 import 'package:taxane/widget/comptabilite/gestion-journal-banque/admin_journal_banques.dart';
 import 'package:taxane/widget/comptabilite/gestion-journal-caisse/admin_journal_caisse.dart';
 import 'package:taxane/widget/menu-left-home.dart';
@@ -21,6 +22,10 @@ class _ComptabiliteState extends State<Comptabilite> {
   late Size size;
   String typeEntresSortie = "entrees";
   DateTime date = DateTime.now();
+
+  DateTime initialPeriod = DateTime.now();
+  DateTime finalPeriod = DateTime.now();
+  String choixExecution = "debit";
   @override
   Widget build(BuildContext context) {
     size = MediaQuery.of(context).size;
@@ -159,7 +164,8 @@ class _ComptabiliteState extends State<Comptabilite> {
                                                 ),
                                                 Spacer(),
                                                 GestureDetector(
-                                                  onTap: () => adminJournalBanques(
+                                                  onTap: () =>
+                                                      adminJournalBanques(
                                                           context: context),
                                                   child: Container(
                                                     width:
@@ -212,7 +218,9 @@ class _ComptabiliteState extends State<Comptabilite> {
 
                                                 Spacer(),
                                                 GestureDetector(
-                                                  onTap: () => null,
+                                                  onTap: () =>
+                                                      adminMiseEnPlaceBudgeratire(
+                                                          context: context),
                                                   child: Container(
                                                     width:
                                                         constraints.maxWidth *
@@ -238,42 +246,7 @@ class _ComptabiliteState extends State<Comptabilite> {
                                                   ),
                                                 ),
                                                 Spacer(),
-                                              ],
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Container(
-                                            height: constraints.maxHeight * .25,
-                                            child: Row(
-                                              children: [
-                                                Spacer(),
-                                                GestureDetector(
-                                                  onTap: () => null,
-                                                  child: Container(
-                                                    width:
-                                                        constraints.maxWidth *
-                                                            .3,
-                                                    child: Center(
-                                                      child: Text(
-                                                        'Execution Budgetaire',
-                                                        style: TextStyle(
-                                                            fontSize: constraints
-                                                                    .maxHeight *
-                                                                .02,
-                                                            fontWeight:
-                                                                FontWeight.w800,
-                                                            color: blanc),
-                                                      ),
-                                                    ),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8),
-                                                      color: vert,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Spacer(),
+
                                                 GestureDetector(
                                                   onTap: () => null,
                                                   child: Container(

@@ -2,18 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:taxane/utils/color-by-dii.dart';
+import 'package:taxane/widget/agriculture-horticulture-transformation-produits-agricole/transformation/operation-transformation/show-transforamtions/show-operation-transformation.dart';
 
 adminOperationTransformation({required BuildContext context}) {
   Size size = MediaQuery.of(context).size;
   showDialog(context: context, builder: (context) => AlertDialog(
     content: Container(
       height: size.height * .9,
-      width: size.width * .6,
+      width: size.width * .8,
       child: Column(
         children: [
           Container(
             /*  height: size.height * .07, */
-            width: size.width * .6,
+            width: size.width * .8,
             child: Row(
               children: [
                 Text('Gestion des Opérations de transformation') ,
@@ -21,14 +22,14 @@ adminOperationTransformation({required BuildContext context}) {
                 GestureDetector(
                   onTap: () => null,
                   child:  Container(
-                    width: size.width * .1,
+                    
                     child: Column(
                       children: [
                         SizedBox(
                           height: 4,
                         ),
                         Text(
-                          'Ajouter une opération',
+                          '   Ajouter une opération   ',
                           style: TextStyle(
                               fontSize: size.height * .015,
                               color: blanc),
@@ -78,11 +79,11 @@ adminOperationTransformation({required BuildContext context}) {
           SizedBox(height: size.height * .02,),
           Container(
             height: size.height * .8,
-            width: size.width * .6,
+            width: size.width * .8,
              child:  LayoutBuilder(
                                   builder: (context ,  constraints) =>  StreamBuilder<QuerySnapshot>(
                                                               stream: FirebaseFirestore.instance
-                                    .collection("point-de-ventes")
+                                    .collection("/operation-transformation")
                                     .snapshots(),
                                     builder: (context, snapshot) {
                                       if (!snapshot.hasData) {
@@ -119,7 +120,7 @@ adminOperationTransformation({required BuildContext context}) {
                                               children: [
                                                 Spacer(),
                                                 Icon(
-                                                  CupertinoIcons.globe,
+                                                  CupertinoIcons.money_dollar_circle,
                                                   color: vert,
                                                 ),
                                                 SizedBox(
@@ -127,7 +128,7 @@ adminOperationTransformation({required BuildContext context}) {
                                                       constraints.maxWidth * .01,
                                                 ),
                                                 Text(
-                                                  'Adresse',
+                                                  'Compte d\'exploitation',
                                                   style: TextStyle(
                                                       color: vert,
                                                       fontWeight:
@@ -213,7 +214,7 @@ adminOperationTransformation({required BuildContext context}) {
                                             children: [
                                               Spacer(),
                                               Text(
-                                               "${ e.get('adresse')}",
+                                               "${ e.get('compte-exploitation')}",
                                                 style: TextStyle(
                                                     color: vert,
                                                     fontWeight:
@@ -242,6 +243,17 @@ adminOperationTransformation({required BuildContext context}) {
                                           child: Row(
                                             children: [
                                               Spacer(),
+                                              GestureDetector(
+                                                onTap: () => showOperationTransformation(context: context, idOperation: e.id),
+                                                child: Icon(
+                                                  Icons.remove_red_eye_rounded,
+                                                  color: jaune,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width:
+                                                    constraints.maxWidth * .01,
+                                              ),
                                               GestureDetector(
                                                 onTap: () => null,
                                                 child: Icon(

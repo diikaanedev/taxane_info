@@ -96,7 +96,7 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                       children: [
                         Spacer(),
                         Container(
-                          width: constraints.maxWidth * .7,
+                          width: constraints.maxWidth * .75,
                           height: constraints.maxHeight,
                           color: noir.withOpacity(.8),
                           child: Row(
@@ -128,7 +128,7 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                         "Collecte Traitement et Diffusion de l\'information",
                                         style: TextStyle(
                                             fontSize:
-                                                constraints.maxHeight * .3,
+                                                constraints.maxHeight * .2,
                                             fontWeight: FontWeight.w300,
                                             color: blanc),
                                       ),
@@ -141,7 +141,7 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                             "Sous forme de ",
                                             style: TextStyle(
                                                 fontSize:
-                                                    constraints.maxHeight * .3,
+                                                    constraints.maxHeight * .2,
                                                 fontWeight: FontWeight.w300,
                                                 color: blanc),
                                           ),
@@ -149,7 +149,7 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                             "DONNÉES STATISTIQUES ET D\'INDICATEUR DE SUIVI ",
                                             style: TextStyle(
                                                 fontSize:
-                                                    constraints.maxHeight * .35,
+                                                    constraints.maxHeight * .25,
                                                 fontWeight: FontWeight.bold,
                                                 color: blanc),
                                           ),
@@ -191,7 +191,7 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                   child: Text(
                                     "Partenaires 1",
                                     style: TextStyle(
-                                        fontSize: constraints.maxHeight * .03,
+                                        fontSize: constraints.maxWidth * .015,
                                         fontWeight: FontWeight.bold,
                                         color: blanc),
                                   ),
@@ -206,7 +206,7 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                   child: Text(
                                     "Partenaires 2",
                                     style: TextStyle(
-                                        fontSize: constraints.maxHeight * .03,
+                                        fontSize: constraints.maxWidth * .015,
                                         fontWeight: FontWeight.bold,
                                         color: blanc),
                                   ),
@@ -221,7 +221,7 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                   child: Text(
                                     "Partenaires 3",
                                     style: TextStyle(
-                                        fontSize: constraints.maxHeight * .03,
+                                        fontSize: constraints.maxWidth * .015,
                                         fontWeight: FontWeight.bold,
                                         color: blanc),
                                   ),
@@ -236,7 +236,7 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                   child: Text(
                                     "Partenaires 4",
                                     style: TextStyle(
-                                        fontSize: constraints.maxHeight * .03,
+                                        fontSize: constraints.maxWidth * .015,
                                         fontWeight: FontWeight.bold,
                                         color: blanc),
                                   ),
@@ -251,7 +251,7 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                   child: Text(
                                     "Partenaires 5",
                                     style: TextStyle(
-                                        fontSize: constraints.maxHeight * .03,
+                                        fontSize: constraints.maxWidth * .015,
                                         fontWeight: FontWeight.bold,
                                         color: blanc),
                                   ),
@@ -298,7 +298,9 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                                       .map((e) => DropdownMenuItem(
                                                           value: e,
                                                           child: Text(
-                                                              e.toUpperCase())))
+                                                              e.toUpperCase() ,  style: TextStyle(
+                                                                fontSize: constraints.maxWidth * .012
+                                                              ),)))
                                                       .toList(),
                                                   onChanged: (value) {
                                                     setState(() {
@@ -860,8 +862,8 @@ class _EspaceVisiteurScreenState extends State<EspaceVisiteurScreen> {
                                                         'Réservé au ministere de tutel ',
                                                         style: TextStyle(
                                                             fontSize: constraints
-                                                                    .maxHeight *
-                                                                .07),
+                                                                    .maxWidth *
+                                                                .04),
                                                       ),
                                                     ),
                                                   ))

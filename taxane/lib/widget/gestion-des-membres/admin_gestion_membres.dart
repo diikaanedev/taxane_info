@@ -225,7 +225,7 @@ adminGestionMembres(
                                               children: [
                                                 Spacer(),
                                                 GestureDetector(
-                                                  onTap: () => null,
+                                                  onTap: () => editMembreGestionMembre(context: context, idRegroupement: idRegroupement, idMembre: item.id),
                                                   child: Icon(
                                                     Icons.edit,
                                                     color: vert,
@@ -236,7 +236,7 @@ adminGestionMembres(
                                                       .01,
                                                 ),
                                                 GestureDetector(
-                                                  onTap: () => null,
+                                                  onTap: () => deleteMembre(context: context, idRegroupement: idRegroupement, idMembre: item.id),
                                                   child: Icon(
                                                     Icons.delete,
                                                     color: rouge,

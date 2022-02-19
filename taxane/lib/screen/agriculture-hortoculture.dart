@@ -178,7 +178,7 @@ class _AgricultureHortocultureState extends State<AgricultureHortoculture> {
                                           style: TextStyle(
                                               color: vert,
                                               fontSize:
-                                                  constraints.maxHeight * .02,
+                                                  constraints.maxHeight * .015,
                                               fontWeight: FontWeight.bold),
                                         ),
                                         SizedBox(
