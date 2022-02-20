@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:taxane/utils/color-by-dii.dart';
 import 'package:taxane/widget/comptabilite/gestion-journal-caisse/dialog_journal_caisse.dart';
 
-adminJournalCaisse({required BuildContext context}) {
+adminJournalCaisse(
+    {required BuildContext context, required String idRegroupement}) {
   Size size = MediaQuery.of(context).size;
 
   showDialog(
@@ -26,8 +27,8 @@ adminJournalCaisse({required BuildContext context}) {
                           'Journal de Caisse du ${dateFormatter(DateTime.now())} ${DateTime.now().year}'),
                       Spacer(),
                       GestureDetector(
-                        onTap: () =>
-                            addOperationCaisseJournal(context: context),
+                        onTap: () => addOperationCaisseJournal(
+                            context: context, idRegroupement: idRegroupement),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
@@ -71,11 +72,20 @@ adminJournalCaisse({required BuildContext context}) {
                             SizedBox(
                               height: 2,
                             ),
-                            Container(
-                                child: Text(
-                              '   155.000 FCFA  ',
-                              style: TextStyle(color: vert),
-                            )),
+                            StreamBuilder<DocumentSnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection("caisse")
+                                    .doc(idRegroupement)
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                  return !snapshot.hasData
+                                      ? Text('')
+                                      : Container(
+                                          child: Text(
+                                          '   ${snapshot.data!.get("montantPrecedant")} FCFA  ',
+                                          style: TextStyle(color: vert),
+                                        ));
+                                }),
                             SizedBox(
                               height: 2,
                             ),
@@ -249,7 +259,7 @@ adminJournalCaisse({required BuildContext context}) {
                                     new DateTime.fromMicrosecondsSinceEpoch(
                                         timestamp.millisecondsSinceEpoch *
                                             1000);
-                                if (true) {
+                                if (item.get("idRegroupement") == idRegroupement) {
                                   listes.add(TableRow(children: [
                                     Container(
                                         height: constraints.maxHeight * .05,
@@ -316,13 +326,27 @@ adminJournalCaisse({required BuildContext context}) {
                                     Container(
                                         height: constraints.maxHeight * .05,
                                         child: Center(
-                                          child: Text(
-                                            "145.000 FCFA",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: vert,
-                                                fontWeight: FontWeight.w300),
-                                          ),
+                                          child:
+                                              StreamBuilder<DocumentSnapshot>(
+                                                  stream: FirebaseFirestore
+                                                      .instance
+                                                      .collection("caisse")
+                                                      .doc(idRegroupement)
+                                                      .snapshots(),
+                                                  builder: (context, snapshot) {
+                                                    return !snapshot.hasData
+                                                        ? Text('')
+                                                        : Text(
+                                                            "${snapshot.data!.get("montantPrecedant")} FCFA",
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                color: vert,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w300),
+                                                          );
+                                                  }),
                                         )),
                                     Container(
                                         height: constraints.maxHeight * .05,
@@ -330,10 +354,32 @@ adminJournalCaisse({required BuildContext context}) {
                                           children: [
                                             Spacer(),
                                             GestureDetector(
-                                              onTap: () => null,
+                                              onTap: () =>
+                                                  editOperationCaisseJournal(
+                                                      context: context,
+                                                      idRegroupement:
+                                                          idRegroupement,
+                                                      idOperationCaisseJournal:
+                                                          item.id),
                                               child: Icon(
                                                 Icons.edit,
                                                 color: vert,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: constraints.maxWidth * .02,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () =>
+                                                  deleteOperationCaisseJournal(
+                                                      context: context,
+                                                      idRegroupement:
+                                                          idRegroupement,
+                                                      idOperationCaisseJournal:
+                                                          item.id),
+                                              child: Icon(
+                                                Icons.delete,
+                                                color: rouge,
                                               ),
                                             ),
                                             Spacer(),

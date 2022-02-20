@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:taxane/utils/color-by-dii.dart';
 import 'package:taxane/widget/comptabilite/gestion-journal-banque/dialog_journal_anques.dart';
 
-adminJournalBanques({required BuildContext context}) {
+adminJournalBanques(
+    {required BuildContext context, required String idRegroupement}) {
   Size size = MediaQuery.of(context).size;
 
   showDialog(
@@ -26,8 +27,8 @@ adminJournalBanques({required BuildContext context}) {
                           'Journal de Banques du ${dateFormatter(DateTime.now())} ${DateTime.now().year}'),
                       Spacer(),
                       GestureDetector(
-                        onTap: () =>
-                            addOperationBanqueJournall(context: context),
+                        onTap: () => addOperationBanqueJournall(
+                            context: context, idRegroupement: idRegroupement),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(4),
@@ -72,10 +73,19 @@ adminJournalBanques({required BuildContext context}) {
                               height: 2,
                             ),
                             Container(
-                                child: Text(
-                              '   155.000 FCFA  ',
-                              style: TextStyle(color: vert),
-                            )),
+                                child: StreamBuilder<DocumentSnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection("banques")
+                                        .doc(idRegroupement)
+                                        .snapshots(),
+                                    builder: (context, snapshot) {
+                                      return !snapshot.hasData
+                                          ? Text("")
+                                          : Text(
+                                              '   ${snapshot.data!.get("montantPrecedant")} FCFA  ',
+                                              style: TextStyle(color: vert),
+                                            );
+                                    })),
                             SizedBox(
                               height: 2,
                             ),
@@ -249,7 +259,8 @@ adminJournalBanques({required BuildContext context}) {
                                     new DateTime.fromMicrosecondsSinceEpoch(
                                         timestamp.millisecondsSinceEpoch *
                                             1000);
-                                if (true) {
+                                if (item.get("idRegroupement") ==
+                                    idRegroupement) {
                                   listes.add(TableRow(children: [
                                     Container(
                                         height: constraints.maxHeight * .05,
@@ -316,13 +327,27 @@ adminJournalBanques({required BuildContext context}) {
                                     Container(
                                         height: constraints.maxHeight * .05,
                                         child: Center(
-                                          child: Text(
-                                            "145.000 FCFA",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                color: vert,
-                                                fontWeight: FontWeight.w300),
-                                          ),
+                                          child:
+                                              StreamBuilder<DocumentSnapshot>(
+                                                  stream: FirebaseFirestore
+                                                      .instance
+                                                      .collection("banques")
+                                                      .doc(idRegroupement)
+                                                      .snapshots(),
+                                                  builder: (context, snapshot) {
+                                                    return !snapshot.hasData
+                                                        ? Text('')
+                                                        : Text(
+                                                            "${snapshot.data!.get("montantPrecedant")} FCFA",
+                                                            textAlign: TextAlign
+                                                                .center,
+                                                            style: TextStyle(
+                                                                color: vert,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w300),
+                                                          );
+                                                  }),
                                         )),
                                     Container(
                                         height: constraints.maxHeight * .05,
@@ -330,10 +355,18 @@ adminJournalBanques({required BuildContext context}) {
                                           children: [
                                             Spacer(),
                                             GestureDetector(
-                                              onTap: () => null,
+                                              onTap: () => editOperationBanqueJournall(context: context, idRegroupement: idRegroupement, idOpertion: item.id),
                                               child: Icon(
                                                 Icons.edit,
                                                 color: vert,
+                                              ),
+                                            ),
+                                            SizedBox(width: constraints.maxWidth * .02,),
+                                            GestureDetector(
+                                              onTap: () => deleteOperationBanqueJournall(context: context, idRegroupement: idRegroupement, idOpertion: item.id),
+                                              child: Icon(
+                                                Icons.delete,
+                                                color: rouge,
                                               ),
                                             ),
                                             Spacer(),

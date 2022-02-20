@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:taxane/screen/comptabilite.dart';
 import 'package:taxane/utils/color-by-dii.dart';
 
-addOperationBanqueJournall({required BuildContext context}) {
+addOperationBanqueJournall(
+    {required BuildContext context, required String idRegroupement}) {
   Size size = MediaQuery.of(context).size;
   TextEditingController code = new TextEditingController();
   TextEditingController montant = new TextEditingController();
@@ -20,7 +21,7 @@ addOperationBanqueJournall({required BuildContext context}) {
             physics: BouncingScrollPhysics(),
             children: [
               Text(
-                'Formulaire d\' ajout d\'une oppération de caisse',
+                'Formulaire d\' ajout d\'une oppération de banque',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: noir,
@@ -135,8 +136,10 @@ addOperationBanqueJournall({required BuildContext context}) {
                     padding: const EdgeInsets.only(left: 8),
                     child: Row(
                       children: [
-                        
-                        Icon(Icons.outbox_sharp, color: gris,),
+                        Icon(
+                          Icons.outbox_sharp,
+                          color: gris,
+                        ),
                         SizedBox(
                           width: 4,
                         ),
@@ -192,12 +195,32 @@ addOperationBanqueJournall({required BuildContext context}) {
               GestureDetector(
                 onTap: () async {
                   FirebaseFirestore.instance.collection("journalBanque").add({
-                    "dateOperation" :  comptabiliteState.date , 
-                    "numeroReference" : code.text,
-                    "montant" : montant.text,
-                    "soldeEntre" : comptabiliteState.typeEntresSortie,
-                    "detailTransaction" : details.text
-                  }).then((value) => Navigator.pop(context));
+                    "dateOperation": comptabiliteState.date,
+                    "numeroReference": code.text,
+                    "montant": montant.text,
+                    "idRegroupement": idRegroupement,
+                    "soldeEntre": comptabiliteState.typeEntresSortie,
+                    "detailTransaction": details.text
+                  }).then((value) {
+                    FirebaseFirestore.instance
+                        .collection("banques")
+                        .doc(idRegroupement)
+                        .get()
+                        .then((caisse) {
+                      FirebaseFirestore.instance
+                          .collection("banques")
+                          .doc(idRegroupement)
+                          .update({
+                        "montantPrecedant":
+                            comptabiliteState.typeEntresSortie == "entrees"
+                                ? caisse.get("montantPrecedant") +
+                                    int.parse(montant.text)
+                                : caisse.get("montantPrecedant") -
+                                    int.parse(montant.text)
+                      }).then((value) => print("complete"));
+                    });
+                  });
+                  Navigator.pop(context);
                 },
                 child: Container(
                   height: size.height * .05,
@@ -225,5 +248,401 @@ addOperationBanqueJournall({required BuildContext context}) {
         ),
       ),
     ),
+  );
+}
+
+editOperationBanqueJournall(
+    {required BuildContext context,
+    required String idRegroupement,
+    required String idOpertion}) {
+  Size size = MediaQuery.of(context).size;
+
+  showDialog(
+    context: context,
+    builder: (context) => StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection("journalBanque")
+            .doc(idOpertion)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Text('');
+          } else {
+            TextEditingController code = new TextEditingController(
+                text: snapshot.data!.get("numeroReference"));
+            TextEditingController montant =
+                new TextEditingController(text: snapshot.data!.get("montant"));
+            TextEditingController details = new TextEditingController(
+                text: snapshot.data!.get("detailTransaction"));
+
+            Timestamp timestampF = snapshot.data!.get('dateOperation');
+            DateTime date = new DateTime.fromMicrosecondsSinceEpoch(
+                timestampF.millisecondsSinceEpoch * 1000);
+            return AlertDialog(
+              content: StatefulBuilder(
+                builder: (context, setState) {
+                  setState(() {
+                    comptabiliteState.date = date;
+                    comptabiliteState.typeEntresSortie =
+                        snapshot.data!.get('soldeEntre');
+                  });
+                  return Container(
+                    height: size.height * .7,
+                    width: size.width * .7,
+                    child: ListView(
+                      physics: BouncingScrollPhysics(),
+                      children: [
+                        Text(
+                          'Formulaire d\' édition d\'une oppération de banque',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: noir,
+                              fontSize: size.height * .03,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: size.height * .05,
+                        ),
+                        Container(
+                          height: size.height * .05,
+                          width: size.width * .4,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: TextField(
+                              cursorColor: vert,
+                              controller: code,
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  labelText: 'Numéro de Référence',
+                                  icon: Icon(CupertinoIcons.waveform_circle)),
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: vert),
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
+                        SizedBox(
+                          height: size.height * .05,
+                        ),
+                        StatefulBuilder(
+                          builder: (context, setState) => Container(
+                            height: size.height * .05,
+                            width: size.width * .4,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: vert),
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Row(
+                              children: [
+                                Container(
+                                  child: Column(
+                                    children: [
+                                      Spacer(),
+                                      Container(
+                                          width: size.width * .4,
+                                          child: Text(
+                                              '  Date : ${comptabiliteState.date.day.toString()}/${comptabiliteState.date.month.toString()}/${comptabiliteState.date.year.toString()}')),
+                                      Spacer(),
+                                    ],
+                                  ),
+                                ),
+                                Spacer(),
+                                GestureDetector(
+                                  onTap: () async {
+                                    await showDatePicker(
+                                            context: context,
+                                            initialDate: comptabiliteState.date,
+                                            initialDatePickerMode:
+                                                DatePickerMode.day,
+                                            firstDate: DateTime.now(),
+                                            lastDate: DateTime(2030))
+                                        .then((value) => setState(() {
+                                              comptabiliteState.date = value!;
+                                            }));
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(4),
+                                          bottomRight: Radius.circular(4),
+                                        ),
+                                        color: rouge),
+                                    child: Center(
+                                      child: Text(
+                                        "    Choisir Votre date     ",
+                                        style: TextStyle(color: blanc),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: size.height * .05,
+                        ),
+                        Container(
+                          height: size.height * .05,
+                          width: size.width * .4,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: TextField(
+                              cursorColor: vert,
+                              controller: details,
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  labelText: 'Détails transaction',
+                                  icon: Icon(CupertinoIcons.command)),
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: vert),
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
+                        SizedBox(
+                          height: size.height * .05,
+                        ),
+                        Container(
+                          height: size.height * .04,
+                          width: size.width * .4,
+                          child: Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.outbox_sharp,
+                                    color: gris,
+                                  ),
+                                  SizedBox(
+                                    width: 4,
+                                  ),
+                                  Text('Solde Entrées ou Sorties /   '),
+                                  DropdownButton<String>(
+                                      value: comptabiliteState.typeEntresSortie,
+                                      underline: Container(),
+                                      onChanged: (String? newValue) {
+                                        setState(() {
+                                          comptabiliteState.setState(() {
+                                            comptabiliteState.typeEntresSortie =
+                                                newValue!;
+                                          });
+                                        });
+                                      },
+                                      items: [
+                                        "entrees",
+                                        "sorties",
+                                      ]
+                                          .map((e) => DropdownMenuItem(
+                                              value: e,
+                                              child: Text(e.toUpperCase())))
+                                          .toList()),
+                                ],
+                              )),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: vert),
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
+                        SizedBox(
+                          height: size.height * .05,
+                        ),
+                        Container(
+                          height: size.height * .05,
+                          width: size.width * .4,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: TextField(
+                              cursorColor: vert,
+                              controller: montant,
+                              decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  labelText: 'Montant transaction',
+                                  icon: Icon(CupertinoIcons.money_rubl_circle)),
+                            ),
+                          ),
+                          decoration: BoxDecoration(
+                              border: Border.all(color: vert),
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
+                        SizedBox(
+                          height: size.height * .05,
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            FirebaseFirestore.instance
+                                .collection("journalBanque")
+                                .doc(idOpertion)
+                                .update({
+                              "dateOperation": comptabiliteState.date,
+                              "numeroReference": code.text,
+                              "montant": montant.text,
+                              "idRegroupement": idRegroupement,
+                              "soldeEntre": comptabiliteState.typeEntresSortie,
+                              "detailTransaction": details.text
+                            }).then((value) {
+                              FirebaseFirestore.instance
+                                  .collection("banques")
+                                  .doc(idRegroupement)
+                                  .get()
+                                  .then((caisse) {
+                                FirebaseFirestore.instance
+                                    .collection("banques")
+                                    .doc(idRegroupement)
+                                    .update({
+                                  "montantPrecedant":
+                                      comptabiliteState.typeEntresSortie ==
+                                              "entrees"
+                                          ? caisse.get("montantPrecedant") +
+                                              int.parse(montant.text)
+                                          : caisse.get("montantPrecedant") -
+                                              int.parse(montant.text)
+                                }).then((value) => print("complete"));
+                              });
+                            });
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            height: size.height * .05,
+                            width: size.width * .5,
+                            child: Center(
+                              child: Container(
+                                height: size.height * .05,
+                                width: size.width * .2,
+                                child: Center(
+                                  child: Text(
+                                    'Modifier',
+                                    style: TextStyle(
+                                        color: jaune,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: jaune),
+                                    borderRadius: BorderRadius.circular(8)),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            );
+          }
+        }),
+  );
+}
+
+deleteOperationBanqueJournall(
+    {required BuildContext context,
+    required String idRegroupement,
+    required String idOpertion}) {
+  Size size = MediaQuery.of(context).size;
+
+  showDialog(
+    context: context,
+    builder: (context) => StreamBuilder<DocumentSnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection("journalBanque")
+            .doc(idOpertion)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Text('');
+          } else {
+            TextEditingController code = new TextEditingController(
+                text: snapshot.data!.get("numeroReference"));
+            TextEditingController montant =
+                new TextEditingController(text: snapshot.data!.get("montant"));
+            TextEditingController details = new TextEditingController(
+                text: snapshot.data!.get("detailTransaction"));
+
+            Timestamp timestampF = snapshot.data!.get('dateOperation');
+            DateTime date = new DateTime.fromMicrosecondsSinceEpoch(
+                timestampF.millisecondsSinceEpoch * 1000);
+            return AlertDialog(
+              content: StatefulBuilder(
+                builder: (context, setState) {
+                  setState(() {
+                    comptabiliteState.date = date;
+                    comptabiliteState.typeEntresSortie =
+                        snapshot.data!.get('soldeEntre');
+                  });
+                  return Container(
+                    height: size.height * .2,
+                    width: size.width * .3,
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: size.height * .05,
+                        ),
+                        Text(
+                          'Suprimer cette  oppération de banque',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              color: noir,
+                              fontSize: size.height * .03,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        SizedBox(
+                          height: size.height * .05,
+                        ),
+                        GestureDetector(
+                          onTap: () async {
+                            FirebaseFirestore.instance
+                                .collection("journalBanque")
+                                .doc(idOpertion)
+                                .delete()
+                                .then((value) {
+                              FirebaseFirestore.instance
+                                  .collection("banques")
+                                  .doc(idRegroupement)
+                                  .get()
+                                  .then((caisse) {
+                                FirebaseFirestore.instance
+                                    .collection("banques")
+                                    .doc(idRegroupement)
+                                    .update({
+                                  "montantPrecedant":
+                                      caisse.get("soldeEntre") == "entrees"
+                                          ? caisse.get("montantPrecedant") +
+                                              int.parse(montant.text)
+                                          : caisse.get("montantPrecedant") -
+                                              int.parse(montant.text)
+                                }).then((value) => print("complete"));
+                              });
+                            });
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            height: size.height * .05,
+                            width: size.width * .5,
+                            child: Center(
+                              child: Container(
+                                height: size.height * .05,
+                                width: size.width * .2,
+                                child: Center(
+                                  child: Text(
+                                    'Suprimer',
+                                    style: TextStyle(
+                                        color: rouge,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: rouge),
+                                    borderRadius: BorderRadius.circular(8)),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            );
+          }
+        }),
   );
 }

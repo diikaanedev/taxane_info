@@ -80,7 +80,7 @@ addRegroupement({required BuildContext context, required String idVillage}) {
                         labelText: "nom regroupement",
                         icon: Icon(CupertinoIcons.person_3_fill)),
                   ),
-                ),
+                ),  
                 decoration: BoxDecoration(
                     border: Border.all(color: vert),
                     borderRadius: BorderRadius.circular(8)),
@@ -323,6 +323,13 @@ addRegroupement({required BuildContext context, required String idVillage}) {
                                 "villages": idVillage,
                                 "date": DateTime.now()
                               });
+                              FirebaseFirestore.instance
+                                  .collection("caisse")
+                                  .doc(code.text)
+                                  .set({
+                                "montantInitial": 0,
+                                "montantPrecedant": 0,
+                              });
                             });
                           });
                         } catch (e) {
@@ -341,6 +348,13 @@ addRegroupement({required BuildContext context, required String idVillage}) {
                             "logo_url": "",
                             "villages": idVillage,
                             "date": DateTime.now()
+                          });
+                          FirebaseFirestore.instance
+                              .collection("caisse")
+                              .doc(code.text)
+                              .set({
+                            "montantInitial": 0,
+                            "montantPrecedant": 0,
                           });
                         }
                       });
