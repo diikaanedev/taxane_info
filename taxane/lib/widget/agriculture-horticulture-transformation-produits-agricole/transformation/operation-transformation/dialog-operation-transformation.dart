@@ -1,7 +1,3 @@
 import 'package:flutter/material.dart';
 
-addOperationTransformation({
-  required BuildContext context
-}) {
-
-}
+addOperationTransformation({required BuildContext context}) {}
